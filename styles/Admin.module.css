@@ -1,0 +1,111 @@
+.topNavBtn {
+  @apply p-2 flex items-center gap-x-1 text-gray-200 hover:text-white;
+}
+
+.navItem {
+  @apply w-full bg-white dark:bg-gray-900 hover:bg-gray-100 py-5 pl-8 gap-x-3 flex items-center text-gray-600 hover:text-gray-700 transition-colors duration-75 ease-linear cursor-pointer focus:outline-none;
+}
+
+.navItemActive {
+  @apply w-full bg-gray-100 dark:hover:bg-gray-800 py-5 pl-8 gap-x-3 flex items-center text-teal-700 cursor-pointer border-r-3 border-teal-700 focus:outline-none;
+}
+
+.searchBarContainer {
+  @apply px-3 flex items-center bg-gray-100 text-gray-400 rounded-md focus-within:text-teal-700 border-gray-200 focus-within:border-teal-700 focus-within:ring-1 focus-within:ring-teal-700;
+}
+
+.searchBarInput {
+  @apply w-44 px-1 bg-transparent placeholder-gray-400 rounded-l-full font-medium text-gray-700 text-sm border-none focus:outline-none focus:ring-transparent;
+}
+
+.addBtn {
+  @apply px-3 py-2 bg-teal-800 hover:bg-teal-700 focus:bg-teal-700 focus:outline-none ring-2 ring-offset-2 ring-transparent ring-offset-transparent focus:ring-offset-gray-100 focus:ring-teal-700 text-gray-50 flex items-center gap-x-1 rounded-md font-medium;
+}
+
+.tabsItem {
+  @apply flex items-center gap-x-2 border-b-2 border-transparent text-gray-500 hover:text-gray-600 px-4 py-2 cursor-pointer;
+}
+
+.tabsItemActive {
+  @apply flex items-center gap-x-2 border-b-2 border-teal-700 text-teal-700 px-4 py-2 cursor-pointer;
+}
+
+.theadClass {
+  @apply bg-gray-100 dark:bg-gray-800;
+}
+
+.tbodyClass {
+  @apply bg-white dark:bg-gray-900 divide-y divide-gray-200;
+}
+
+.tableRowClass {
+  @apply bg-transparent hover:bg-gray-50;
+}
+
+.tableHeadingClass {
+  @apply px-4 py-3;
+}
+
+.tableDataClass {
+  @apply px-4 py-4 whitespace-nowrap;
+}
+
+.tableDataTextClass {
+  @apply text-sm text-gray-800;
+}
+
+.actionBtn {
+  @apply bg-gray-200 hover:bg-teal-700 rounded-md p-2 text-gray-500 hover:text-gray-100 focus:bg-teal-700 focus:text-gray-100 focus:outline-none;
+}
+
+.actionBtnIcon {
+  @apply h-5 w-5 text-current;
+}
+
+.sideDropDownItem {
+  @apply flex items-center gap-x-4 pl-8 py-4 text-gray-600 hover:text-gray-700 bg-gray-50 hover:bg-gray-100;
+}
+
+.sideDropDownIcon {
+  @apply h-5 w-5 text-current;
+}
+
+.sideDropDownText {
+  @apply font-mont font-bold text-xs;
+}
+
+.popOverContainer {
+  @apply absolute w-60 py-1 shadow-sm border-b border-gray-200 top-14 right-10 bg-white flex flex-col rounded-md focus:outline-none;
+}
+
+.popOverItem {
+  @apply flex items-center gap-x-1 px-5 py-3 text-gray-500 hover:text-teal-700 hover:bg-gray-100 focus:outline-none cursor-pointer;
+}
+
+.popOverItemActive {
+  @apply flex items-center gap-x-1 px-5 py-3 text-teal-700 bg-gray-100 focus:outline-none cursor-pointer;
+}
+
+.popOverIcon {
+  @apply w-6 h-6 text-current;
+}
+
+.popOverText {
+  @apply capitalize text-sm font-medium tracking-wide;
+}
+
+.toggleDarkOn {
+  @apply transform translate-x-7;
+}
+
+.toggleDarkOff {
+  @apply transform translate-x-0;
+}
+
+.cardPopOverBtn {
+  @apply bg-gray-100 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none text-gray-500 hover:text-gray-700 focus:text-gray-700 rounded-full h-9 w-9 flex justify-center items-center;
+}
+
+.cardPopOverItem {
+  @apply w-full flex items-center gap-x-2 px-4 py-3 bg-transparent hover:bg-gray-100 text-gray-500;
+}

@@ -1,0 +1,71 @@
+.sideNavItem {
+  @apply w-full bg-white hover:bg-gray-100 py-5 pl-8 gap-x-3 flex items-center text-gray-600 hover:text-gray-700 transition-colors duration-75 ease-linear cursor-pointer focus:outline-none;
+}
+
+.sideNavItemActive {
+  @apply w-full bg-gray-100 py-5 pl-8 gap-x-3 flex items-center text-teal-700 cursor-pointer border-r-3 border-teal-700 focus:outline-none;
+}
+
+.sideNavIcon {
+  @apply w-6 h-6 text-current;
+}
+
+.topNavBtn {
+  @apply p-2 flex items-center gap-x-1 text-gray-200 rounded-md bg-transparent focus:outline-none ring-1 ring-offset-2 ring-offset-teal-700 ring-transparent focus:ring-gray-200 focus:ring-offset-gray-200;
+}
+
+.navItem {
+  @apply flex items-center gap-x-1 text-gray-200 hover:text-white focus:outline-none cursor-pointer;
+}
+
+.navItemIcon {
+  @apply h-5 w-5 text-current;
+}
+
+.navItemText {
+  @apply capitalize text-sm font-bold;
+}
+
+.sideDropDownItem {
+  @apply flex items-center gap-x-4 pl-8 py-4 text-gray-600 hover:text-gray-700 bg-gray-50 hover:bg-gray-100;
+}
+
+.sideDropDownIcon {
+  @apply h-5 w-5 text-current;
+}
+
+.sideDropDownText {
+  @apply font-mont font-bold text-xs;
+}
+
+.addBtn {
+  @apply px-3 py-2 bg-teal-800 hover:bg-teal-700 focus:bg-teal-700 focus:outline-none ring-2 ring-offset-2 ring-transparent ring-offset-transparent focus:ring-offset-gray-100 focus:ring-teal-700 text-gray-50 flex items-center gap-x-1 rounded-md font-medium;
+}
+
+.popOverContainer {
+  @apply absolute w-60 py-1 shadow-sm border-b border-gray-200 top-14 right-10 bg-white flex flex-col rounded-md focus:outline-none;
+}
+
+.popOverItem {
+  @apply flex items-center gap-x-1 px-5 py-3 text-gray-500 hover:text-teal-700 hover:bg-gray-100 focus:outline-none cursor-pointer;
+}
+
+.popOverItemActive {
+  @apply flex items-center gap-x-1 px-5 py-3 text-teal-700 bg-gray-100 focus:outline-none cursor-pointer;
+}
+
+.popOverIcon {
+  @apply w-6 h-6 text-current;
+}
+
+.popOverText {
+  @apply capitalize text-sm font-medium tracking-wide;
+}
+
+.toggleDarkOn {
+  @apply transform translate-x-7;
+}
+
+.toggleDarkOff {
+  @apply transform translate-x-0;
+}

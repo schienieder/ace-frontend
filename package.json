@@ -8,8 +8,21 @@
     "start": "next start"
   },
   "dependencies": {
+    "@formiz/core": "^1.0.4",
+    "@formiz/validations": "^1.0.0",
+    "@headlessui/react": "^1.2.0",
+    "@tailwindcss/forms": "^0.3.2",
+    "autoprefixer": "^9.8.6",
     "next": "10.2.2",
+    "postcss": "^7.0.35",
+    "postcss-import": "^14.0.2",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
-  }
+    "react-dom": "17.0.2",
+    "react-hook-form": "^7.6.3",
+    "react-trello": "^2.2.10",
+    "react-use": "^17.2.4",
+    "recharts": "^2.0.9",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2"
+  },
+  "devDependencies": {}
 }
