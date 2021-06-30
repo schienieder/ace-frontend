@@ -13,6 +13,9 @@ module.exports = {
       '8': '8px',
     },
     extend: {
+      backgroundImage : theme => ({
+        'about-img' : "url('/images/flowers.jpg')",
+      }),
       width: {
         'client-profile-form-container' : '38rem',
         'custom-textarea': '32rem',

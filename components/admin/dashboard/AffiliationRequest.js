@@ -1,6 +1,6 @@
 const RecentActivities = () => {
     return (
-        <div className="w-3/5 card flex flex-col gap-y-5">
+        <div className="w-1/2 card flex flex-col gap-y-5">
             <div className="w-full flex justify-between">
                 <h4 className="text-base font-bold dark:text-gray-300">Affiliation Requests</h4>
                 <a className="text-xs text-gray-500 hover:text-blue-600 cursor-pointer">View All</a>

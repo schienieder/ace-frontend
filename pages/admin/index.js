@@ -5,7 +5,7 @@ import Footer from '../../components/admin/Footer'
 import PageHeader from '../../components/admin/PageHeader'
 import SalesOverview from '../../components/admin/dashboard/SalesOverview'
 import AffiliationRequest from '../../components/admin/dashboard/AffiliationRequest'
-import NewClients from '../../components/admin/dashboard/NewClients'
+import UpcomingEvents from '../../components/admin/dashboard/UpcomingEvents'
 
 
 export default function dashboard() {
@@ -24,7 +24,7 @@ export default function dashboard() {
                         <SalesOverview />
                         <div className="w-full flex gap-x-5">
                             <AffiliationRequest />
-                            <NewClients />
+                            <UpcomingEvents />
                         </div>
                     </div>
                     <Footer />

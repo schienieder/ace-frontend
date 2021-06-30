@@ -1,60 +1,29 @@
-import AboutItem from './AboutItem'
-import Image from 'next/image'
+import heroStyles from '../../styles/Hero.module.css'
 
 const About = () => {
     return (
-        <div className="row-start-2 w-full min-h-screen flex flex-col justify-center items-center bg-gray-100 text-gray-700 font-mont gap-y-5 md:gap-y-10 p-8">
-            <div className="flex flex-col items-center">
-                <h4 className="text-xl md:text-3xl font-source font-black">What Makes Alas Special?</h4>
-                <div className="w-64 md:w-80 border-b-2 border-teal-700 rounded-full"></div>
+        <div className="row-start-2 w-full h-screen grid grid-cols-2 bg-white text-gray-800 font-mont">
+            <div className="col-start-1 w-full h-full flex items-center justify-center">
+                <div className={ heroStyles.aboutFlower }></div>
             </div>
-            <div className="flex flex-col md:flex-row gap-x-20 gap-y-5 md:gap-y-0">
-                <AboutItem 
-                    title="Hassle Free Events"
-                    desc="Book an event, sit back and have a drink."
-                >
-                    <Image 
-                        src="/images/party.svg"
-                        height={60}
-                        width={60}
-                        alt="Party"
-                    />
-                </AboutItem>
-                <AboutItem 
-                    title="No Hidden Charges"
-                    desc="Transparent fees because we are not like any other."
-                >
-                    <Image 
-                        src="/images/invoice.svg"
-                        height={60}
-                        width={60}
-                        alt="Invoice"
-                    />
-                </AboutItem>
-            </div>
-            <div className="flex flex-col md:flex-row gap-x-20 gap-y-5 md:gap-y-0">
-                <AboutItem 
-                    title="Quality of Services"
-                    desc="Lorem ipsum dolor, et al buang u sapin mufasa"
-                >
-                    <Image 
-                        src="/images/medal.svg"
-                        height={60}
-                        width={60}
-                        alt="Medal"
-                    />
-                </AboutItem>
-                <AboutItem 
-                    title="Client Friendly"
-                    desc="The top priority of ACE is the client's perspective in handling the event, establishing solid connections of emotions and relationships to the client."
-                >
-                    <Image 
-                        src="/images/handshake.svg"
-                        height={60}
-                        width={60}
-                        alt="Hand Shake"
-                    />
-                </AboutItem>
+            <div className="col-start-2 w-full h-full flex flex-col justify-center gap-y-5 p-8">
+                <h4 className="text-xl md:text-3xl font-source font-black">What is Alas?</h4>
+                <p className="text-base">Alas Creative Events is a full coordination service, lifestyle based, professional event
+                planning company that specializes in wedding events, corporate events, dinner
+                galas, fundraisers, long service awards, grand openings, conferences, pageantries,
+                debut, conventions, private events and any occasion that in need of our service.</p>
+                <button className="w-36 px-4 py-2 bg-transparent hover:bg-teal-700 border border-teal-700 focus:outline-none text-teal-700 hover:text-gray-200 color-transition flex justify-center items-center gap-x-1 rounded-sm">
+                    <p className="font-bold text-base">Read More</p>
+                    <svg 
+                        className="w-4 h-4 text-current" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24" 
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                </button>
             </div>
         </div>
     )

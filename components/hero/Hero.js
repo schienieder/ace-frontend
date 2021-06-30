@@ -3,12 +3,12 @@ import Image from 'next/image'
 
 const Hero = () => {
     return (
-        <div className="row-start-1 w-full min-h-screen bg-teal-700 flex md:grid md:grid-cols-2 md:place-items-center justify-center items-center text-gray-100">
+        <div className="row-start-1 w-full min-h-screen bg-gray-100 flex md:grid md:grid-cols-2 md:place-items-center justify-center items-center text-gray-800">
             <div className="md:col-start-1 flex flex-col items-center md:items-start">
                 <h4 className="text-3xl md:text-4xl font-source font-black">Alas Creative Events</h4>
                 <p className="text-lg md:text-xl">"a dream beyond forever"</p>
                 <Link href="/register">
-                    <button className="px-4 py-2 mt-5 bg-transparent hover:bg-gray-200 border-2 border-gray-200 color-transition focus:bg-gray-200  focus:outline-none text-gray-200 hover:text-teal-700 focus:text-teal-700 flex items-center gap-x-1 rounded-sm">
+                    <button className="w-36 px-4 py-2 mt-5 bg-transparent hover:bg-teal-700 border border-teal-700 focus:outline-none text-teal-700 hover:text-gray-200 color-transition flex justify-center items-center gap-x-1 rounded-sm">
                         <p className="font-bold text-base">Book Now</p>
                         <svg 
                             className="w-4 h-4 text-current" 
@@ -22,13 +22,12 @@ const Hero = () => {
                     </button>
                 </Link>
             </div>
-            <div className="hidden h-full w-full col-start-2 md:flex justify-center items-center">
+            <div className="hidden h-full w-full bg-gray-200 col-start-2 md:flex justify-center items-end">
                 <Image 
-                    src="/images/hero_img.svg"
-                    alt="Creative Man Image"
-                    height={ 784.34 }
-                    width={ 1080.97 }
-                    className="transform scale-95"
+                    src="/images/Married Couple.png"
+                    alt="Married Couple"
+                    height={ 530 }
+                    width={ 354 }
                 />
             </div>
         </div>

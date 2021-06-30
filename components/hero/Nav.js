@@ -49,14 +49,14 @@ const Nav = () => {
                     }
                     id="example-navbar-danger"
                 >
-                    <div className="flex flex-col items-center lg:flex-row lg:ml-auto text-gray-200 gap-x-5 gap-y-4 pt-5 lg:pt-0">
+                    <div className="flex flex-col items-center lg:flex-row lg:ml-auto text-gray-800 gap-x-5 gap-y-4 pt-5 lg:pt-0">
                         <NavItem text="about" />
                         <NavItem text="services" />
                         <NavItem text="contact" />
                         <NavItem text="FAQ" />
                         <Link href="/login" passHref>
                             <a
-                                className="px-5 py-2 text-gray-200 bg-teal-900 hover:bg-teal-800 color-transition focus:bg-teal-800 ring-2 ring-offset-2 ring-transparent ring-offset-transparent focus:ring-teal-800 focus:ring-offset-teal-700 focus:outline-none text-base font-bold rounded-sm" 
+                                className="px-5 py-2 text-gray-200 bg-teal-800 hover:bg-teal-700 color-transition focus:bg-teal-700 ring-2 ring-offset-2 ring-transparent ring-offset-transparent focus:ring-teal-700 focus:ring-offset-gray-200 focus:outline-none text-base font-bold rounded-sm" 
                             >Login</a>
                         </Link>
                     </div>
