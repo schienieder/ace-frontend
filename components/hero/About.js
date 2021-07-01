@@ -12,7 +12,7 @@ const About = () => {
                 planning company that specializes in wedding events, corporate events, dinner
                 galas, fundraisers, long service awards, grand openings, conferences, pageantries,
                 debut, conventions, private events and any occasion that in need of our service.</p>
-                <button className="w-36 px-4 py-2 bg-transparent hover:bg-teal-700 border border-teal-700 focus:outline-none text-teal-700 hover:text-gray-200 color-transition flex justify-center items-center gap-x-1 rounded-sm">
+                <button className="w-36 px-4 py-2 bg-transparent hover:bg-teal-700 focus:bg-teal-700 border border-teal-700 focus:outline-none text-teal-700 hover:text-gray-200 focus:text-gray-200 color-transition flex justify-center items-center gap-x-1 rounded-sm">
                     <p className="font-bold text-base">Read More</p>
                     <svg 
                         className="w-4 h-4 text-current" 

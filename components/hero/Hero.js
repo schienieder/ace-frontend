@@ -8,7 +8,7 @@ const Hero = () => {
                 <h4 className="text-3xl md:text-4xl font-source font-black">Alas Creative Events</h4>
                 <p className="text-lg md:text-xl">"a dream beyond forever"</p>
                 <Link href="/register">
-                    <button className="w-36 px-4 py-2 mt-5 bg-transparent hover:bg-teal-700 border border-teal-700 focus:outline-none text-teal-700 hover:text-gray-200 color-transition flex justify-center items-center gap-x-1 rounded-sm">
+                    <button className="w-36 px-4 py-2 mt-5 bg-transparent hover:bg-teal-700 focus:bg-teal-700 border border-teal-700 focus:outline-none text-teal-700 hover:text-gray-200 focus:text-gray-200 color-transition flex justify-center items-center gap-x-1 rounded-sm">
                         <p className="font-bold text-base">Book Now</p>
                         <svg 
                             className="w-4 h-4 text-current" 
