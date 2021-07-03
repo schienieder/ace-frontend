@@ -51,7 +51,7 @@ const TopNav = () => {
                         <Menu.Items className={ clientStyles.popOverContainer }>
                             <Menu.Item>
                                 {({ active }) => (
-                                    <Link href="/client/" passHref>
+                                    <Link href="/client/profile" passHref>
                                         <a
                                             className={`${active ? clientStyles.popOverItemActive : clientStyles.popOverItem} color-transition border-b border-gray-200`}
                                         >

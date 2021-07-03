@@ -70,15 +70,6 @@ export default function reports() {
 
                                 </div>
                                 <div className="flex items-center gap-x-3 bottom-0">
-                                    <div 
-                                        className="w-full px-3 flex items-center bg-gray-100 text-gray-400 rounded-md focus-within:text-teal-700 border-gray-200 focus-within:border-teal-700 focus-within:ring-1 focus-within:ring-teal-700"
-                                    >
-                                        <input 
-                                            type="text"
-                                            className="flex-1 px-1 bg-transparent placeholder-gray-400 rounded-l-full text-gray-700 text-sm border-none focus:outline-none focus:ring-transparent"
-                                            placeholder="Type your message . . ."
-                                        />
-                                    </div>
                                     <button className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 text-teal-700 color-transition">
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 
@@ -90,6 +81,26 @@ export default function reports() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                         </svg>
                                     </button>
+                                    <button className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 text-teal-700 color-transition">
+                                        <svg 
+                                            xmlns="http://www.w3.org/2000/svg" 
+                                            className="h-4 w-4 text-current" 
+                                            fill="none" 
+                                            viewBox="0 0 24 24" 
+                                            stroke="currentColor"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                                        </svg>
+                                    </button>
+                                    <div 
+                                        className="w-full px-3 flex items-center bg-gray-100 text-gray-400 rounded-md focus-within:text-teal-700 border-gray-200 focus-within:border-teal-700 focus-within:ring-1 focus-within:ring-teal-700"
+                                    >
+                                        <input 
+                                            type="text"
+                                            className="flex-1 px-1 bg-transparent placeholder-gray-400 rounded-l-full text-gray-700 text-sm border-none focus:outline-none focus:ring-transparent"
+                                            placeholder="Type your message . . ."
+                                        />
+                                    </div>
                                     <button className="p-3 rounded-full bg-teal-800 hover:bg-teal-700 text-gray-50 color-transition">
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 

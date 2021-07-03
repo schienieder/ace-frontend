@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
 import adminStyles from '../../../styles/Admin.module.css'
 import { Menu, Transition } from '@headlessui/react'
+import Link from 'next/link'
 
 const EventCard = () => {
     return (
@@ -73,6 +74,7 @@ const EventCard = () => {
                     <Menu.Items className="absolute z-10 w-56 mt-10 bg-white divide-y divide-gray-200 rounded-md shadow-lg border border-gray-300 py-1">
                         <Menu.Item>
                             {({ active }) => (
+                            <Link href="/admin/events/tasks">
                             <button
                                 className={`${adminStyles.cardPopOverItem} color-transition`}
                             >
@@ -88,6 +90,7 @@ const EventCard = () => {
                                 </svg>
                                 <p className="text-xs font-medium">View Event</p>
                             </button>
+                            </Link>
                             )}
                         </Menu.Item>
                         <Menu.Item>

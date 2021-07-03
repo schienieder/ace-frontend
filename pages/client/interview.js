@@ -3,7 +3,6 @@ import SideNav from '../../components/client/SideNav'
 import TopNav from '../../components/client/TopNav'
 import Footer from '../../components/client/Footer'
 import PageHeader from '../../components/client/PageHeader'
-import InterviewCard from '../../components/client/InterviewDetailCard'
 
 export default function interview() {
     return (
@@ -50,12 +49,29 @@ export default function interview() {
                                                 <p className="text-xs">miakabudo_miakaki@yahoo.com</p>
                                             </div>
                                         </div>
-                                        <div className="flex flex-col border-t border-b border-gray-200 py-3 gap-y-4">
-                                            <h4 className="font-bold">Interview Details</h4>
-                                            <div className="flex items-center gap-x-1">
+                                        <div className="flex flex-col border-t border-gray-200 py-3 gap-y-4">
+                                            <h4 className="font-bold">Address</h4>
+                                            <p className="text-xs">Purok Cogon, Visayan Village, Tagum City, Davao Del Norte</p>
+                                            <button 
+                                                className="mt-5 w-full bg-teal-800 hover:bg-teal-700 focus:bg-teal-700 focus:outline-none ring-2 ring-offset-2 ring-transparent ring-offset-transparent focus:ring-offset-gray-100 focus:ring-teal-700 color-transition text-gray-50 font-bold py-2 rounded-md tracking-wide text-sm"
+                                            >View Profile</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* booking details card */}
+                            <div className="w-3/5 flex flex-col gap-y-5 text-gray-700">
+                                <div className="w-full flex flex-col">
+                                    <div className="w-full px-5 py-3 bg-teal-700 rounded-tl-md rounded-tr-md flex items-center gap-x-1 text-gray-200">
+                                        <p className="font-bold">Interview Details</p>
+                                    </div>
+                                    <div className="w-full flex flex-col gap-y-5 p-5 bg-white rounded-bl-md rounded-br-md shadow-sm border-b border-gray-200">
+                                        <div className="flex flex-col gap-y-2">
+                                            <p className="text-sm font-bold">Location</p>
+                                            <div className="flex items-center gap-x-2">
                                                 <svg 
                                                     xmlns="http://www.w3.org/2000/svg" 
-                                                    className="h-6 w-6 text-current" 
+                                                    className="h-5 w-5 text-current" 
                                                     fill="none" 
                                                     viewBox="0 0 24 24" 
                                                     stroke="currentColor"
@@ -65,138 +81,46 @@ export default function interview() {
                                                 </svg>
                                                 <p className="text-xs">Gourmet Restaurant, Quezon Street, Tagum City</p>
                                             </div>
-                                            <div className="flex justify-between">
-                                                <div className="flex items-center gap-x-1">
+                                        </div>
+                                        <div className="flex flex-col gap-y-2">
+                                            <p className="text-sm font-bold">Date & Time</p>
+                                            <div className="flex gap-x-10">
+                                                <div className="flex items-center gap-x-2">
                                                     <svg 
                                                         xmlns="http://www.w3.org/2000/svg" 
-                                                        className="h-6 w-6 text-current" 
+                                                        className="h-5 w-5 text-current" 
                                                         fill="none" 
                                                         viewBox="0 0 24 24" 
                                                         stroke="currentColor"
                                                     >
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                                     </svg>
-                                                    <p className="text-xs">July 29, 2021</p>
+                                                    <p className="text-xs">July 13, 2021</p>
                                                 </div>
-                                                <div className="flex items-center gap-x-1">
+                                                <div className="flex items-center gap-x-2">
                                                     <svg 
                                                         xmlns="http://www.w3.org/2000/svg" 
-                                                        className="h-6 w-6 text-current" 
+                                                        className="h-5 w-5 text-current" 
                                                         fill="none" 
                                                         viewBox="0 0 24 24" 
                                                         stroke="currentColor"
-                                                    >
+                                                        >
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                     </svg>
-                                                    <p className="text-xs">10:30 AM</p>
+                                                    <p className="text-xs">2:30 PM</p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            {/* booking details card */}
-                            <div className="w-3/5 flex flex-col gap-y-5 text-gray-700">
-                                <h4 className="font-bold">Interview Details</h4>
-                                <div className="w-full grid grid-cols-2 gap-x-5">
-                                    <InterviewCard 
-                                        title="Location" 
-                                        text="Gourmet Restaurant, Quezon Street, Tagum City"
-                                    >
-                                        <svg 
-                                            xmlns="http://www.w3.org/2000/svg" 
-                                            className="h-5 w-5 text-current" 
-                                            fill="none" 
-                                            viewBox="0 0 24 24" 
-                                            stroke="currentColor"
-                                        >
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                    </InterviewCard>
-                                    <InterviewCard 
-                                        title="Date & Time" 
-                                        text="Gourmet Restaurant, Quezon Street, Tagum City"
-                                    >
-                                        <svg 
-                                            xmlns="http://www.w3.org/2000/svg" 
-                                            className="h-5 w-5 text-current" 
-                                            fill="none" 
-                                            viewBox="0 0 24 24" 
-                                            stroke="currentColor"
-                                        >
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                        </svg>
-                                    </InterviewCard>
+                                <div className="w-full flex flex-col">
+                                    <div className="w-full px-5 py-3 bg-teal-700 rounded-tl-md rounded-tr-md flex items-center gap-x-1 text-gray-200">
+                                        <p className="font-bold">Booking Details</p>
+                                    </div>
+                                    <div className="w-full flex flex-col gap-y-3 p-5 bg-white rounded-bl-md rounded-br-md shadow-sm border-b border-gray-200">
+                                        
+                                    </div>
                                 </div>
-                                <h4 className="font-bold">Booking Details</h4>
-                                <div className="w-full grid grid-rows-3 gap-5">
-                                    <InterviewCard 
-                                        title="Location" 
-                                        text="Gourmet Restaurant, Quezon Street, Tagum City"
-                                    >
-                                        <svg 
-                                            xmlns="http://www.w3.org/2000/svg" 
-                                            className="h-5 w-5 text-current" 
-                                            fill="none" 
-                                            viewBox="0 0 24 24" 
-                                            stroke="currentColor"
-                                        >
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                    </InterviewCard>
-                                    <InterviewCard 
-                                        title="Date & Time" 
-                                        text="Gourmet Restaurant, Quezon Street, Tagum City"
-                                    >
-                                        <svg 
-                                            xmlns="http://www.w3.org/2000/svg" 
-                                            className="h-5 w-5 text-current" 
-                                            fill="none" 
-                                            viewBox="0 0 24 24" 
-                                            stroke="currentColor"
-                                        >
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                        </svg>
-                                    </InterviewCard>
-                                    <InterviewCard 
-                                        title="Location" 
-                                        text="Gourmet Restaurant, Quezon Street, Tagum City"
-                                    >
-                                        <svg 
-                                            xmlns="http://www.w3.org/2000/svg" 
-                                            className="h-5 w-5 text-current" 
-                                            fill="none" 
-                                            viewBox="0 0 24 24" 
-                                            stroke="currentColor"
-                                        >
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                    </InterviewCard>
-                                </div>
-                                {/* <h4 className="font-bold">Booking Details</h4>
-                                <div className="grid grid-cols-2">
-                                    <BookingDetailItem title="Type of Event" subtext="Wedding Event" />
-                                    <BookingDetailItem title="Venue" subtext="Big 8 Hotel, Tagum City, Davao del Norte" />
-                                </div>
-                                <div className="grid grid-cols-2">
-                                    <BookingDetailItem title="Type of Venue" subtext="Indoor" />
-                                    <BookingDetailItem title="No. of Guests" subtext="80" />
-                                </div>
-                                <div className="grid grid-cols-2">
-                                    <BookingDetailItem title="Seating Style" subtext="Theatre Style" />
-                                    <BookingDetailItem title="Time Schedule" subtext="7:00 PM" />
-                                </div>
-                                <div className="grid grid-cols-2">
-                                    <BookingDetailItem title="Desired Date" subtext="July 16, 1999" />
-                                    <BookingDetailItem title="Service Requirements" subtext="Buffet" />
-                                </div>
-                                <div className="grid grid-cols-2">
-                                    <BookingDetailItem title="Beverages" subtext="July 16, 1999" />
-                                    <BookingDetailItem title="Best way to contact you?" subtext="Facebook/Email" />
-                                </div> */}
                             </div>
                         </div>
                     </div>
