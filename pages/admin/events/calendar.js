@@ -1,11 +1,48 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import TopNav from '../../../components/admin/TopNav'
 import SideNav from '../../../components/admin/SideNav'
 import Footer from '../../../components/admin/Footer'
 import PageHeader from '../../../components/admin/PageHeader'
 import CalendarHook from '../../../components/admin/events/CalendarHook'
+import { useRouter } from 'next/router'
+import Cookies from 'js-cookie'
+import jwt_decode from 'jwt-decode'
 
 export default function cards() {
+    const router = useRouter()
+    const axios = require('axios')
+    const readCookie = () => {
+        try {
+            const jwt_token = Cookies.get('jwt')
+            const decoded_token = jwt_decode(jwt_token)
+            axios({
+                method : 'GET',
+                url : `http://localhost:8000/account/${decoded_token.user_id}`,
+                headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
+            })
+            .then((response) => {
+                response.data.role !== 'admin' ? router.push('/login') : ''
+            })
+            .catch((error) => {
+                Swal.fire({
+                    icon : 'error',
+                    title: 'Error',
+                    text: `${error.response}`,
+                    showCloseButton: true,
+                    confirmButtonColor: '#0F766E',
+                })
+                console.log(error.response)
+            })
+            console.log(jwt_token)
+        }
+        catch {
+            router.push('/login')
+        }
+        
+    }
+    useEffect(() => {
+        readCookie()
+    }, [])
     const { calendarRows, selectedDate, todayFormatted, daysShort, monthNames, getNextMonth, getPrevMonth } = CalendarHook()
     const dateClickHandler = date => {
         console.log(date);

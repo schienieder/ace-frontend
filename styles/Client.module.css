@@ -23,7 +23,7 @@
 }
 
 .navItemText {
-  @apply capitalize text-sm font-bold;
+  @apply text-sm font-bold;
 }
 
 .sideDropDownItem {

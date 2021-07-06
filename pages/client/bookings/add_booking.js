@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import SideNav from '../../../components/client/SideNav'
 import TopNav from '../../../components/client/TopNav'
 import Footer from '../../../components/client/Footer'
@@ -7,6 +7,9 @@ import { useForm } from 'react-hook-form'
 import AuthErrorIcon from '../../../components/AuthErrorIcon'
 import { RadioGroup, Listbox, Transition } from '@headlessui/react'
 import clientStyles from '../../../styles/Client.module.css'
+import { useRouter } from 'next/router'
+import Cookies from 'js-cookie'
+import jwt_decode from 'jwt-decode'
 
 const eventTypeArr = [
     { name : 'Wedding Event' },
@@ -40,6 +43,39 @@ const bestWayArr = [
     { name : 'All' },
 ]
 export default function add_booking() {
+    const router = useRouter()
+    const axios = require('axios')
+    const readCookie = () => {
+        try {
+            const jwt_token = Cookies.get('jwt')
+            const decoded_token = jwt_decode(jwt_token)
+            axios({
+                method : 'GET',
+                url : `http://localhost:8000/account/${decoded_token.user_id}`,
+                headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
+            })
+            .then((response) => {
+                response.data.role !== 'client' ? router.push('/login') : ''
+            })
+            .catch((error) => {
+                Swal.fire({
+                    icon : 'error',
+                    title: 'Error',
+                    text: `${error.response}`,
+                    showCloseButton: true,
+                    confirmButtonColor: '#0F766E',
+                })
+                console.log(error.response)
+            })
+            console.log(jwt_token)
+        }
+        catch {
+            router.push('/login')
+        }
+    }
+    useEffect(() => {
+        readCookie()
+    }, [])
     const [eventType, setEventType] = useState(eventTypeArr[0])
     const [serviceRequirements, setServiceRequirements] = useState(serviceRequirementsArr[0])
     const [eventBeverages, setEventBeverages] = useState(eventBeveragesArr[0])

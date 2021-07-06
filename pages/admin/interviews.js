@@ -1,12 +1,48 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import TopNav from '../../components/admin/TopNav'
 import SideNav from '../../components/admin/SideNav'
 import Footer from '../../components/admin/Footer'
 import PageHeader from '../../components/admin/PageHeader'
 import InterviewItem from '../../components/admin/interviews/InterviewItem'
 import adminStyles from '../../styles/Admin.module.css'
+import { useRouter } from 'next/router'
+import Cookies from 'js-cookie'
+import jwt_decode from 'jwt-decode'
 
 export default function interviews() {
+    const router = useRouter()
+    const axios = require('axios')
+    const readCookie = () => {
+        try {
+            const jwt_token = Cookies.get('jwt')
+            const decoded_token = jwt_decode(jwt_token)
+            axios({
+                method : 'GET',
+                url : `http://localhost:8000/account/${decoded_token.user_id}`,
+                headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
+            })
+            .then((response) => {
+                response.data.role !== 'admin' ? router.push('/login') : ''
+            })
+            .catch((error) => {
+                Swal.fire({
+                    icon : 'error',
+                    title: 'Error',
+                    text: `${error.response}`,
+                    showCloseButton: true,
+                    confirmButtonColor: '#0F766E',
+                })
+                console.log(error.response)
+            })
+            console.log(jwt_token)
+        }
+        catch {
+            router.push('/login')
+        }
+    }
+    useEffect(() => {
+        readCookie()
+    }, [])
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="bookings" />
@@ -33,21 +69,6 @@ export default function interviews() {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
                                 </div>
-                                <button
-                                    type="button" 
-                                    className={ adminStyles.addBtn }
-                                >
-                                    <svg 
-                                        xmlns="http://www.w3.org/2000/svg" 
-                                        className="h-5 w-5 text-current" 
-                                        fill="none" 
-                                        viewBox="0 0 24 24" 
-                                        stroke="currentColor"
-                                    >
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                    </svg>
-                                    <p className="text-sm font-bold">New Partner</p>
-                                </button>
                             </div>
                             <table className="min-w-full divide-y divide-gray-200 border-b border-gray-200">
                                 <thead className={ adminStyles.theadClass }>

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import SideNav from '../../components/client/SideNav'
 import TopNav from '../../components/client/TopNav'
 import Footer from '../../components/client/Footer'
@@ -6,6 +6,9 @@ import PageHeader from '../../components/client/PageHeader'
 import AuthErrorIcon from '../../components/AuthErrorIcon'
 import { Listbox, Transition } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/router'
+import Cookies from 'js-cookie'
+import jwt_decode from 'jwt-decode'
 
 const sexArr = [
     { name : 'Male' },
@@ -13,6 +16,39 @@ const sexArr = [
 ]
 
 export default function index() {
+    const router = useRouter()
+    const axios = require('axios')
+    const readCookie = () => {
+        try {
+            const jwt_token = Cookies.get('jwt')
+            const decoded_token = jwt_decode(jwt_token)
+            axios({
+                method : 'GET',
+                url : `http://localhost:8000/account/${decoded_token.user_id}`,
+                headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
+            })
+            .then((response) => {
+                response.data.role !== 'client' ? router.push('/login') : ''
+            })
+            .catch((error) => {
+                Swal.fire({
+                    icon : 'error',
+                    title: 'Error',
+                    text: `${error.response}`,
+                    showCloseButton: true,
+                    confirmButtonColor: '#0F766E',
+                })
+                console.log(error.response)
+            })
+            console.log(jwt_token)
+        }
+        catch {
+            router.push('/login')
+        }
+    }
+    useEffect(() => {
+        readCookie()
+    }, [])
     const [selectedSex, setSelectedSex] = useState(sexArr[0])
     const { register, handleSubmit, formState : { errors } } = useForm()
     const onSubmitForm = (data) => {

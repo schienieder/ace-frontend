@@ -2,9 +2,39 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import clientStyles from '../../styles/Client.module.css'
 import { Menu, Transition, Switch } from '@headlessui/react'
+import { useRouter } from 'next/router'
+import Cookies from 'js-cookie'
+import jwt_decode from 'jwt-decode'
 
 const TopNav = () => {
     const [toggleDark, setToggleDark] = useState(false)
+    const [loggedUsername, setLoggedUserName] = useState('')
+    const axios = require('axios')
+    const router = useRouter()
+    try {
+        const jwt_token = Cookies.get('jwt')
+        const decoded_token = jwt_decode(jwt_token)
+        axios({
+            method : 'GET',
+            url : `http://localhost:8000/account/${decoded_token.user_id}`,
+            headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
+        })
+        .then((response) => {
+            setLoggedUserName(response.data.username)
+            console.log(response.data.username)
+        })
+        .catch((error) => {
+            console.log(error.response)
+        })
+        console.log(jwt_token)
+    }
+    catch(e) {
+        console.log(e.message)
+    }
+    const handleLogOut = () => {
+        Cookies.remove('jwt')
+        router.push('/login')
+    }
     return (
         <>
         <nav className="row-start-1 w-full sticky top-0 z-30 py-3 px-10 bg-teal-700 border-b border-gray-300 flex justify-between items-center">
@@ -34,7 +64,7 @@ const TopNav = () => {
                         >
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
-                        <p className={ clientStyles.navItemText }>Torres, Justine Rhei</p>
+                        <p className={ clientStyles.navItemText }>{ loggedUsername }</p>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                         </svg>
@@ -96,22 +126,21 @@ const TopNav = () => {
                             </Menu.Item>
                             <Menu.Item>
                                 {({ active }) => (
-                                    <Link href="/client/messages" passHref>
-                                        <a
-                                            className={`${active ? clientStyles.popOverItemActive : clientStyles.popOverItem} color-transition`}
+                                    <button
+                                        onClick={ handleLogOut }
+                                        className={`${active ? clientStyles.popOverItemActive : clientStyles.popOverItem} color-transition`}
+                                    >
+                                        <svg 
+                                            xmlns="http://www.w3.org/2000/svg" 
+                                            className={ clientStyles.popOverIcon } 
+                                            fill="none" 
+                                            viewBox="0 0 24 24" 
+                                            stroke="currentColor"
                                         >
-                                            <svg 
-                                                xmlns="http://www.w3.org/2000/svg" 
-                                                className={ clientStyles.popOverIcon } 
-                                                fill="none" 
-                                                viewBox="0 0 24 24" 
-                                                stroke="currentColor"
-                                            >
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                            </svg>
-                                            <p className={ clientStyles.popOverText }>Logout</p>
-                                        </a>
-                                    </Link>
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                        </svg>
+                                        <p className={ clientStyles.popOverText }>Logout</p>
+                                    </button>
                                 )}
                             </Menu.Item>
                         </Menu.Items>

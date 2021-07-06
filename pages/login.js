@@ -3,11 +3,60 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useForm } from 'react-hook-form'
 import AuthErrorIcon from '../components/AuthErrorIcon'
+import { useRouter } from 'next/router'
+import jwt_decode from 'jwt-decode'
+import Cookies from 'js-cookie'
 
 export default function login() {
+    const router = useRouter()
+    const axios = require('axios')
     const { register, handleSubmit, formState : { errors } } = useForm()
-    const onSubmit = (data) => {
-        console.log(data)
+    const onSubmit = async (data) => {
+        const Swal = require('sweetalert2')
+        const formData = new FormData()
+        formData.append('username', data.login_uname)
+        formData.append('password', data.login_pass)
+        axios({
+            method : 'POST',
+            url : 'http://localhost:8000/api/token/',
+            headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
+            data : formData
+        })
+        .then((response) => {
+            const jwt_token = response.data.access
+            const access_token = response.data.access
+            let decoded_token = jwt_decode(access_token)
+            Cookies.set('jwt', jwt_token)
+            console.log(decoded_token)
+            axios({
+                method : 'GET',
+                url : `http://localhost:8000/account/${decoded_token.user_id}`,
+                headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
+            })
+            .then((response) => {
+                router.push(`/${response.data.role}`)
+            })
+            .catch((error) => {
+                Swal.fire({
+                    icon : 'error',
+                    title: 'Error',
+                    text: `${error.response}`,
+                    showCloseButton: true,
+                    confirmButtonColor: '#0F766E',
+                })
+                console.log(error.response)
+            })
+        })
+        .catch((error) => {
+            Swal.fire({
+                    icon : 'error',
+                    title: 'Login Error',
+                    text: `Invalid login credentials!`,
+                    showCloseButton: true,
+                    confirmButtonColor: '#0F766E',
+            })
+            console.log(error.response)
+        })
     }
     return (
         <div className="w-full h-screen grid grid-cols-1 md:grid-cols-2 justify-center place-items-center">
@@ -93,7 +142,10 @@ export default function login() {
                             </div> 
                         }
                     </div>
-                    <button className="form-btn w-24 color-transition">Login</button>
+                    <button
+                        type="submit" 
+                        className="form-btn w-24 color-transition"
+                    >Login</button>
                     <div className="flex items-center gap-x-1 text-sm mt-5">
                         <p>Don't have an account?</p>
                         <Link href="/register" passHref>

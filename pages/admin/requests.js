@@ -1,12 +1,48 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import TopNav from '../../components/admin/TopNav'
 import SideNav from '../../components/admin/SideNav'
 import Footer from '../../components/admin/Footer'
 import PageHeader from '../../components/admin/PageHeader'
 import RequestItem from '../../components/admin/requests/RequestItem'
 import adminStyles from '../../styles/Admin.module.css'
+import { useRouter } from 'next/router'
+import Cookies from 'js-cookie'
+import jwt_decode from 'jwt-decode'
 
 export default function reports() {
+    const router = useRouter()
+    const axios = require('axios')
+    const readCookie = () => {
+        try {
+            const jwt_token = Cookies.get('jwt')
+            const decoded_token = jwt_decode(jwt_token)
+            axios({
+                method : 'GET',
+                url : `http://localhost:8000/account/${decoded_token.user_id}`,
+                headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
+            })
+            .then((response) => {
+                response.data.role !== 'admin' ? router.push('/login') : ''
+            })
+            .catch((error) => {
+                Swal.fire({
+                    icon : 'error',
+                    title: 'Error',
+                    text: `${error.response}`,
+                    showCloseButton: true,
+                    confirmButtonColor: '#0F766E',
+                })
+                console.log(error.response)
+            })
+            console.log(jwt_token)
+        }
+        catch {
+            router.push('/login')
+        }
+    }
+    useEffect(() => {
+        readCookie()
+    }, [])
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="partners" />
@@ -25,7 +61,7 @@ export default function reports() {
                                     />
                                     <svg 
                                         xmlns="http://www.w3.org/2000/svg" 
-                                        className="h-5 w-5 text-current" 
+                                        className="h-4 w-4 text-current" 
                                         fill="none" 
                                         viewBox="0 0 24 24" 
                                         stroke="currentColor"
@@ -46,7 +82,7 @@ export default function reports() {
                                     >
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                     </svg>
-                                    <p className="text-sm font-bold">New Partner</p>
+                                    <p className="text-sm font-bold">New Request</p>
                                 </button>
                             </div>
                             <table className="min-w-full divide-y divide-gray-200 border-b border-gray-200">

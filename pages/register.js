@@ -5,11 +5,36 @@ import authStyles from '../styles/Auth.module.css'
 import { Formiz, FormizStep, useForm } from '@formiz/core'
 import { isLength, isMinLength, isNumber, } from '@formiz/validations'
 import MyInputField from '../components/MyInputField'
+import { useRouter } from 'next/router'
 
 export default function register() {
+    const router = useRouter()
+    const Swal = require('sweetalert2')
     const myForm = useForm() // call useForm
-    const handleSubmit = (data) => {
-        alert(JSON.stringify(data))
+    const handleSubmit = async (data) => {
+        await fetch('http://localhost:8000/register/', {
+            method : "POST",
+            headers : {'Content-Type' : 'application/json'},
+            body : JSON.stringify({
+                first_name : data.register_fname,
+                last_name : data.register_lname,
+                mobile_number : data.register_mobile,
+                username : data.register_uname,
+                password : data.register_pass1,
+                role : "client"
+            })
+        })
+        Swal.fire({
+            icon : 'success',
+            title: 'Regristration Successsful!',
+            timer : 3000,
+            text: `Account ${data.register_uname} successfully registered!`,
+            showCloseButton: true,
+            confirmButtonColor: '#0F766E',
+        })
+        .then( async () => {
+            await router.push('/login')
+        })
     }
     return (
         <div className="w-full h-screen grid grid-cols-1 md:grid-cols-2 place-items-center">
