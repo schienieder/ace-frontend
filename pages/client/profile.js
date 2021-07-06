@@ -15,7 +15,7 @@ const sexArr = [
     { name : 'Female' }
 ]
 
-export default function index() {
+export default function profile({ clientProfile }) {
     const router = useRouter()
     const axios = require('axios')
     const readCookie = () => {
@@ -29,6 +29,17 @@ export default function index() {
             })
             .then((response) => {
                 response.data.role !== 'client' ? router.push('/login') : ''
+                axios({
+                    method : 'GET',
+                    url : `http://localhost:8000/profile/${decoded_token.user_id}`,
+                    headers : {'Authorization' : 'Bearer'+' '+jwt_token}
+                })
+                .then((response) => {
+                    console.log(response.data)
+                })
+                .catch((error) => {
+                    console.log(error.response)
+                })
             })
             .catch((error) => {
                 Swal.fire({
@@ -69,7 +80,6 @@ export default function index() {
                                 onSubmit={ handleSubmit(onSubmitForm) }
                                 className="w-full rounded-md p-5 flex flex-col items-center border border-gray-300 gap-y-7"
                             >
-
                                 {/* This is for the name field */}
                                 <div className="flex flex-col gap-y-2">
                                     <p className="inputFieldLabel">Name</p>
@@ -91,6 +101,7 @@ export default function index() {
                                                     type="text"
                                                     { ...register("client_fname", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
+                                                    value={ clientProfile.first_name }
                                                 />
                                             </div>
                                             { 
@@ -118,6 +129,7 @@ export default function index() {
                                                     type="text"
                                                     { ...register("client_lname", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
+                                                    value={ clientProfile.last_name }
                                                 />
                                             </div>
                                             { 
@@ -153,6 +165,7 @@ export default function index() {
                                                     type="text"
                                                     { ...register("client_mobile", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
+                                                    value={ clientProfile.mobile_number }
                                                 />
                                             </div>
                                             { 
@@ -180,6 +193,7 @@ export default function index() {
                                                     type="text"
                                                     { ...register("client_email", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
+                                                    value={ clientProfile.email || '' }
                                                 />
                                             </div>
                                             { 
@@ -262,6 +276,7 @@ export default function index() {
                                                     className="inputFieldDateTime appearance-none"
                                                     { ...register("client_birth", { required: "This field should not be empty!" }) }
                                                     autoComplete="off"
+                                                    value={ clientProfile.birthdate || '' }
                                                 />
                                             </div>
                                             { 
@@ -299,6 +314,7 @@ export default function index() {
                                                     type="text"
                                                     { ...register("client_st_add", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
+                                                    value={ clientProfile.street_address || '' }
                                                 />
                                             </div>
                                             { 
@@ -326,6 +342,7 @@ export default function index() {
                                                     type="text"
                                                     { ...register("client_city", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
+                                                    value={ clientProfile.city || '' }
                                                 />
                                             </div>
                                             { 
@@ -357,6 +374,7 @@ export default function index() {
                                                     type="text"
                                                     { ...register("client_province", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
+                                                    value={ clientProfile.state_province || '' }
                                                 />
                                             </div>
                                             { 
@@ -384,6 +402,7 @@ export default function index() {
                                                     type="text"
                                                     { ...register("client_zip", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
+                                                    value={ clientProfile.postal_zip || '' }
                                                 />
                                             </div>
                                             { 
@@ -416,4 +435,34 @@ export default function index() {
             </div>
         </div>
     )
+}
+
+// export const getStaticProps = async () => {
+//     const token = Cookies.get('jwt')
+//     console.log(token)
+//     const decoded_token = jwt_decode(token)
+//     const res = await fetch(`http://localhost:8000/profile/${decoded_token.user_id}`, {
+//         method : 'GET',
+//         headers : {'Authorization' : 'Bearer'+' '+token}
+//     })
+//     const data = await res.json()
+//     return {
+//         props : {
+//             clientProfile : data,
+//         }
+//     }
+// }
+
+export const getStaticProps = async () => {
+    const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjMwNDI4MjA1LCJqdGkiOiI2NGYxMjk2YzQ4YmU0YjI5YjM5M2U3N2JlMWFkODlhMiIsInVzZXJfaWQiOjMyfQ.Z4mc2ZL49tfMeB1ZNQcOsw4OM22wmBkctnmdTTxQrWk'
+    const res = await fetch('http://localhost:8000/profile/1', {
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data = await res.json()
+    return {
+        props : {
+            clientProfile : data,
+        }
+    }
 }

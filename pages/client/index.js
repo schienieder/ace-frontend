@@ -50,7 +50,7 @@ export default function dashboard() {
                     <div className="p-8 flex flex-col gap-y-5 min-h-screen">
                         <PageHeader text="Dashboard" />
                         <div className="card w-full flex justify-center">
-                            <h4 className="text-xl">The fvcking client dashboard!</h4>
+                            <h4 className="text-xl"></h4>
                         </div>
                     </div>
                     <Footer />
