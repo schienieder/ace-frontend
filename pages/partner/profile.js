@@ -9,7 +9,7 @@ import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
 
-export default function profile() {
+export default function profile({ partnerProfile }) {
     const router = useRouter()
     const axios = require('axios')
     const readCookie = () => {
@@ -23,6 +23,17 @@ export default function profile() {
             })
             .then((response) => {
                 response.data.role !== 'partner' ? router.push('/login') : ''
+                axios({
+                    method : 'GET',
+                    url : `http://localhost:8000/partner_profile/${decoded_token.user_id}`,
+                    headers : {'Authorization' : 'Bearer'+' '+jwt_token}
+                })
+                .then((response) => {
+                    console.log(response.data)
+                })
+                .catch((error) => {
+                    console.log(error.response)
+                })
             })
             .catch((error) => {
                 Swal.fire({
@@ -89,6 +100,7 @@ export default function profile() {
                                                     type="text"
                                                     { ...register("partner_fname", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
+                                                    value={ partnerProfile.first_name || '' }
                                                 />
                                             </div>
                                             { 
@@ -116,6 +128,7 @@ export default function profile() {
                                                     type="text"
                                                     { ...register("partner_lname", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
+                                                    value={ partnerProfile.last_name || '' }
                                                 />
                                             </div>
                                             { 
@@ -151,6 +164,7 @@ export default function profile() {
                                                     type="number"
                                                     { ...register("partner_mobile", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
+                                                    value={ partnerProfile.mobile_number || '' }
                                                 />
                                             </div>
                                             { 
@@ -178,6 +192,7 @@ export default function profile() {
                                                     type="text"
                                                     { ...register("partner_email", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
+                                                    value={ partnerProfile.email || '' }
                                                 />
                                             </div>
                                             { 
@@ -214,6 +229,7 @@ export default function profile() {
                                                 type="text"
                                                 { ...register("partner_bus_name", { required : "This field cannot be empty" }) } 
                                                 className="inputField"
+                                                value={ partnerProfile.business_name || '' }
                                             />
                                         </div>
                                         { 
@@ -241,6 +257,7 @@ export default function profile() {
                                                 type="text"
                                                 { ...register("partner_tob", { required : "This field cannot be empty" }) } 
                                                 className="inputField"
+                                                value={ partnerProfile.type_of_business || '' }
                                             />
                                         </div>
                                         { 
@@ -278,6 +295,7 @@ export default function profile() {
                                                     type="text"
                                                     { ...register("partner_st_add", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
+                                                    value={ partnerProfile.street_address || '' }
                                                 />
                                             </div>
                                             { 
@@ -305,6 +323,7 @@ export default function profile() {
                                                     type="text"
                                                     { ...register("partner_city", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
+                                                    value={ partnerProfile.city || '' }
                                                 />
                                             </div>
                                             { 
@@ -336,6 +355,7 @@ export default function profile() {
                                                     type="text"
                                                     { ...register("partner_province", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
+                                                    value={ partnerProfile.state_province || '' }
                                                 />
                                             </div>
                                             { 
@@ -363,6 +383,7 @@ export default function profile() {
                                                     type="text"
                                                     { ...register("partner_zip", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
+                                                    value={ partnerProfile.postal_zip || '' }
                                                 />
                                             </div>
                                             { 
@@ -397,4 +418,19 @@ export default function profile() {
             </div>
         </div>
     )
+}
+
+export const getServerSideProps = async ({ req }) => {
+    const token = req.cookies.jwt
+    const decoded_token = jwt_decode(token)
+    const res = await fetch(`http://localhost:8000/partner_profile/${decoded_token.user_id}`, {
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data = await res.json()
+    return {
+        props : {
+            partnerProfile : data
+        }
+    }
 }

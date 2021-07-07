@@ -26,7 +26,7 @@ export default function register() {
         })
         Swal.fire({
             icon : 'success',
-            title: 'Regristration Successsful!',
+            title: 'Regristration Successsful',
             timer : 3000,
             text: `Account ${data.register_uname} successfully registered!`,
             showCloseButton: true,

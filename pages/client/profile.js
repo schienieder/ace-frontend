@@ -437,32 +437,17 @@ export default function profile({ clientProfile }) {
     )
 }
 
-// export const getStaticProps = async () => {
-//     const token = Cookies.get('jwt')
-//     console.log(token)
-//     const decoded_token = jwt_decode(token)
-//     const res = await fetch(`http://localhost:8000/profile/${decoded_token.user_id}`, {
-//         method : 'GET',
-//         headers : {'Authorization' : 'Bearer'+' '+token}
-//     })
-//     const data = await res.json()
-//     return {
-//         props : {
-//             clientProfile : data,
-//         }
-//     }
-// }
-
-export const getStaticProps = async () => {
-    const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjMwNDI4MjA1LCJqdGkiOiI2NGYxMjk2YzQ4YmU0YjI5YjM5M2U3N2JlMWFkODlhMiIsInVzZXJfaWQiOjMyfQ.Z4mc2ZL49tfMeB1ZNQcOsw4OM22wmBkctnmdTTxQrWk'
-    const res = await fetch('http://localhost:8000/profile/1', {
+export const getServerSideProps = async ({ req }) => {
+    const token = req.cookies.jwt
+    const decoded_token = jwt_decode(token)
+    const res = await fetch(`http://localhost:8000/client_profile/${decoded_token.user_id}`, {
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })
     const data = await res.json()
     return {
         props : {
-            clientProfile : data,
+            clientProfile : data
         }
     }
 }

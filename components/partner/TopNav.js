@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import partnerStyles from '../../styles/Admin.module.css'
 import { Menu, Transition, Switch } from '@headlessui/react'
@@ -11,26 +11,27 @@ const TopNav = () => {
     const [loggedUsername, setLoggedUserName] = useState('')
     const axios = require('axios')
     const router = useRouter()
-    try {
-        const jwt_token = Cookies.get('jwt')
-        const decoded_token = jwt_decode(jwt_token)
-        axios({
-            method : 'GET',
-            url : `http://localhost:8000/account/${decoded_token.user_id}`,
-            headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
-        })
-        .then((response) => {
-            setLoggedUserName(response.data.username)
-            console.log(response.data.username)
-        })
-        .catch((error) => {
-            console.log(error.response)
-        })
-        console.log(jwt_token)
-    }
-    catch(e) {
-        console.log(e.message)
-    }
+    useEffect(() => {
+        try {
+            const jwt_token = Cookies.get('jwt')
+            const decoded_token = jwt_decode(jwt_token)
+            axios({
+                method : 'GET',
+                url : `http://localhost:8000/account/${decoded_token.user_id}`,
+                headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
+            })
+            .then((response) => {
+                setLoggedUserName(response.data.username)
+                console.log(response.data.username)
+            })
+            .catch((error) => {
+                console.log(error.response)
+            })
+        }
+        catch(e) {
+            console.log(e.message)
+        }
+    }, [])
     const handleLogOut = () => {
         Cookies.remove('jwt')
         router.push('/login')
