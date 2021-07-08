@@ -31,7 +31,7 @@ export default function profile({ clientProfile }) {
                 response.data.role !== 'client' ? router.push('/login') : ''
                 axios({
                     method : 'GET',
-                    url : `http://localhost:8000/profile/${decoded_token.user_id}`,
+                    url : `http://localhost:8000/client_profile/${decoded_token.user_id}`,
                     headers : {'Authorization' : 'Bearer'+' '+jwt_token}
                 })
                 .then((response) => {
