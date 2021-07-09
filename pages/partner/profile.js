@@ -11,6 +11,7 @@ import jwt_decode from 'jwt-decode'
 
 export default function profile({ partnerProfile }) {
     const router = useRouter()
+    const Swal = require('sweetalert2')
     const axios = require('axios')
     const readCookie = () => {
         try {
@@ -55,11 +56,47 @@ export default function profile({ partnerProfile }) {
         readCookie()
     }, [])
     const { register, handleSubmit, formState : { errors } } = useForm()
-    const handleSubmitFormPI = (data) => {
-        console.log(data)
-    }
-    const handleSubmitFormCI = (data) => {
-        console.log(data)
+    const handleSubmitForm = (data) => {
+        const jwt_token = Cookies.get('jwt')
+        axios({
+            method : 'PUT',
+            url : 'http://localhost:8000/api/partner_profile/update',
+            headers : {
+                'Content-Type' : 'application/json',
+                'Authorization' : 'Bearer'+' '+ jwt_token
+            },
+            data : {
+                first_name : data.partner_fname,
+                last_name : data.partner_lname,
+                mobile_number : data.partner_mobile,
+                email : data.partner_email,
+                business_name : data.partner_bus_name,
+                type_of_business : data.partner_tob,
+                street_address : data.partner_st_add,
+                city : data.partner_city,
+                state_province : data.partner_province,
+                postal_zip : data.partner_zip
+            }
+        }).then(() => {
+            console.log(data)
+            Swal.fire({
+                icon : 'success',
+                title: 'Update Successful',
+                timer : 3000,
+                text: `Profile successfully updated!`,
+                showCloseButton: true,
+                confirmButtonColor: '#0F766E',
+            })
+        }).catch(error => {
+            Swal.fire({
+                icon : 'error',
+                title: 'Update Error',
+                timer : 3000,
+                text: error.message,
+                showCloseButton: true,
+                confirmButtonColor: '#0F766E',
+            })
+        })
     }
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
@@ -74,7 +111,7 @@ export default function profile({ partnerProfile }) {
                         
                         <div className="card w-client-profile-form-container">
                             <form
-                                onSubmit={ handleSubmit(handleSubmitFormPI) }
+                                onSubmit={ handleSubmit(handleSubmitForm) }
                                 className="w-full flex flex-col items-center gap-y-6 border border-gray-300 rounded-md p-5"
                             >
                                 <h4 className="text-base font-bold">Personal Information</h4>
@@ -100,7 +137,7 @@ export default function profile({ partnerProfile }) {
                                                     type="text"
                                                     { ...register("partner_fname", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
-                                                    value={ partnerProfile.first_name || '' }
+                                                    defaultValue={ partnerProfile.first_name || '' }
                                                 />
                                             </div>
                                             { 
@@ -128,7 +165,7 @@ export default function profile({ partnerProfile }) {
                                                     type="text"
                                                     { ...register("partner_lname", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
-                                                    value={ partnerProfile.last_name || '' }
+                                                    defaultValue={ partnerProfile.last_name || '' }
                                                 />
                                             </div>
                                             { 
@@ -164,7 +201,7 @@ export default function profile({ partnerProfile }) {
                                                     type="number"
                                                     { ...register("partner_mobile", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
-                                                    value={ partnerProfile.mobile_number || '' }
+                                                    defaultValue={ partnerProfile.mobile_number || '' }
                                                 />
                                             </div>
                                             { 
@@ -192,7 +229,7 @@ export default function profile({ partnerProfile }) {
                                                     type="text"
                                                     { ...register("partner_email", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
-                                                    value={ partnerProfile.email || '' }
+                                                    defaultValue={ partnerProfile.email || '' }
                                                 />
                                             </div>
                                             { 
@@ -229,7 +266,7 @@ export default function profile({ partnerProfile }) {
                                                 type="text"
                                                 { ...register("partner_bus_name", { required : "This field cannot be empty" }) } 
                                                 className="inputField"
-                                                value={ partnerProfile.business_name || '' }
+                                                defaultValue={ partnerProfile.business_name || '' }
                                             />
                                         </div>
                                         { 
@@ -257,7 +294,7 @@ export default function profile({ partnerProfile }) {
                                                 type="text"
                                                 { ...register("partner_tob", { required : "This field cannot be empty" }) } 
                                                 className="inputField"
-                                                value={ partnerProfile.type_of_business || '' }
+                                                defaultValue={ partnerProfile.type_of_business || '' }
                                             />
                                         </div>
                                         { 
@@ -295,7 +332,7 @@ export default function profile({ partnerProfile }) {
                                                     type="text"
                                                     { ...register("partner_st_add", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
-                                                    value={ partnerProfile.street_address || '' }
+                                                    defaultValue={ partnerProfile.street_address || '' }
                                                 />
                                             </div>
                                             { 
@@ -323,7 +360,7 @@ export default function profile({ partnerProfile }) {
                                                     type="text"
                                                     { ...register("partner_city", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
-                                                    value={ partnerProfile.city || '' }
+                                                    defaultValue={ partnerProfile.city || '' }
                                                 />
                                             </div>
                                             { 
@@ -355,7 +392,7 @@ export default function profile({ partnerProfile }) {
                                                     type="text"
                                                     { ...register("partner_province", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
-                                                    value={ partnerProfile.state_province || '' }
+                                                    defaultValue={ partnerProfile.state_province || '' }
                                                 />
                                             </div>
                                             { 
@@ -383,7 +420,7 @@ export default function profile({ partnerProfile }) {
                                                     type="text"
                                                     { ...register("partner_zip", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
-                                                    value={ partnerProfile.postal_zip || '' }
+                                                    defaultValue={ partnerProfile.postal_zip || '' }
                                                 />
                                             </div>
                                             { 
@@ -403,6 +440,7 @@ export default function profile({ partnerProfile }) {
 
                                 <div className="w-full pl-2">
                                     <button 
+                                        type="submit"
                                         className="w-24 px-3 py-2 bg-teal-800 hover:bg-teal-700 color-transition border-teal-800 focus:bg-teal-700 ring-2 ring-offset-2 ring-transparent focus:ring-teal-700 focus:outline-none text-gray-50 rounded-sm"
                                     >
                                         <p className="text-base font-medium">Save</p>

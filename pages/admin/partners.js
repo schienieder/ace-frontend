@@ -49,11 +49,12 @@ export default function partners({ partnersList }) {
         readCookie()
     }, [])
     const { register, reset, handleSubmit, formState : { errors } } = useForm()
-    const addPartner = async (data) => {
-        await fetch('http://localhost:8000/register/', {
+    const addPartner = (data) => {
+        axios({
             method : "POST",
+            url : 'http://localhost:8000/register/',
             headers : {'Content-Type' : 'application/json'},
-            body : JSON.stringify({
+            data : {
                 first_name : data.partner_fname,
                 last_name : data.partner_lname,
                 mobile_number : data.partner_mobile,
@@ -61,21 +62,30 @@ export default function partners({ partnersList }) {
                 username : data.partner_uname,
                 password : data.partner_pass,
                 role : "partner"
+            }
+        }).then(() => {
+            console.log(data)
+            Swal.fire({
+                icon : 'success',
+                title: 'Regristration Successsful',
+                timer : 3000,
+                text: `Business partner ${data.partner_fname} ${data.partner_lname} successfully added!`,
+                showCloseButton: true,
+                confirmButtonColor: '#0F766E',
+            })
+            router.push('/admin/partners')
+        }).catch((error) => {
+            Swal.fire({
+                icon : 'error',
+                title: 'Regristration Error',
+                timer : 3000,
+                text: error.message,
+                showCloseButton: true,
+                confirmButtonColor: '#0F766E',
             })
         })
+        reset()
         setIsOpen(false)
-        Swal.fire({
-            icon : 'success',
-            title: 'Regristration Successsful',
-            timer : 3000,
-            text: `Business partner ${data.partner_fname} ${data.partner_lname} successfully added!`,
-            showCloseButton: true,
-            confirmButtonColor: '#0F766E',
-        })
-        .then( async () => {
-            reset()
-            await router.push('/admin/partners')
-        })
     }
     const closeModal = () => {
         setIsOpen(false)
@@ -295,7 +305,7 @@ export default function partners({ partnersList }) {
                                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                                                     </svg>
                                                                     <input
-                                                                        type="email"
+                                                                        type="text"
                                                                         { ...register("partner_email", { required : "This field cannot be empty" }) } 
                                                                         className="inputField"
                                                                         autoComplete="off"

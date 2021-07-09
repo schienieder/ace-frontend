@@ -9,7 +9,7 @@ import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
 
-export default function clients() {
+export default function clients({ clientsList }) {
     const router = useRouter()
     const axios = require('axios')
     const readCookie = () => {
@@ -103,9 +103,16 @@ export default function clients() {
                                     </tr>
                                 </thead>
                                 <tbody className={ adminStyles.tbodyClass }>
-                                    <ClientItem name="Abdhul Dominador" address="Prk. Tulalian, Carmen Municipality, Davao del Norte" mobile="09456339122" />
-                                    <ClientItem name="Abdhul Dominador" address="Prk. Tulalian, Carmen Municipality, Davao del Norte" mobile="09456339122" />
-                                    <ClientItem name="Abdhul Dominador" address="Prk. Tulalian, Carmen Municipality, Davao del Norte" mobile="09456339122" />
+                                    {
+                                        clientsList.results.map((client) => (
+                                            <ClientItem
+                                                key={ client.id }
+                                                name={ client.first_name+' '+client.last_name }
+                                                address={ client.street_address && client.city && client.state_province ? `${client.street_address}, ${client.city}, ${client.state_province}` : 'N/A' }
+                                                mobile={ client.mobile_number }
+                                            />
+                                        ))
+                                    }
                                     <ClientItem name="Abdhul Dominador" address="Prk. Tulalian, Carmen Municipality, Davao del Norte" mobile="09456339122" />
                                     <ClientItem name="Abdhul Dominador" address="Prk. Tulalian, Carmen Municipality, Davao del Norte" mobile="09456339122" />
                                     <ClientItem name="Abdhul Dominador" address="Prk. Tulalian, Carmen Municipality, Davao del Norte" mobile="09456339122" />
@@ -117,7 +124,7 @@ export default function clients() {
                             </table>
                             <div className="flex gap-x-2 text-sm">
                                 <p className="font-normal">Total Clients: </p>
-                                <p className="font-bold">9</p>
+                                <p className="font-bold">{ clientsList.count }</p>
                             </div>
                         </div>
                     </div>
@@ -126,4 +133,18 @@ export default function clients() {
             </div>
         </div>
     )
+}
+
+export const getServerSideProps = async ({ req }) => {
+    const token = req.cookies.jwt
+    const res = await fetch('http://localhost:8000/clients_list/',{
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data = await res.json()
+    return {
+        props : {
+            clientsList : data
+        }
+    }
 }

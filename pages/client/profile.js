@@ -62,7 +62,7 @@ export default function profile({ clientProfile }) {
     }, [])
     const [selectedSex, setSelectedSex] = useState(sexArr[0])
     const { register, handleSubmit, formState : { errors } } = useForm()
-    const onSubmitForm = (data) => {
+    const handleSubmitForm = (data) => {
         console.log(data)
     }
     return (
@@ -77,7 +77,7 @@ export default function profile({ clientProfile }) {
                         </div>
                         <div className="card w-client-profile-form-container">
                             <form 
-                                onSubmit={ handleSubmit(onSubmitForm) }
+                                onSubmit={ handleSubmit(handleSubmitForm) }
                                 className="w-full rounded-md p-5 flex flex-col items-center border border-gray-300 gap-y-7"
                             >
                                 {/* This is for the name field */}

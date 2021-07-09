@@ -23,17 +23,30 @@ export default function register() {
                 password : data.register_pass1,
                 role : "client"
             })
-        })
-        Swal.fire({
-            icon : 'success',
-            title: 'Regristration Successsful',
-            timer : 3000,
-            text: `Account ${data.register_uname} successfully registered!`,
-            showCloseButton: true,
-            confirmButtonColor: '#0F766E',
-        })
-        .then( async () => {
+        }).then( async (response) => {
+            if (!response.ok) {
+                throw Error('Duplication of account credentials!')
+            }
+        }).then(async () => {
+            await Swal.fire({
+                icon : 'success',
+                title: 'Regristration Successsful',
+                timer : 3000,
+                text: `Account ${data.register_uname} successfully registered!`,
+                showCloseButton: true,
+                confirmButtonColor: '#0F766E',
+            })
             await router.push('/login')
+        }).catch(async (error) => {
+            console.log(error)
+            await Swal.fire({
+                icon : 'error',
+                title: 'Registration Error',
+                timer : 3000,
+                text: error,
+                showCloseButton: true,
+                confirmButtonColor: '#0F766E',
+            })
         })
     }
     return (
