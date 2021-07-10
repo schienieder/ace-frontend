@@ -21,7 +21,13 @@ const EventCard = () => {
                     </svg>
                     <p className="text-sm font-medium">Venue Location</p>
                 </div>
-                <p className="text-gray-500 text-xs">Quezon St., Tagum City, Davao del Norte</p>
+                <Link href="/admin/events/locations" passHref>
+                    <a 
+                        className="text-gray-500 hover:text-teal-700 hover:underline text-xs"
+                    >
+                        Quezon St., Tagum City, Davao del Norte
+                    </a>
+                </Link>
             </div>
             <div className="w-full flex justify-between">
                 <div className="flex items-center gap-x-2">
@@ -50,7 +56,7 @@ const EventCard = () => {
                     <p className="text-xs font-medium">Progress</p>
                     <p className="text-sm font-normal">40%</p>
                 </div>
-                <div className="w-full h-2 rounded-md bg-teal-100">
+                <div className="w-full h-2 rounded-md bg-gray-200">
                     <div className="w-1/4 h-2 rounded-md bg-teal-600"></div>
                 </div>
             </div>

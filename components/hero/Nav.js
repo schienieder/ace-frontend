@@ -49,7 +49,7 @@ const Nav = () => {
                     }
                     id="example-navbar-danger"
                 >
-                    <div className="flex flex-col items-center lg:flex-row lg:ml-auto text-gray-800 gap-x-5 gap-y-4 pt-5 lg:pt-0">
+                    <div className="flex flex-col items-center lg:flex-row lg:ml-auto text-gray-600 gap-x-5 gap-y-4 pt-5 lg:pt-0">
                         <NavItem text="about" />
                         <NavItem text="services" />
                         <NavItem text="contact" />

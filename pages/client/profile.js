@@ -17,6 +17,7 @@ const sexArr = [
 
 export default function profile({ clientProfile }) {
     const router = useRouter()
+    const Swal = require('sweetalert2')
     const axios = require('axios')
     const readCookie = () => {
         try {
@@ -63,7 +64,45 @@ export default function profile({ clientProfile }) {
     const [selectedSex, setSelectedSex] = useState(sexArr[0])
     const { register, handleSubmit, formState : { errors } } = useForm()
     const handleSubmitForm = (data) => {
-        console.log(data)
+        const jwt_token = Cookies.get('jwt')
+        axios({
+            method : 'PUT',
+            url : 'http://localhost:8000/client_profile/update',
+            headers : {
+                'Content-Type' : 'application/json',
+                'Authorization' : 'Bearer'+' '+jwt_token
+            },
+            data : {
+                first_name : data.client_fname,
+                last_name : data.client_lname,
+                mobile_number : data.client_mobile,
+                email : data.client_email,
+                birthdate : data.client_birth,
+                street_address : data.client_st_add,
+                city : data.client_city,
+                state_province : data.client_province,
+                postal_zip : data.client_zip
+            }
+        }).then(() => {
+            console.log(data)
+            Swal.fire({
+                icon : 'success',
+                title: 'Update Successful',
+                timer : 3000,
+                text: `Profile successfully updated!`,
+                showCloseButton: true,
+                confirmButtonColor: '#0F766E',
+            })
+        }).catch((error) => {
+            Swal.fire({
+                icon : 'error',
+                title: 'Update Error',
+                timer : 3000,
+                text: error.message,
+                showCloseButton: true,
+                confirmButtonColor: '#0F766E',
+            })
+        })
     }
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
@@ -101,7 +140,7 @@ export default function profile({ clientProfile }) {
                                                     type="text"
                                                     { ...register("client_fname", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
-                                                    value={ clientProfile.first_name }
+                                                    defaultValue={ clientProfile.first_name }
                                                 />
                                             </div>
                                             { 
@@ -129,7 +168,7 @@ export default function profile({ clientProfile }) {
                                                     type="text"
                                                     { ...register("client_lname", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
-                                                    value={ clientProfile.last_name }
+                                                    defaultValue={ clientProfile.last_name }
                                                 />
                                             </div>
                                             { 
@@ -165,7 +204,7 @@ export default function profile({ clientProfile }) {
                                                     type="text"
                                                     { ...register("client_mobile", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
-                                                    value={ clientProfile.mobile_number }
+                                                    defaultValue={ clientProfile.mobile_number }
                                                 />
                                             </div>
                                             { 
@@ -193,7 +232,7 @@ export default function profile({ clientProfile }) {
                                                     type="text"
                                                     { ...register("client_email", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
-                                                    value={ clientProfile.email || '' }
+                                                    defaultValue={ clientProfile.email || '' }
                                                 />
                                             </div>
                                             { 
@@ -276,7 +315,7 @@ export default function profile({ clientProfile }) {
                                                     className="inputFieldDateTime appearance-none"
                                                     { ...register("client_birth", { required: "This field should not be empty!" }) }
                                                     autoComplete="off"
-                                                    value={ clientProfile.birthdate || '' }
+                                                    defaultValue={ clientProfile.birthdate || '' }
                                                 />
                                             </div>
                                             { 
@@ -314,7 +353,7 @@ export default function profile({ clientProfile }) {
                                                     type="text"
                                                     { ...register("client_st_add", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
-                                                    value={ clientProfile.street_address || '' }
+                                                    defaultValue={ clientProfile.street_address || '' }
                                                 />
                                             </div>
                                             { 
@@ -342,7 +381,7 @@ export default function profile({ clientProfile }) {
                                                     type="text"
                                                     { ...register("client_city", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
-                                                    value={ clientProfile.city || '' }
+                                                    defaultValue={ clientProfile.city || '' }
                                                 />
                                             </div>
                                             { 
@@ -374,7 +413,7 @@ export default function profile({ clientProfile }) {
                                                     type="text"
                                                     { ...register("client_province", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
-                                                    value={ clientProfile.state_province || '' }
+                                                    defaultValue={ clientProfile.state_province || '' }
                                                 />
                                             </div>
                                             { 
@@ -402,7 +441,7 @@ export default function profile({ clientProfile }) {
                                                     type="text"
                                                     { ...register("client_zip", { required : "This field cannot be empty" }) } 
                                                     className="inputField"
-                                                    value={ clientProfile.postal_zip || '' }
+                                                    defaultValue={ clientProfile.postal_zip || '' }
                                                 />
                                             </div>
                                             { 

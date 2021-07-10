@@ -97,9 +97,60 @@ export default function interview() {
                             </div>
                             {/* booking details card */}
                             <div className="w-3/5 flex flex-col gap-y-5 text-gray-700">
+                                {/* <div className="card w-full flex flex-col gap-y-5">
+                                    <h4 className="font-bold">Interview Details</h4>
+                                    <div className="flex flex-col gap-y-2">
+                                        <p className="text-sm font-bold">Location</p>
+                                        <div className="flex items-center gap-x-2">
+                                            <svg 
+                                                xmlns="http://www.w3.org/2000/svg" 
+                                                className="h-5 w-5 text-current" 
+                                                fill="none" 
+                                                viewBox="0 0 24 24" 
+                                                stroke="currentColor"
+                                            >
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                            <p className="text-xs">Gourmet Restaurant, Quezon Street, Tagum City</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col gap-y-2">
+                                        <p className="text-sm font-bold">Date & Time</p>
+                                        <div className="flex gap-x-10">
+                                            <div className="flex items-center gap-x-2">
+                                                <svg 
+                                                    xmlns="http://www.w3.org/2000/svg" 
+                                                    className="h-5 w-5 text-current" 
+                                                    fill="none" 
+                                                    viewBox="0 0 24 24" 
+                                                    stroke="currentColor"
+                                                >
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                </svg>
+                                                <p className="text-xs">July 13, 2021</p>
+                                            </div>
+                                            <div className="flex items-center gap-x-2">
+                                                <svg 
+                                                    xmlns="http://www.w3.org/2000/svg" 
+                                                    className="h-5 w-5 text-current" 
+                                                    fill="none" 
+                                                    viewBox="0 0 24 24" 
+                                                    stroke="currentColor"
+                                                    >
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <p className="text-xs">2:30 PM</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="card w-full flex flex-col gap-y-5">
+                                    <h4 className="font-bold">Booking Details</h4>
+                                </div> */}
                                 <div className="w-full flex flex-col">
-                                    <div className="w-full px-5 py-3 bg-teal-700 rounded-tl-md rounded-tr-md flex items-center gap-x-1 text-gray-200">
-                                        <p className="font-bold">Interview Details</p>
+                                    <div className="w-full px-5 py-3 bg-teal-700 rounded-tl-md rounded-tr-md flex items-center gap-x-1 text-gray-50">
+                                        <h4 className="font-bold">Interview Details</h4>
                                     </div>
                                     <div className="w-full flex flex-col gap-y-5 p-5 bg-white rounded-bl-md rounded-br-md shadow-sm border-b border-gray-200">
                                         <div className="flex flex-col gap-y-2">
@@ -150,8 +201,8 @@ export default function interview() {
                                     </div>
                                 </div>
                                 <div className="w-full flex flex-col">
-                                    <div className="w-full px-5 py-3 bg-teal-700 rounded-tl-md rounded-tr-md flex items-center gap-x-1 text-gray-200">
-                                        <p className="font-bold">Booking Details</p>
+                                    <div className="w-full px-5 py-3 bg-teal-700 rounded-tl-md rounded-tr-md flex items-center gap-x-1 text-gray-50">
+                                        <h4 className="font-bold">Booking Details</h4>
                                     </div>
                                     <div className="w-full flex flex-col gap-y-3 p-5 bg-white rounded-bl-md rounded-br-md shadow-sm border-b border-gray-200">
                                         

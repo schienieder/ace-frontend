@@ -60,7 +60,7 @@ export default function profile({ partnerProfile }) {
         const jwt_token = Cookies.get('jwt')
         axios({
             method : 'PUT',
-            url : 'http://localhost:8000/api/partner_profile/update',
+            url : 'http://localhost:8000/partner_profile/update',
             headers : {
                 'Content-Type' : 'application/json',
                 'Authorization' : 'Bearer'+' '+ jwt_token

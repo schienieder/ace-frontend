@@ -6,7 +6,7 @@ const About = () => {
             <div className="col-start-1 w-full h-full flex items-center justify-center">
                 <div className={ heroStyles.aboutFlower }></div>
             </div>
-            <div className="col-start-2 w-full h-full flex flex-col justify-center gap-y-5 p-8">
+            <div className="col-start-2 w-full h-full flex flex-col justify-center gap-y-5 p-10">
                 <h4 className="text-xl md:text-3xl font-source font-black">What is Alas?</h4>
                 <p className="text-base">Alas Creative Events is a full coordination service, lifestyle based, professional event
                 planning company that specializes in wedding events, corporate events, dinner

@@ -15,15 +15,21 @@ module.exports = {
     extend: {
       backgroundImage : theme => ({
         'about-img' : "url('/images/flowers.jpg')",
+        'testimonial-img' : "url('/images/couple.jpg')",
+        'award1-img' : "url('/images/award1.png')",
+        'award2-img' : "url('/images/award2.png')",
+        'award3-img' : "url('/images/award3.png')",
       }),
       width: {
+        'rating-form' : '508px',
         'client-profile-form-container' : '38rem',
+        'rating-form' : '42rem',
         'custom-textarea': '32rem',
         '63': '15.25rem'
       },
       gridTemplateRows: {
           // landing page
-        'hero': 'repeat(3, 1fr) 16rem 1fr 5rem',
+        'hero': 'repeat(3, 1fr) 14rem 24rem 5rem',
         // custom layout
         'custom-layout': '4.5rem 1fr',
         // rows for calendar
@@ -47,6 +53,7 @@ module.exports = {
     fontFamily : {
       mont : ['Montserrat', 'sans-serif'],
       source : ['"Source Serif Pro"', 'serif'],
+      catam : ['Catamaran', 'sans-serif'],
     },
   },
   variants: {
