@@ -5,48 +5,14 @@ import Footer from '../../../components/client/Footer'
 import PageHeader from '../../../components/client/PageHeader'
 import { useForm } from 'react-hook-form'
 import AuthErrorIcon from '../../../components/AuthErrorIcon'
-import { RadioGroup, Listbox, Transition } from '@headlessui/react'
-import clientStyles from '../../../styles/Client.module.css'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
-import Select from 'react-select'
+import Swal from 'sweetalert2'
+import axios from 'axios'
 
-const eventTypeOptions = [
-    { label : 'Wedding Event', value : 'Wedding Event' },
-    { label : 'Debut Event', value : 'Debut Event' },
-    { label : 'Corporate Event', value : 'Corporate Event' },
-    { label : 'Conferences Event', value : 'Conferences Event' },
-    { label : 'Dinner Galas Event', value : 'Dinner Galas Event' },
-    { label : 'Fundraisers Event', value : 'Fundraisers Event' },
-    { label : 'Long Service Awards Event', value : 'Long Service Awards Event' },
-    { label : 'Grand Openings Event', value : 'Grand Openings Event' },
-    { label : 'Family Day’s Event', value : 'Family Day’s Event' },
-    { label : 'Pageantries Event', value : 'Pageantries Event' },
-    { label : 'Conventions Event', value : 'Conventions Event' },
-    { label : 'Private Event', value : 'Private Event' },
-]
-const serviceRequirementsOptions = [
-    { label : 'Plated', value : 'Plated' },
-    { label : 'Buffet', value : 'Buffet' },
-    { label : 'Neither', value : 'Neither' },
-]
-const eventBeveragesOptions = [
-    { label : 'Alcoholic', value : 'Alcoholic' },
-    { label : 'Non-Alcoholic', value : 'Non-Alcoholic' },
-    { label : 'Both', value : 'Both' },
-    { label : 'Neither', value : 'Neither' },
-]
-const bestWayOptions = [
-    { label : 'Phone Call', value : 'Phone Call' },
-    { label : 'Text Messages', value : 'Text Messages' },
-    { label : 'Facebook/Email', value : 'Facebook/Email' },
-    { label : 'All', value : 'All' },
-]
-
-export default function add_booking() {
+export default function add_booking({ clientProfile }) {
     const router = useRouter()
-    const axios = require('axios')
     const readCookie = () => {
         try {
             const jwt_token = Cookies.get('jwt')
@@ -78,9 +44,49 @@ export default function add_booking() {
     useEffect(() => {
         readCookie()
     }, [])
-    const { register, handleSubmit, formState : { errors } } = useForm()
+    const { register, reset, handleSubmit, formState : { errors } } = useForm()
     const handleFormSubmit = (data) => {
-        console.log(data)
+        const jwt_token = Cookies.get('jwt')
+        axios({
+            method : 'POST',
+            url : 'http://localhost:8000/add_booking/',
+            headers : {
+                'Authorization' : 'Bearer'+' '+jwt_token,
+                'Content-Type' : 'application/json'
+            },
+            data : {
+                type_of_event : data.booking_event_type,
+                venue_name : data.booking_venue_name,
+                event_budget : data.booking_budget,
+                desired_date : data.booking_des_date,
+                time_schedule : data.booking_time_sched,
+                guests_no : data.booking_guests_no,
+                service_requirements : data.booking_service_requirements,
+                beverages : data.booking_beverages,
+                best_way_contact : data.booking_contact_call + ' ' || '' + data.booking_contact_text + ', ' || '' + data.booking_contact_fb + ', ' || '' + data.booking_contact_email || '',
+                booked_by : clientProfile.id
+            }
+        }).then(() => {
+            reset()
+            Swal.fire({
+                icon : 'success',
+                title: 'Booking Successsful',
+                timer : 3000,
+                text: `Your booking has been successfully created!`,
+                showCloseButton: true,
+                confirmButtonColor: '#0F766E',
+            })
+            router.push('/client/bookings')
+        }).catch((error) => {
+            Swal.fire({
+                icon : 'error',
+                title: 'Booking Error',
+                timer : 3000,
+                text: error.message,
+                showCloseButton: true,
+                confirmButtonColor: '#0F766E',
+            })
+        })
     }
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
@@ -101,10 +107,23 @@ export default function add_booking() {
                                 <div className="flex gap-x-5">
                                     <div className="flex flex-col gap-y-1">
                                         <label htmlFor="booking_event_type" className="inputFieldLabel">Type of Event</label>
-                                        <Select 
-                                            className="w-63"
-                                            options={ eventTypeOptions }
-                                        />
+                                        <select
+                                            className="inputSelect"
+                                            {...register("booking_event_type")}
+                                        >
+                                            <option value="Wedding Event">Wedding Event</option>
+                                            <option value="Debut Event">Debut Event</option>
+                                            <option value="Corporate Event">Corporate Event</option>
+                                            <option value="Conferences Event">Conferences Event</option>
+                                            <option value="Dinner Galas Event">Dinner Galas Event</option>
+                                            <option value="Fundraisers Event">Fundraisers Event</option>
+                                            <option value="Long Service Awards Event">Long Service Awards Event</option>
+                                            <option value="Grand Openings Event">Grand Openings Event</option>
+                                            <option value="Family Day’s Event">Family Day’s Event</option>
+                                            <option value="Pageantries Event">Pageantries Event</option>
+                                            <option value="Conventions Event">Conventions Event</option>
+                                            <option value="Private Event">Private Event</option>
+                                        </select>
                                     </div>
                                     <div className="flex flex-col gap-y-1">
                                         <label htmlFor="booking_venue_name" className="inputFieldLabel">Venue Name</label>
@@ -190,7 +209,7 @@ export default function add_booking() {
                                             <input
                                                 type="time"
                                                 className="inputFieldDateTime appearance-none"
-                                                { ...register("booking_start_time", { required: "This field should not be empty!" }) }
+                                                { ...register("booking_time_sched", { required: "This field should not be empty!" }) }
                                                 autoComplete="off"
                                             />
                                         </div>
@@ -234,24 +253,76 @@ export default function add_booking() {
                                 <div className="flex gap-x-5">
                                     <div className="flex flex-col gap-y-1">
                                         <label htmlFor="booking_service_requirements" className="inputFieldLabel">Service Requirements</label>
-                                        <Select 
-                                            className="w-63"
-                                            options={ serviceRequirementsOptions }
-                                        />
+                                        <select
+                                            className="inputSelect"
+                                            {...register("booking_service_requirements")}
+                                        >
+                                            <option value="Plated">Plated</option>
+                                            <option value="Buffet">Buffet</option>
+                                            <option value="Neither Plated or Buffet">Neither</option>
+                                        </select>
                                     </div>
                                     <div className="flex flex-col gap-y-1">
                                         <label htmlFor="booking_beverages" className="inputFieldLabel">Beverages</label>
-                                        <Select 
-                                            className="w-63"
-                                            options={ eventBeveragesOptions }
-                                        />
+                                        <select
+                                            className="inputSelect"
+                                            {...register("booking_beverages")}
+                                        >
+                                            <option value="Alcoholic">Alcoholic</option>
+                                            <option value="Non-Alcoholic">Non-Alcoholic</option>
+                                            <option value="Both Alcoholic & Non-Alcoholic">Both</option>
+                                            <option value="Neither Alcoholic or Non-Alcoholic">Neither</option>
+                                        </select>
                                     </div>
                                 </div>
                                 {/* best way to contact fields */}
                                 <div className="w-full px-2">
                                     <div className="flex flex-col gap-y-1">
-                                        <label htmlFor="booking_best_way" className="inputFieldLabel">Best way to contact you?</label>
-                                        
+                                        <label className="inputFieldLabel">Best way to contact you?</label>
+                                        <div className="flex gap-x-5 mt-3">
+                                            <div className="w-63 flex items-center gap-x-3">
+                                                <input 
+                                                    type="checkbox"
+                                                    value="Phone Call"
+                                                    id="check1"
+                                                    className="inputCheckbox"
+                                                    {...register("booking_contact_call")}
+                                                />
+                                                <label htmlFor="check1" className="text-sm text-gray-800 cursor-pointer">Phone Call</label>
+                                            </div>
+                                            <div className="w-63 flex items-center gap-x-3">
+                                                <input 
+                                                    type="checkbox"
+                                                    value="Text Messages"
+                                                    id="check2"
+                                                    className="inputCheckbox"
+                                                    {...register("booking_contact_text")}
+                                                />
+                                                <label htmlFor="check2" className="text-sm text-gray-800 cursor-pointer">Text Messages</label>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-x-5 mt-3">
+                                            <div className="w-63 flex items-center gap-x-3">
+                                                <input 
+                                                    type="checkbox"
+                                                    value="Facebook"
+                                                    id="check3"
+                                                    className="inputCheckbox"
+                                                    {...register("booking_contact_fb")}
+                                                />
+                                                <label htmlFor="check3" className="text-sm text-gray-800 cursor-pointer">Facebook</label>
+                                            </div>
+                                            <div className="w-63 flex items-center gap-x-3">
+                                                <input 
+                                                    type="checkbox"
+                                                    value="All"
+                                                    id="check4"
+                                                    className="inputCheckbox"
+                                                    {...register("booking_contact_email")}
+                                                />
+                                                <label htmlFor="check4" className="text-sm text-gray-800 cursor-pointer">Email</label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="w-full pl-2">
@@ -281,17 +352,17 @@ export default function add_booking() {
     )
 }
 
-function CheckIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" fill="none" {...props}>
-        <circle cx={12} cy={12} r={12} fill="#fff" opacity="0.2" />
-        <path
-            d="M7 13l3 3 7-7"
-            stroke="#fff"
-            strokeWidth={1.5}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        />
-        </svg>
-    )
+export const getServerSideProps = async ({ req }) => {
+    const token = req.cookies.jwt
+    const decoded_token = jwt_decode(token)
+    const res = await fetch(`http://localhost:8000/client_profile/${decoded_token.user_id}`, {
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data = await res.json()
+    return {
+        props : {
+            clientProfile : data
+        }
+    }
 }

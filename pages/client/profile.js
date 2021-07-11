@@ -248,7 +248,7 @@ export default function profile({ clientProfile }) {
                                     <div className="flex flex-col gap-y-1">
                                             <label htmlFor="profile_sex" className="inputFieldLabel">Sex</label>
                                             <select
-                                                className="inputSelect appearance-none"
+                                                className="inputSelect"
                                                 {...register("client_sex")}
                                                 defaultValue={ clientProfile.sex || '' }
                                             >

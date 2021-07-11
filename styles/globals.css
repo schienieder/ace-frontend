@@ -55,6 +55,10 @@ body {
   @apply w-56 py-1 px-1 bg-gray-200 border-none focus:outline-none focus:ring-transparent text-sm rounded-sm text-gray-800;
 }
 
+.inputCheckbox {
+  @apply cursor-pointer border border-gray-400 text-teal-700 focus:ring-teal-700 rounded;
+}
+
 .inputIcon {
   @apply h-5 w-5 text-current;
 }

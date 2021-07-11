@@ -3,11 +3,12 @@ import SideNav from '../../components/client/SideNav'
 import TopNav from '../../components/client/TopNav'
 import Footer from '../../components/client/Footer'
 import PageHeader from '../../components/client/PageHeader'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
 
-export default function interview() {
+export default function interview({ clientProfile }) {
     const router = useRouter()
     const axios = require('axios')
     const readCookie = () => {
@@ -55,7 +56,7 @@ export default function interview() {
                                 <div className="w-full flex flex-col justify-center gap-y-5">
                                     <div className="flex flex-col items-center gap-y-3 mt-5">
                                         <div className="h-28 w-28 bg-gray-200 rounded-full"></div>
-                                        <h4 className="text-lg font-bold">Justine Rhei Torres</h4>
+                                        <h4 className="text-lg font-bold">{ clientProfile.first_name + ' ' + clientProfile.last_name }</h4>
                                     </div>
                                     <div className="w-full flex flex-col justify-start">
                                         <div className="flex flex-col border-t border-gray-200 py-3 gap-y-5">
@@ -70,7 +71,7 @@ export default function interview() {
                                                 >
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                                 </svg>
-                                                <p className="text-xs">09063536212</p>
+                                                <p className="text-xs">{ clientProfile.mobile_number }</p>
                                             </div>
                                             <div className="flex items-center gap-x-1">
                                                 <svg 
@@ -82,15 +83,17 @@ export default function interview() {
                                                 >
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                                 </svg>
-                                                <p className="text-xs">miakabudo_miakaki@yahoo.com</p>
+                                                <p className="text-xs">{ clientProfile.email || 'N/A' }</p>
                                             </div>
                                         </div>
                                         <div className="flex flex-col border-t border-gray-200 py-3 gap-y-4">
                                             <h4 className="font-bold">Address</h4>
-                                            <p className="text-xs">Purok Cogon, Visayan Village, Tagum City, Davao Del Norte</p>
-                                            <button 
-                                                className="mt-5 w-full bg-teal-800 hover:bg-teal-700 focus:bg-teal-700 focus:outline-none ring-2 ring-offset-2 ring-transparent ring-offset-transparent focus:ring-offset-gray-100 focus:ring-teal-700 color-transition text-gray-50 font-bold py-2 rounded-md tracking-wide text-sm"
-                                            >View Profile</button>
+                                            <p className="text-xs">{ clientProfile.street_address && clientProfile.city && clientProfile.state_province ? `${clientProfile.street_address}, ${clientProfile.city}, ${clientProfile.state_province}` : 'N/A' }</p>
+                                            <Link href="/client/profile">
+                                                <button 
+                                                    className="mt-5 w-full bg-teal-800 hover:bg-teal-700 focus:bg-teal-700 focus:outline-none ring-2 ring-offset-2 ring-transparent ring-offset-transparent focus:ring-offset-gray-100 focus:ring-teal-700 color-transition text-gray-50 font-bold py-2 rounded-md tracking-wide text-sm"
+                                                >View Profile</button>
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>
@@ -216,4 +219,19 @@ export default function interview() {
             </div>
         </div>
     )
+}
+
+export const getServerSideProps = async ({ req }) => {
+    const token = req.cookies.jwt
+    const decoded_token = jwt_decode(token)
+    const res = await fetch(`http://localhost:8000/client_profile/${decoded_token.user_id}`, {
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data = await res.json()
+    return {
+        props : {
+            clientProfile : data
+        }
+    }
 }
