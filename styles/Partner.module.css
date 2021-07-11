@@ -45,3 +45,35 @@
 .toggleDarkOff {
   @apply transform translate-x-0;
 }
+
+.theadClass {
+  @apply bg-gray-100 dark:bg-gray-800;
+}
+
+.tbodyClass {
+  @apply bg-white dark:bg-gray-900 divide-y divide-gray-200;
+}
+
+.tableRowClass {
+  @apply bg-transparent hover:bg-gray-50;
+}
+
+.tableHeadingClass {
+  @apply px-4 py-3;
+}
+
+.tableDataClass {
+  @apply px-4 py-4 whitespace-nowrap;
+}
+
+.tableDataTextClass {
+  @apply text-sm text-gray-800;
+}
+
+.actionBtn {
+  @apply bg-gray-200 hover:bg-teal-800 rounded-md p-2 text-gray-500 hover:text-gray-50 focus:bg-teal-800 focus:text-gray-50 focus:outline-none;
+}
+
+.actionBtnIcon {
+  @apply h-5 w-5 text-current;
+}

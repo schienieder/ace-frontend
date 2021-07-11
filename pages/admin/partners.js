@@ -3,7 +3,6 @@ import TopNav from '../../components/admin/TopNav'
 import SideNav from '../../components/admin/SideNav'
 import Footer from '../../components/admin/Footer'
 import PageHeader from '../../components/admin/PageHeader'
-import PartnerItem from '../../components/admin/partners/PartnerItem'
 import adminStyles from '../../styles/Admin.module.css'
 import AuthErrorIcon from '../../components/AuthErrorIcon'
 import { Dialog, Transition } from '@headlessui/react'
@@ -11,12 +10,12 @@ import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
+import Swal from 'sweetalert2'
+import axios from 'axios'
 
 export default function partners({ partnersList }) {
     let [isOpen, setIsOpen] = useState(false)
     const router = useRouter()
-    const Swal = require('sweetalert2')
-    const axios = require('axios')
     const readCookie = () => {
         try {
             const jwt_token = Cookies.get('jwt')
@@ -87,6 +86,47 @@ export default function partners({ partnersList }) {
         reset()
         setIsOpen(false)
     }
+    const destroyPartner = (partner_id, partner_name) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `Delete business partner records of ${partner_name}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#0F766E',
+            cancelButtonColor: '#9CA3AF',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            const jwt_token = Cookies.get('jwt')
+            if (result.isConfirmed) {
+                axios({
+                    method : 'DELETE',
+                    url : `http://localhost:8000/partner_profile/destroy/${partner_id}`,
+                    headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
+                })
+                .then(() => {
+                    Swal.fire({
+                        icon : 'success',
+                        title : 'Deleted!',
+                        text : 'Business partner record has been deleted.',
+                        confirmButtonColor: '#0F766E',
+                        showCloseButton : true,
+                        timer : 2000
+                    })
+                    router.push('/admin/partners')
+                })
+                .catch((error) => {
+                    Swal.fire({
+                        icon : 'error',
+                        title: 'Delete Error',
+                        timer : 3000,
+                        text: error.message,
+                        showCloseButton: true,
+                        confirmButtonColor: '#0F766E',
+                    })
+                })
+            }
+        })
+    }
     const closeModal = () => {
         setIsOpen(false)
     }
@@ -138,18 +178,18 @@ export default function partners({ partnersList }) {
                                 <Transition appear show={isOpen} as={Fragment}>
                                     <Dialog
                                         as="div"
-                                        className="fixed inset-0 z-20 overflow-y-auto backdrop-filter backdrop-blur-sm"
+                                        className="fixed inset-0 z-20 overflow-y-auto backdrop-filter backdrop-brightness-50"
                                         onClose={closeModal}
                                     >
                                     <div className="min-h-screen px-4 text-center">
                                         <Transition.Child
                                             as={Fragment}
-                                            enter="ease-out duration-300"
-                                            enterFrom="opacity-0"
-                                            enterTo="opacity-100"
-                                            leave="ease-in duration-200"
-                                            leaveFrom="opacity-100"
-                                            leaveTo="opacity-0"
+                                            enter="transform transition duration-[150ms]"
+                                            enterFrom="scale-50"
+                                            enterTo="scale-100"
+                                            leave="transform transition duration-[150ms]"
+                                            leaveFrom="scale-100"
+                                            leaveTo="scale-50"
                                         >
                                             <Dialog.Overlay className="fixed inset-0" />
                                         </Transition.Child>
@@ -426,19 +466,56 @@ export default function partners({ partnersList }) {
                                 <tbody className={ adminStyles.tbodyClass }>
                                     {
                                         partnersList.results.map((partner) => (
-                                            <PartnerItem 
+                                            <tr 
                                                 key={ partner.id }
-                                                name={ partner.business_name || partner.first_name +' '+ partner.last_name } 
-                                                operation={ partner.type_of_business || 'N/A' } 
-                                                number={ partner.mobile_number }
-                                            />
+                                                className={`${adminStyles.tableRowClass} color-transition`}
+                                            >
+                                                <td className={ adminStyles.tableDataClass }>
+                                                    <p className={ adminStyles.tableDataTextClass }>{ partner.business_name || partner.first_name +' '+ partner.last_name }</p>
+                                                </td>
+                                                <td className={ adminStyles.tableDataClass }>
+                                                    <p className="text-sm text-gray-800">{ partner.type_of_business || 'N/A' }</p>
+                                                </td>
+                                                <td className={ adminStyles.tableDataClass }>
+                                                    <p className={ adminStyles.tableDataTextClass }>{ partner.mobile_number }</p>
+                                                </td>
+                                                <td className={ adminStyles.tableDataClass }>
+                                                    <div className="flex gap-x-2">
+                                                        <button
+                                                            type="button"
+                                                            className={`${adminStyles.actionBtn} color-transition`}
+                                                        >
+                                                            <svg 
+                                                                xmlns="http://www.w3.org/2000/svg" 
+                                                                className={ adminStyles.actionBtnIcon } 
+                                                                fill="none" 
+                                                                viewBox="0 0 24 24" 
+                                                                stroke="currentColor"
+                                                            >
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                            </svg>
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className={`${adminStyles.actionBtn} color-transition`}
+                                                            onClick={ () => destroyPartner(partner.id, partner.business_name || partner.first_name + ' ' + partner.last_name) }
+                                                        >
+                                                            <svg 
+                                                                xmlns="http://www.w3.org/2000/svg" 
+                                                                className={ adminStyles.actionBtnIcon } 
+                                                                fill="none" 
+                                                                viewBox="0 0 24 24" 
+                                                                stroke="currentColor"
+                                                            >
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                         ))
                                     }
-                                    <PartnerItem name="Troy Puquiz" operation="Marriage Photo & Video Editor" number="09456339122" />
-                                    <PartnerItem name="Venerando Antiporta Jr." operation="Alas Creative Events - Head Coordinator" number="09456339122" />
-                                    <PartnerItem name="Rose Garden" operation="Flower & Boquet Gifts Services" number="09456339122" />
-                                    <PartnerItem name="Troy Puquiz" operation="Marriage Photo & Video Editor" number="09456339122" />
-                                    <PartnerItem name="Venerando Antiporta Jr." operation="Alas Creative Events - Head Coordinator" number="09456339122" />
                                 </tbody>
                             </table>
                             <div className="flex gap-x-2 text-sm">

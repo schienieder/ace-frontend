@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import SideNav from '../../components/client/SideNav'
 import TopNav from '../../components/client/TopNav'
 import Footer from '../../components/client/Footer'
@@ -9,16 +9,18 @@ import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
+import Swal from 'sweetalert2'
+import axios from 'axios'
+import Select from 'react-select'
 
-const sexArr = [
-    { name : 'Male' },
-    { name : 'Female' }
+const sexOptions = [
+    { label : 'Male', value : 1 },
+    { label : 'Female', value : 2 }
 ]
 
 export default function profile({ clientProfile }) {
+    const [isClearable, setIsClearable] = useState(true)
     const router = useRouter()
-    const Swal = require('sweetalert2')
-    const axios = require('axios')
     const readCookie = () => {
         try {
             const jwt_token = Cookies.get('jwt')
@@ -61,7 +63,6 @@ export default function profile({ clientProfile }) {
     useEffect(() => {
         readCookie()
     }, [])
-    const [selectedSex, setSelectedSex] = useState(sexArr[0])
     const { register, handleSubmit, formState : { errors } } = useForm()
     const handleSubmitForm = (data) => {
         const jwt_token = Cookies.get('jwt')
@@ -93,6 +94,7 @@ export default function profile({ clientProfile }) {
                 showCloseButton: true,
                 confirmButtonColor: '#0F766E',
             })
+            router.push('/client/profile')
         }).catch((error) => {
             Swal.fire({
                 icon : 'error',
@@ -251,61 +253,13 @@ export default function profile({ clientProfile }) {
 
                                     <div className="flex flex-col gap-y-1">
                                             <label htmlFor="profile_sex" className="inputFieldLabel">Sex</label>
-                                            <Listbox as="div" className="w-63" value={selectedSex} onChange={setSelectedSex}>
-                                                <div className="relative">
-                                                <Listbox.Button className="relative text-left text-sm w-full px-3 py-1 bg-gray-200 text-gray-500 focus-within:text-teal-700 border-gray-200 focus:outline-none focus-within:border-teal-700 focus-within:ring-1 focus-within:ring-teal-700 rounded-sm">
-                                                    <span className="block truncate text-gray-500">{selectedSex.name}</span>
-                                                    <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" className="inputIcon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
-                                                    </svg>
-                                                    </span>
-                                                </Listbox.Button>
-                                                <Transition
-                                                    as={Fragment}
-                                                    leave="transition ease-in duration-100"
-                                                    leaveFrom="opacity-100"
-                                                    leaveTo="opacity-0"
-                                                >
-                                                    <Listbox.Options className="absolute w-full py-1 mt-1 overflow-auto text-sm bg-white rounded-md shadow-lg max-h-60 focus:outline-none sm:text-xs border border-gray-300">
-                                                    {sexArr.map((sex, sexIdx) => (
-                                                        <Listbox.Option
-                                                        key={sexIdx}
-                                                        className={({ active }) =>
-                                                            `${active ? 'text-gray-700 bg-gray-100' : 'text-gray-700'}
-                                                                cursor-default select-none relative py-2 pl-10 pr-4`
-                                                        }
-                                                        value={sex}
-                                                        >
-                                                        {({ selected, active }) => (
-                                                            <>
-                                                            <span
-                                                                className={`${
-                                                                selectedSex ? 'font-medium' : 'font-normal'
-                                                                } block truncate`}
-                                                            >
-                                                                {sex.name}
-                                                            </span>
-                                                            {selected ? (
-                                                                <span
-                                                                className={`${
-                                                                    active ? 'text-teal-700' : 'text-teal-700'
-                                                                }
-                                                                        absolute inset-y-0 left-0 flex items-center pl-3`}
-                                                                >
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" className="inputIcon" viewBox="0 0 20 20" fill="currentColor">
-                                                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                                                    </svg>
-                                                                </span>
-                                                            ) : null}
-                                                            </>
-                                                        )}
-                                                        </Listbox.Option>
-                                                    ))}
-                                                    </Listbox.Options>
-                                                </Transition>
-                                                </div>
-                                            </Listbox>
+                                            <Select 
+                                                options={ sexOptions }
+                                                className="w-63"
+                                                isClearable={ () => setIsClearable(!isClearable) }
+                                                onChange={ () => console.log(sexOptions.value) }
+                                                defaultValue={ clientProfile.sex || '' }
+                                            />
                                         </div>
                                         <div className="flex flex-col gap-y-1">
                                             <label htmlFor="profile_birth" className="inputFieldLabel">Birth Date</label>

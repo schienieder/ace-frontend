@@ -50,7 +50,7 @@ export default function locations() {
                 <div className="row-start-2 w-full h-full bg-gray-100">
                     <div className="p-8 flex flex-col gap-y-5 min-h-screen">
                         <PageHeader text="Event Locations" />
-                        <div className="card w-full h-full">
+                        <div className="card w-full h-screen">
                             <div className="bg-gray-100 w-full h-full rounded-md"></div>
                         </div>
                     </div>

@@ -7,10 +7,10 @@ import partnerStyles from '../../styles/Partner.module.css'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
+import axios from 'axios'
 
 export default function messages() {
     const router = useRouter()
-    const axios = require('axios')
     const readCookie = () => {
         try {
             const jwt_token = Cookies.get('jwt')

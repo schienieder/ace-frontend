@@ -10,38 +10,40 @@ import clientStyles from '../../../styles/Client.module.css'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
+import Select from 'react-select'
 
-const eventTypeArr = [
-    { name : 'Wedding Event' },
-    { name : 'Debut Event' },
-    { name : 'Corporate Event' },
-    { name : 'Conferences Event' },
-    { name : 'Dinner Galas Event' },
-    { name : 'Fundraisers Event' },
-    { name : 'Long Service Awards Event' },
-    { name : 'Grand Openings Event' },
-    { name : 'Family Day’s Event' },
-    { name : 'Pageantries Event' },
-    { name : 'Conventions Event' },
-    { name : 'Private Event' },
+const eventTypeOptions = [
+    { label : 'Wedding Event', value : 'Wedding Event' },
+    { label : 'Debut Event', value : 'Debut Event' },
+    { label : 'Corporate Event', value : 'Corporate Event' },
+    { label : 'Conferences Event', value : 'Conferences Event' },
+    { label : 'Dinner Galas Event', value : 'Dinner Galas Event' },
+    { label : 'Fundraisers Event', value : 'Fundraisers Event' },
+    { label : 'Long Service Awards Event', value : 'Long Service Awards Event' },
+    { label : 'Grand Openings Event', value : 'Grand Openings Event' },
+    { label : 'Family Day’s Event', value : 'Family Day’s Event' },
+    { label : 'Pageantries Event', value : 'Pageantries Event' },
+    { label : 'Conventions Event', value : 'Conventions Event' },
+    { label : 'Private Event', value : 'Private Event' },
 ]
-const serviceRequirementsArr = [
-    { name : 'Plated' },
-    { name : 'Buffet' },
-    { name : 'Neither' },
+const serviceRequirementsOptions = [
+    { label : 'Plated', value : 'Plated' },
+    { label : 'Buffet', value : 'Buffet' },
+    { label : 'Neither', value : 'Neither' },
 ]
-const eventBeveragesArr = [
-    { name : 'Alcoholic' },
-    { name : 'Non-Alcoholic' },
-    { name : 'Both' },
-    { name : 'Neither' },
+const eventBeveragesOptions = [
+    { label : 'Alcoholic', value : 'Alcoholic' },
+    { label : 'Non-Alcoholic', value : 'Non-Alcoholic' },
+    { label : 'Both', value : 'Both' },
+    { label : 'Neither', value : 'Neither' },
 ]
-const bestWayArr = [
-    { name : 'Phone Call' },
-    { name : 'Text Messages' },
-    { name : 'Facebook/Email' },
-    { name : 'All' },
+const bestWayOptions = [
+    { label : 'Phone Call', value : 'Phone Call' },
+    { label : 'Text Messages', value : 'Text Messages' },
+    { label : 'Facebook/Email', value : 'Facebook/Email' },
+    { label : 'All', value : 'All' },
 ]
+
 export default function add_booking() {
     const router = useRouter()
     const axios = require('axios')
@@ -76,10 +78,6 @@ export default function add_booking() {
     useEffect(() => {
         readCookie()
     }, [])
-    const [eventType, setEventType] = useState(eventTypeArr[0])
-    const [serviceRequirements, setServiceRequirements] = useState(serviceRequirementsArr[0])
-    const [eventBeverages, setEventBeverages] = useState(eventBeveragesArr[0])
-    const [bestWay, setBestWay] = useState(bestWayArr[0])
     const { register, handleSubmit, formState : { errors } } = useForm()
     const handleFormSubmit = (data) => {
         console.log(data)
@@ -103,61 +101,10 @@ export default function add_booking() {
                                 <div className="flex gap-x-5">
                                     <div className="flex flex-col gap-y-1">
                                         <label htmlFor="booking_event_type" className="inputFieldLabel">Type of Event</label>
-                                        <Listbox as="div" className="w-63" value={eventType} onChange={setEventType}>
-                                            <div className="relative">
-                                            <Listbox.Button className="relative text-left text-sm w-full px-3 py-1 bg-gray-200 text-gray-500 focus-within:text-teal-700 border-gray-200 focus:outline-none focus-within:border-teal-700 focus-within:ring-1 focus-within:ring-teal-700 rounded-sm">
-                                                <span className="block truncate text-gray-500">{eventType.name}</span>
-                                                <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="inputIcon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
-                                                </svg>
-                                                </span>
-                                            </Listbox.Button>
-                                            <Transition
-                                                as={Fragment}
-                                                leave="transition ease-in duration-100"
-                                                leaveFrom="opacity-100"
-                                                leaveTo="opacity-0"
-                                            >
-                                                <Listbox.Options className="absolute z-10 w-full py-1 mt-1 overflow-auto text-sm bg-white rounded-md shadow-lg max-h-60 focus:outline-none sm:text-xs border border-gray-300">
-                                                {eventTypeArr.map((event, eventIdx) => (
-                                                    <Listbox.Option
-                                                    key={eventIdx}
-                                                    className={({ active }) =>
-                                                        `${active ? 'text-gray-700 bg-gray-100' : 'text-gray-700'}
-                                                            cursor-default select-none relative py-2 pl-10 pr-4`
-                                                    }
-                                                    value={event}
-                                                    >
-                                                    {({ selected, active }) => (
-                                                        <>
-                                                        <span
-                                                            className={`${
-                                                            eventType ? 'font-medium' : 'font-normal'
-                                                            } block truncate`}
-                                                        >
-                                                            {event.name}
-                                                        </span>
-                                                        {selected ? (
-                                                            <span
-                                                            className={`${
-                                                                active ? 'text-teal-700' : 'text-teal-700'
-                                                            }
-                                                                    absolute inset-y-0 left-0 flex items-center pl-3`}
-                                                            >
-                                                                <svg xmlns="http://www.w3.org/2000/svg" className="inputIcon" viewBox="0 0 20 20" fill="currentColor">
-                                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                                                </svg>
-                                                            </span>
-                                                        ) : null}
-                                                        </>
-                                                    )}
-                                                    </Listbox.Option>
-                                                ))}
-                                                </Listbox.Options>
-                                            </Transition>
-                                            </div>
-                                        </Listbox>
+                                        <Select 
+                                            className="w-63"
+                                            options={ eventTypeOptions }
+                                        />
                                     </div>
                                     <div className="flex flex-col gap-y-1">
                                         <label htmlFor="booking_venue_name" className="inputFieldLabel">Venue Name</label>
@@ -287,171 +234,25 @@ export default function add_booking() {
                                 <div className="flex gap-x-5">
                                     <div className="flex flex-col gap-y-1">
                                         <label htmlFor="booking_service_requirements" className="inputFieldLabel">Service Requirements</label>
-                                        <Listbox as="div" className="w-63" value={serviceRequirements} onChange={setServiceRequirements}>
-                                            <div className="relative">
-                                            <Listbox.Button className="relative text-left text-sm w-full px-3 py-1 bg-gray-200 text-gray-500 focus-within:text-teal-700 border-gray-200 focus:outline-none focus-within:border-teal-700 focus-within:ring-1 focus-within:ring-teal-700 rounded-sm">
-                                                <span className="block truncate text-gray-500">{serviceRequirements.name}</span>
-                                                <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="inputIcon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
-                                                </svg>
-                                                </span>
-                                            </Listbox.Button>
-                                            <Transition
-                                                as={Fragment}
-                                                leave="transition ease-in duration-100"
-                                                leaveFrom="opacity-100"
-                                                leaveTo="opacity-0"
-                                            >
-                                                <Listbox.Options className="absolute z-10 w-full py-1 mt-1 overflow-auto text-sm bg-white rounded-md shadow-lg max-h-60 focus:outline-none sm:text-xs border border-gray-300">
-                                                {serviceRequirementsArr.map((service, serviceIdx) => (
-                                                    <Listbox.Option
-                                                    key={serviceIdx}
-                                                    className={({ active }) =>
-                                                        `${active ? 'text-gray-700 bg-gray-100' : 'text-gray-700'}
-                                                            cursor-default select-none relative py-2 pl-10 pr-4`
-                                                    }
-                                                    value={service}
-                                                    >
-                                                    {({ selected, active }) => (
-                                                        <>
-                                                        <span
-                                                            className={`${
-                                                            serviceRequirements ? 'font-medium' : 'font-normal'
-                                                            } block truncate`}
-                                                        >
-                                                            {service.name}
-                                                        </span>
-                                                        {selected ? (
-                                                            <span
-                                                            className={`${
-                                                                active ? 'text-teal-700' : 'text-teal-700'
-                                                            }
-                                                                    absolute inset-y-0 left-0 flex items-center pl-3`}
-                                                            >
-                                                                <svg xmlns="http://www.w3.org/2000/svg" className="inputIcon" viewBox="0 0 20 20" fill="currentColor">
-                                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                                                </svg>
-                                                            </span>
-                                                        ) : null}
-                                                        </>
-                                                    )}
-                                                    </Listbox.Option>
-                                                ))}
-                                                </Listbox.Options>
-                                            </Transition>
-                                            </div>
-                                        </Listbox>
+                                        <Select 
+                                            className="w-63"
+                                            options={ serviceRequirementsOptions }
+                                        />
                                     </div>
                                     <div className="flex flex-col gap-y-1">
                                         <label htmlFor="booking_beverages" className="inputFieldLabel">Beverages</label>
-                                        <Listbox as="div" className="w-63" value={eventBeverages} onChange={setEventBeverages}>
-                                            <div className="relative">
-                                            <Listbox.Button className="relative text-left text-sm w-full px-3 py-1 bg-gray-200 text-gray-500 focus-within:text-teal-700 border-gray-200 focus:outline-none focus-within:border-teal-700 focus-within:ring-1 focus-within:ring-teal-700 rounded-sm">
-                                                <span className="block truncate text-gray-500">{eventBeverages.name}</span>
-                                                <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="inputIcon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
-                                                </svg>
-                                                </span>
-                                            </Listbox.Button>
-                                            <Transition
-                                                as={Fragment}
-                                                leave="transition ease-in duration-100"
-                                                leaveFrom="opacity-100"
-                                                leaveTo="opacity-0"
-                                            >
-                                                <Listbox.Options className="absolute z-10 w-full py-1 mt-1 overflow-auto text-sm bg-white rounded-md shadow-lg max-h-60 focus:outline-none sm:text-xs border border-gray-300">
-                                                {eventBeveragesArr.map((beverages, beveragesIdx) => (
-                                                    <Listbox.Option
-                                                    key={beveragesIdx}
-                                                    className={({ active }) =>
-                                                        `${active ? 'text-gray-700 bg-gray-100' : 'text-gray-700'}
-                                                            cursor-default select-none relative py-2 pl-10 pr-4`
-                                                    }
-                                                    value={beverages}
-                                                    >
-                                                    {({ selected, active }) => (
-                                                        <>
-                                                        <span
-                                                            className={`${
-                                                            eventBeverages ? 'font-medium' : 'font-normal'
-                                                            } block truncate`}
-                                                        >
-                                                            {beverages.name}
-                                                        </span>
-                                                        {selected ? (
-                                                            <span
-                                                            className={`${
-                                                                active ? 'text-teal-700' : 'text-teal-700'
-                                                            }
-                                                                    absolute inset-y-0 left-0 flex items-center pl-3`}
-                                                            >
-                                                                <svg xmlns="http://www.w3.org/2000/svg" className="inputIcon" viewBox="0 0 20 20" fill="currentColor">
-                                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                                                </svg>
-                                                            </span>
-                                                        ) : null}
-                                                        </>
-                                                    )}
-                                                    </Listbox.Option>
-                                                ))}
-                                                </Listbox.Options>
-                                            </Transition>
-                                            </div>
-                                        </Listbox>
+                                        <Select 
+                                            className="w-63"
+                                            options={ eventBeveragesOptions }
+                                        />
                                     </div>
                                 </div>
                                 {/* best way to contact fields */}
                                 <div className="w-full px-2">
-                                    <RadioGroup value={bestWay} onChange={setBestWay} className="flex flex-col gap-y-1">
-                                        <RadioGroup.Label className="inputFieldLabel">Best way to contact you?</RadioGroup.Label>
-                                        <div className="grid grid-cols-2 grid-rows-2 gap-y-3 gap-x-5">
-                                            {bestWayArr.map((best) => (
-                                            <RadioGroup.Option
-                                                key={best.name}
-                                                value={best}
-                                                className={({ active, checked }) =>
-                                                `${
-                                                    active
-                                                    ? 'border-teal-700'
-                                                    : ''
-                                                }
-                                                ${
-                                                    checked
-                                                    ? 'border-teal-700'
-                                                    : ''
-                                                }
-                                                    relative rounded-sm shadow p-5 cursor-pointer flex focus:outline-none border border-gray-300`
-                                                }
-                                            >
-                                                {({ active, checked }) => (
-                                                <>
-                                                    <div className="flex items-center justify-between w-full">
-                                                    <div className="flex items-center">
-                                                        <div className="text-sm">
-                                                        <RadioGroup.Label
-                                                            as="p"
-                                                            className={`font-medium  ${
-                                                            checked ? 'text-teal-700' : 'text-gray-700'
-                                                            }`}
-                                                        >
-                                                            {best.name}
-                                                        </RadioGroup.Label>
-                                                        </div>
-                                                    </div>
-                                                    {checked && (
-                                                        <div className="flex-shrink-0 text-white bg-teal-700 rounded-full">
-                                                            <CheckIcon className="w-6 h-6" />
-                                                        </div>
-                                                    )}
-                                                    </div>
-                                                </>
-                                                )}
-                                            </RadioGroup.Option>
-                                            ))}
-                                        </div>
-                                    </RadioGroup>
+                                    <div className="flex flex-col gap-y-1">
+                                        <label htmlFor="booking_best_way" className="inputFieldLabel">Best way to contact you?</label>
+                                        
+                                    </div>
                                 </div>
                                 <div className="w-full pl-2">
                                     <button 

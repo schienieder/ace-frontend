@@ -8,11 +8,11 @@ import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
+import Swal from 'sweetalert2'
+import axios from 'axios'
 
 export default function profile({ partnerProfile }) {
     const router = useRouter()
-    const Swal = require('sweetalert2')
-    const axios = require('axios')
     const readCookie = () => {
         try {
             const jwt_token = Cookies.get('jwt')
@@ -87,6 +87,7 @@ export default function profile({ partnerProfile }) {
                 showCloseButton: true,
                 confirmButtonColor: '#0F766E',
             })
+            router.push('/partner/profile')
         }).catch(error => {
             Swal.fire({
                 icon : 'error',

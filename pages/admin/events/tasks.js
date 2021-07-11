@@ -93,6 +93,7 @@ export default function tasks() {
                                 backgroundColor: '#F5F5F5',
                             }}
                             data={ data } 
+                            editable
                         />
                     </div>
                     <Footer />

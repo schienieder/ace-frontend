@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import authStyles from '../styles/Auth.module.css'
 import { Formiz, FormizStep, useForm } from '@formiz/core'
-import { isLength, isMinLength, isNumber, } from '@formiz/validations'
+import { isEmail, isLength, isMinLength, isNumber, } from '@formiz/validations'
 import MyInputField from '../components/MyInputField'
 import { useRouter } from 'next/router'
 
@@ -19,6 +19,7 @@ export default function register() {
                 first_name : data.register_fname,
                 last_name : data.register_lname,
                 mobile_number : data.register_mobile,
+                email : data.register_email,
                 username : data.register_uname,
                 password : data.register_pass1,
                 role : "client"
@@ -118,6 +119,11 @@ export default function register() {
                             type="text"
                             required="This field is required!"
                         />
+                    </FormizStep>
+                    <FormizStep 
+                        name="step2"
+                        className="flex flex-col gap-y-4"
+                    >
                         <MyInputField 
                             name="register_mobile"
                             label="Mobile Number"
@@ -135,10 +141,23 @@ export default function register() {
                             ]}
                             icon="mobile"
                         />
+                        <MyInputField 
+                            name="register_email"
+                            label="Email Address"
+                            type="email"
+                            required="This field is required!"
+                            validations={[
+                                {
+                                    rule : isEmail(),
+                                    message : 'This is not a valid email!'
+                                }
+                            ]}
+                            icon="email"
+                        />
                     </FormizStep>
-                    {/* step 2 form fields */}
+                    {/* step 3 form fields */}
                     <FormizStep 
-                        name="step2" 
+                        name="step3" 
                         className="flex flex-col gap-y-4"
                     >
                         <MyInputField
