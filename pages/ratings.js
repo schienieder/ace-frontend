@@ -83,49 +83,141 @@ export default function ratings() {
                             name="step3"
                             className="max-w-lg flex flex-col gap-y-8"
                         >
-                            <p>
-                                Thank you for having your event with us! 
-                                We hope your event was a huge success. 
-                                Alas Creative Events goal is to provide exceptional service to our clientele and guests. 
-                                We hope you had as much fun attending as we did our very best organizing it.
-                            </p>
-                            <p>
-                                Please take a few moments to provide us with your feedback 
-                                so that we can continuously improve our services and exceed our guest's expectations 
-                                (your answers will be much appreciated).
-                            </p>
+                            <div className="flex gap-x-5">
+                                <div className="flex flex-col gap-y-1">
+                                    <label className="inputFieldLabel">Venue</label>
+                                    <select
+                                        className="inputSelect"
+                                    >
+                                        <option value="Excellent">Excellent</option>
+                                        <option value="Very Good">Very Good</option>
+                                        <option value="Good">Good</option>
+                                        <option value="Fair">Fair</option>
+                                        <option value="Poor">Poor</option>
+                                    </select>
+                                </div>
+                                <div className="flex flex-col gap-y-1">
+                                    <label className="inputFieldLabel">Event Styling / Set-Up</label>
+                                    <select
+                                        className="inputSelect"
+                                    >
+                                        <option value="Excellent">Excellent</option>
+                                        <option value="Very Good">Very Good</option>
+                                        <option value="Good">Good</option>
+                                        <option value="Fair">Fair</option>
+                                        <option value="Poor">Poor</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="flex gap-x-5">
+                                <div className="flex flex-col gap-y-1">
+                                    <label className="inputFieldLabel">Light, Sound Effect & Audio Visual</label>
+                                    <select
+                                        className="inputSelect"
+                                    >
+                                        <option value="Excellent">Excellent</option>
+                                        <option value="Very Good">Very Good</option>
+                                        <option value="Good">Good</option>
+                                        <option value="Fair">Fair</option>
+                                        <option value="Poor">Poor</option>
+                                    </select>
+                                </div>
+                                <div className="flex flex-col gap-y-1">
+                                    <label className="inputFieldLabel">Catering Services</label>
+                                    <select
+                                        className="inputSelect"
+                                    >
+                                        <option value="Excellent">Excellent</option>
+                                        <option value="Very Good">Very Good</option>
+                                        <option value="Good">Good</option>
+                                        <option value="Fair">Fair</option>
+                                        <option value="Poor">Poor</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="flex gap-x-5">
+                                <div className="flex flex-col gap-y-1">
+                                    <label className="inputFieldLabel">Photo & Video</label>
+                                    <select
+                                        className="inputSelect"
+                                    >
+                                        <option value="Excellent">Excellent</option>
+                                        <option value="Very Good">Very Good</option>
+                                        <option value="Good">Good</option>
+                                        <option value="Fair">Fair</option>
+                                        <option value="Poor">Poor</option>
+                                    </select>
+                                </div>
+                                <div className="flex flex-col gap-y-1">
+                                    <label className="inputFieldLabel">Wardrobe / Make-Up</label>
+                                    <select
+                                        className="inputSelect"
+                                    >
+                                        <option value="Excellent">Excellent</option>
+                                        <option value="Very Good">Very Good</option>
+                                        <option value="Good">Good</option>
+                                        <option value="Fair">Fair</option>
+                                        <option value="Poor">Poor</option>
+                                    </select>
+                                </div>
+                            </div>
                         </FormizStep>
                         <FormizStep
                             name="step4"
                             className="max-w-lg flex flex-col gap-y-8"
                         >
-                            <p>
-                                Thank you for having your event with us! 
-                                We hope your event was a huge success. 
-                                Alas Creative Events goal is to provide exceptional service to our clientele and guests. 
-                                We hope you had as much fun attending as we did our very best organizing it.
-                            </p>
-                            <p>
-                                Please take a few moments to provide us with your feedback 
-                                so that we can continuously improve our services and exceed our guest's expectations 
-                                (your answers will be much appreciated).
-                            </p>
-                        </FormizStep>
-                        <FormizStep
-                            name="step5"
-                            className="max-w-lg flex flex-col gap-y-8"
-                        >
-                            <p>
-                                Thank you for having your event with us! 
-                                We hope your event was a huge success. 
-                                Alas Creative Events goal is to provide exceptional service to our clientele and guests. 
-                                We hope you had as much fun attending as we did our very best organizing it.
-                            </p>
-                            <p>
-                                Please take a few moments to provide us with your feedback 
-                                so that we can continuously improve our services and exceed our guest's expectations 
-                                (your answers will be much appreciated).
-                            </p>
+                            <div className="flex gap-x-5">
+                                <div className="flex flex-col gap-y-1">
+                                    <label className="inputFieldLabel">Courtesy & Helpfulness</label>
+                                    <select
+                                        className="inputSelect"
+                                    >
+                                        <option value="Excellent">Excellent</option>
+                                        <option value="Very Good">Very Good</option>
+                                        <option value="Good">Good</option>
+                                        <option value="Fair">Fair</option>
+                                        <option value="Poor">Poor</option>
+                                    </select>
+                                </div>
+                                <div className="flex flex-col gap-y-1">
+                                    <label className="inputFieldLabel">Overall Service Rating?</label>
+                                    <select
+                                        className="inputSelect"
+                                    >
+                                        <option value="Excellent">Excellent</option>
+                                        <option value="Very Good">Very Good</option>
+                                        <option value="Good">Good</option>
+                                        <option value="Fair">Fair</option>
+                                        <option value="Poor">Poor</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="flex gap-x-5">
+                                <div className="flex flex-col gap-y-1">
+                                    <label className="inputFieldLabel">How satisfied were you as client, guest or attendee?</label>
+                                    <select
+                                        className="inputSelect"
+                                    >
+                                        <option value="Excellent">Excellent</option>
+                                        <option value="Very Good">Very Good</option>
+                                        <option value="Good">Good</option>
+                                        <option value="Fair">Fair</option>
+                                        <option value="Poor">Poor</option>
+                                    </select>
+                                </div>
+                                <div className="flex flex-col gap-y-1">
+                                    <label className="inputFieldLabel">Overall, how will you rate your event with us?</label>
+                                    <select
+                                        className="inputSelect"
+                                    >
+                                        <option value="Excellent">Excellent</option>
+                                        <option value="Very Good">Very Good</option>
+                                        <option value="Good">Good</option>
+                                        <option value="Fair">Fair</option>
+                                        <option value="Poor">Poor</option>
+                                    </select>
+                                </div>
+                            </div>
                         </FormizStep>
                         <div className="flex gap-x-3">
                             {

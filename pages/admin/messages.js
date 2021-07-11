@@ -84,10 +84,12 @@ export default function reports() {
                                         >
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                         </svg>
-                                        <p className="text-sm">New Chat</p>
+                                        <p className="text-sm font-bold">New Chat</p>
                                     </button>
                                 </div>
                                 <div className="w-full h-screen py-3 divide-y divide-gray-200 overflow-y-auto">
+                                    <ChatNames name="Angela Debut GC" time="3 seconds ago" />
+                                    <ChatNames name="Kadayawan GC" time="1 minute ago" />
                                     <ChatNames name="Miakabudo Sewane" time="3 minutes ago" />
                                     <ChatNames name="Justine Rhei Torres" time="24 minutes ago" />
                                     <ChatNames name="Ailene Padaplin" time="17 hours ago" />
@@ -95,8 +97,6 @@ export default function reports() {
                                     <ChatNames name="Kim Jeric Buemil" time="2 days ago" />
                                     <ChatNames name="Henry Mirafuentes" time="3 days ago" />
                                     <ChatNames name="Ovia Ganza" time="1 week ago" />
-                                    <ChatNames name="Bezalel Delos Reyes" time="3 weeks ago" />
-                                    <ChatNames name="Edwin Pampag" time="1 month ago" />
                                 </div>
                             </div>
 

@@ -3,6 +3,7 @@ import SideNav from '../../components/client/SideNav'
 import TopNav from '../../components/client/TopNav'
 import Footer from '../../components/client/Footer'
 import PageHeader from '../../components/client/PageHeader'
+import CalendarHook from '../../components/admin/events/CalendarHook'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
@@ -41,6 +42,10 @@ export default function dashboard() {
     useEffect(() => {
         readCookie()
     }, [])
+    const { calendarRows, selectedDate, todayFormatted, daysShort, monthNames, getNextMonth, getPrevMonth } = CalendarHook()
+    const dateClickHandler = date => {
+        console.log(date);
+    }
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="dashboard" />
@@ -49,8 +54,70 @@ export default function dashboard() {
                 <div className="row-start-2 w-full h-full bg-gray-100">
                     <div className="p-8 flex flex-col gap-y-5 min-h-screen">
                         <PageHeader text="Dashboard" />
-                        <div className="card w-full flex justify-center">
-                            <h4 className="text-xl"></h4>
+                        <div className="flex flex-col gap-y-5">
+                            <div className="card w-full flex flex-col gap-y-5">
+                                <h4 className="font-bold">Available Dates</h4>
+                                <div className="flex justify-between items-center -mb-2">
+                                    {/* This is the month name and year */}
+                                    <div className="flex gap-x-3">
+                                        <h4 className="font-bold">{ monthNames[selectedDate.getMonth()] }</h4>
+                                        <p className="font-normal">{ selectedDate.getFullYear() }</p>
+                                    </div>
+                                    {/* This is the buttons for next and prev */}
+                                    <div className="flex">
+                                        <button
+                                            type="button" 
+                                            className="flex items-center gap-x-1 px-3 py-1 border border-gray-300 cursor-pointer hover:bg-gray-100 focus:outline-none color-transition rounded-tl-md rounded-bl-md"
+                                            onClick={ getPrevMonth }
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                                            </svg>
+                                            <p className="font-normal text-sm">Prev</p>
+                                        </button>
+                                        <button
+                                            type="button" 
+                                            className="flex items-center gap-x-1 px-3 py-1 border border-gray-300 cursor-pointer hover:bg-gray-100 focus:outline-none color-transition rounded-tr-md rounded-br-md"
+                                            onClick={ getNextMonth }
+                                        >
+                                            <p className="font-normal text-sm">Next</p>
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <table className="w-full divide-y divide-gray-200">
+                                    <thead className="bg-gray-100">
+                                        <tr className="text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                            {daysShort.map(day => (
+                                                <th key={day} className="px-4 py-3">{day}</th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-white divide-y divide-gray-200">
+                                        {
+                                            Object.values(calendarRows).map(cols => {
+                                            return <tr key={cols[0].date} className="text-sm font-medium text-gray-600">
+                                                {cols.map(col => (
+                                                col.date === todayFormatted
+                                                    ? <td key={col.date} className={`${col.classes} p-8 cursor-pointer bg-teal-700 text-gray-100 color-transition`} onClick={() => dateClickHandler(col.date)}>{ col.value }</td>
+                                                    : <td key={col.date} className={`${col.classes} p-8 cursor-pointer bg-transparent hover:bg-gray-100 color-transition`} onClick={() => dateClickHandler(col.date)}>{ col.value }</td>
+                                                ))}
+                                            </tr>
+                                            })
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className="flex gap-x-5">
+                                <div className="card w-2/5 flex flex-col gap-y-5">
+                                    <h4 className="font-bold">Client Profile</h4>
+                                </div>
+                                <div className="card w-3/5">
+                                    <h4 className="font-bold">Event Activities</h4>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <Footer />

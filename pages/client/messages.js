@@ -84,7 +84,7 @@ export default function messages() {
                                         >
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                         </svg>
-                                        <p className="text-sm">New Chat</p>
+                                        <p className="text-sm font-bold">New Chat</p>
                                     </button>
                                 </div>
                                 <div className="w-full h-screen py-3 divide-y divide-gray-200 overflow-y-auto">
