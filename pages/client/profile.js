@@ -11,15 +11,8 @@ import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
 import Swal from 'sweetalert2'
 import axios from 'axios'
-import Select from 'react-select'
-
-const sexOptions = [
-    { label : 'Male', value : 1 },
-    { label : 'Female', value : 2 }
-]
 
 export default function profile({ clientProfile }) {
-    const [isClearable, setIsClearable] = useState(true)
     const router = useRouter()
     const readCookie = () => {
         try {
@@ -78,6 +71,7 @@ export default function profile({ clientProfile }) {
                 last_name : data.client_lname,
                 mobile_number : data.client_mobile,
                 email : data.client_email,
+                sex : data.client_sex,
                 birthdate : data.client_birth,
                 street_address : data.client_st_add,
                 city : data.client_city,
@@ -253,13 +247,14 @@ export default function profile({ clientProfile }) {
 
                                     <div className="flex flex-col gap-y-1">
                                             <label htmlFor="profile_sex" className="inputFieldLabel">Sex</label>
-                                            <Select 
-                                                options={ sexOptions }
-                                                className="w-63"
-                                                isClearable={ () => setIsClearable(!isClearable) }
-                                                onChange={ () => console.log(sexOptions.value) }
+                                            <select
+                                                className="inputSelect appearance-none"
+                                                {...register("client_sex")}
                                                 defaultValue={ clientProfile.sex || '' }
-                                            />
+                                            >
+                                                <option value="0">Male</option>
+                                                <option value="1">Female</option>
+                                            </select>
                                         </div>
                                         <div className="flex flex-col gap-y-1">
                                             <label htmlFor="profile_birth" className="inputFieldLabel">Birth Date</label>
