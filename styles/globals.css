@@ -62,3 +62,15 @@ body {
 .inputIcon {
   @apply h-5 w-5 text-current;
 }
+
+.cardContainer {
+  @apply w-full flex flex-col;
+}
+
+.cardHeader {
+  @apply w-full px-5 py-3 rounded-tl-md rounded-tr-md flex items-center gap-x-1 text-gray-50;
+}
+
+.cardBody {
+  @apply w-full flex flex-col gap-y-5 p-5 bg-white rounded-bl-md rounded-br-md shadow-sm border-b border-gray-200;
+}

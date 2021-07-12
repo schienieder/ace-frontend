@@ -151,11 +151,11 @@ export default function interview({ clientProfile }) {
                                 <div className="card w-full flex flex-col gap-y-5">
                                     <h4 className="font-bold">Booking Details</h4>
                                 </div> */}
-                                <div className="w-full flex flex-col">
-                                    <div className="w-full px-5 py-3 bg-teal-700 rounded-tl-md rounded-tr-md flex items-center gap-x-1 text-gray-50">
-                                        <h4 className="font-bold">Interview Details</h4>
+                                <div className="cardContainer">
+                                    <div className="cardHeader bg-white border-b border-gray-200">
+                                        <h4 className="font-bold text-teal-800">Interview Details</h4>
                                     </div>
-                                    <div className="w-full flex flex-col gap-y-5 p-5 bg-white rounded-bl-md rounded-br-md shadow-sm border-b border-gray-200">
+                                    <div className="cardBody">
                                         <div className="flex flex-col gap-y-2">
                                             <p className="text-sm font-bold">Location</p>
                                             <div className="flex items-center gap-x-2">
@@ -203,11 +203,11 @@ export default function interview({ clientProfile }) {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="w-full flex flex-col">
-                                    <div className="w-full px-5 py-3 bg-teal-700 rounded-tl-md rounded-tr-md flex items-center gap-x-1 text-gray-50">
-                                        <h4 className="font-bold">Booking Details</h4>
+                                <div className="cardContainer">
+                                    <div className="cardHeader bg-white border-b border-gray-200">
+                                        <h4 className="font-bold text-teal-800">Booking Details</h4>
                                     </div>
-                                    <div className="w-full flex flex-col gap-y-3 p-5 bg-white rounded-bl-md rounded-br-md shadow-sm border-b border-gray-200">
+                                    <div className="cardBody">
                                         
                                     </div>
                                 </div>
