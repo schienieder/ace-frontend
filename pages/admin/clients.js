@@ -14,6 +14,7 @@ import Swal from 'sweetalert2'
 import axios from 'axios'
 
 export default function clients({ clientsList }) {
+    console.log(clientsList)
     let [addClientOpen, setAddClientOpen] = useState(false)
     const router = useRouter()
     const readCookie = () => {

@@ -63,7 +63,7 @@ export default function add_booking({ clientProfile }) {
                 guests_no : data.booking_guests_no,
                 service_requirements : data.booking_service_requirements,
                 beverages : data.booking_beverages,
-                best_way_contact : data.booking_contact_call + ' ' || '' + data.booking_contact_text + ', ' || '' + data.booking_contact_fb + ', ' || '' + data.booking_contact_email || '',
+                best_way_contact : data.booking_contact_call + ' ' + data.booking_contact_text + ' ' + data.booking_contact_fb + ' ' + data.booking_contact_email,
                 booked_by : clientProfile.id
             }
         }).then(() => {

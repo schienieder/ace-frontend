@@ -3,16 +3,14 @@ import TopNav from '../../components/admin/TopNav'
 import SideNav from '../../components/admin/SideNav'
 import Footer from '../../components/admin/Footer'
 import PageHeader from '../../components/admin/PageHeader'
-import BookingItem from '../../components/admin/bookings/BookingItem'
 import adminStyles from '../../styles/Admin.module.css'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
 import Swal from 'sweetalert2'
 import axios from 'axios'
-import partners from './partners'
 
-export default function bookings({ bookingsList }) {
+export default function bookings({ bookingsList, clientsList }) {
     const router = useRouter()
     const readCookie = () => {
         try {
@@ -45,6 +43,48 @@ export default function bookings({ bookingsList }) {
     useEffect(() => {
         readCookie()
     }, [])
+    const destroyBooking = (booking_id, booking_type, booking_date) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `Delete ${booking_type} booking on ${ new Date(booking_date).toDateString() }?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#0F766E',
+            cancelButtonColor: '#9CA3AF',
+            confirmButtonText: 'Yes, delete it!'
+        })
+        .then((result) => {
+            const jwt_token = Cookies.get('jwt')
+            if (result.isConfirmed) {
+                axios({
+                    method : 'DELETE',
+                    url : `http://localhost:8000/client_booking/destroy/${booking_id}`,
+                    headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
+                })
+                .then(() => {
+                    Swal.fire({
+                        icon : 'success',
+                        title : 'Deleted!',
+                        text : 'Client booking has been deleted.',
+                        confirmButtonColor: '#0F766E',
+                        showCloseButton : true,
+                        timer : 2000
+                    })
+                    router.push('/admin/bookings')
+                })
+                .catch((error) => {
+                    Swal.fire({
+                        icon : 'error',
+                        title: 'Delete Error',
+                        timer : 3000,
+                        text: error.message,
+                        showCloseButton: true,
+                        confirmButtonColor: '#0F766E',
+                    })
+                })
+            }
+        })
+    }
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="bookings" />
@@ -76,7 +116,7 @@ export default function bookings({ bookingsList }) {
                                 <thead className={ adminStyles.theadClass }>
                                     <tr className="text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                                         <th scope="col" className={ adminStyles.tableHeadingClass }>
-                                            Name
+                                            Client Name
                                         </th>
                                         <th scope="col" className={ adminStyles.tableHeadingClass }>
                                             Event Type
@@ -100,13 +140,19 @@ export default function bookings({ bookingsList }) {
                                                 className={`${adminStyles.tableRowClass} color-transition`}
                                             >
                                                 <td className={ adminStyles.tableDataClass }>
-                                                    <p className={ adminStyles.tableDataTextClass }>{ 'Justine Gwapo' }</p>
+                                                    <p className={ adminStyles.tableDataTextClass }>{
+                                                        clientsList.results.map((client) => {
+                                                            if (client.id === booking.booked_by) {
+                                                                return client.first_name + ' ' + client.last_name
+                                                            }
+                                                        })
+                                                    }</p>
                                                 </td>
                                                 <td className="px-4 py-4 whitespace-nowrap">
                                                     <p className={ adminStyles.tableDataTextClass }>{ booking.type_of_event }</p>
                                                 </td>
                                                 <td className="px-4 py-4 whitespace-nowrap">
-                                                    <p className={ adminStyles.tableDataTextClass }>{ booking.desired_date }</p>
+                                                    <p className={ adminStyles.tableDataTextClass }>{ new Date(booking.desired_date).toDateString() }</p>
                                                 </td>
                                                 <td className="px-4 py-4 whitespace-nowrap">
                                                     <p className={ adminStyles.tableDataTextClass }>{`₱${booking.event_budget}`}</p>
@@ -130,6 +176,7 @@ export default function bookings({ bookingsList }) {
                                                         </button>
                                                         <button
                                                             type="button"
+                                                            onClick={ () => destroyBooking(booking.id, booking.type_of_event, booking.desired_date) }
                                                             className={`${adminStyles.actionBtn} color-transition`}
                                                         >
                                                             <svg 
@@ -164,14 +211,20 @@ export default function bookings({ bookingsList }) {
 
 export const getServerSideProps = async ({ req }) => {
     const token = req.cookies.jwt
-    const res = await fetch('http://localhost:8000/bookings_list/', {
+    const res1 = await fetch('http://localhost:8000/bookings_list/', {
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })
-    const data = await res.json()
+    const data1 = await res1.json()
+    const res2 = await fetch('http://localhost:8000/clients_list/',{
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data2 = await res2.json()
     return {
         props : {
-            bookingsList : data
+            bookingsList : data1,
+            clientsList : data2
         }
     }
 }

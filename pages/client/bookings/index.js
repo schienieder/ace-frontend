@@ -52,50 +52,58 @@ export default function bookings({ bookingDetails }) {
                             <PageHeader text="Booking Details" />
                         </div>
                         <div className="card w-client-profile-form-container flex flex-col items-center gap-y-10">
-                            <div className="flex gap-x-5">
-                                <div className="flex flex-col gap-y-1 w-63">
-                                    <h4 className="text-sm font-bold">Type of Event</h4>
-                                    <p className="text-xs">{ bookingDetails.type_of_event }</p>
-                                </div>
-                                <div className="flex flex-col gap-y-1 w-63">
-                                    <h4 className="text-sm font-bold">Venue Name</h4>
-                                    <p className="text-xs">{ bookingDetails.venue_name }</p>
-                                </div>
-                            </div>
-                            <div className="flex gap-x-5">
-                                <div className="flex flex-col gap-y-1 w-63">
-                                    <h4 className="text-sm font-bold">Event Budget</h4>
-                                    <p className="text-xs">{`₱${bookingDetails.event_budget}`}</p>
-                                </div>
-                                <div className="flex flex-col gap-y-1 w-63">
-                                    <h4 className="text-sm font-bold">Desired Date</h4>
-                                    <p className="text-xs">{ bookingDetails.desired_date }</p>
-                                </div>
-                            </div>
-                            <div className="flex gap-x-5">
-                                <div className="flex flex-col gap-y-1 w-63">
-                                    <h4 className="text-sm font-bold">Time Schedule</h4>
-                                    <p className="text-xs">{ bookingDetails.time_schedule }</p>
-                                </div>
-                                <div className="flex flex-col gap-y-1 w-63">
-                                    <h4 className="text-sm font-bold">No. of Guests</h4>
-                                    <p className="text-xs">{ bookingDetails.guests_no }</p>
-                                </div>
-                            </div>
-                            <div className="flex gap-x-5">
-                                <div className="flex flex-col gap-y-1 w-63">
-                                    <h4 className="text-sm font-bold">Service Requirements</h4>
-                                    <p className="text-xs">{ bookingDetails.service_requirements }</p>
-                                </div>
-                                <div className="flex flex-col gap-y-1 w-63">
-                                    <h4 className="text-sm font-bold">Beverages</h4>
-                                    <p className="text-xs">{ bookingDetails.beverages }</p>
-                                </div>
-                            </div>
-                            <div className="w-custom-textarea flex flex-col gap-y-1">
-                                <h4 className="text-sm font-bold">Best way to contact you?</h4>
-                                <p className="text-xs">{ bookingDetails.best_way_contact }</p>
-                            </div>
+                            {
+                                bookingDetails.id ? (
+                                    <>
+                                        <div className="flex gap-x-5">
+                                            <div className="flex flex-col gap-y-1 w-63">
+                                                <h4 className="text-sm font-bold">Type of Event</h4>
+                                                <p className="text-xs">{ bookingDetails.type_of_event }</p>
+                                            </div>
+                                            <div className="flex flex-col gap-y-1 w-63">
+                                                <h4 className="text-sm font-bold">Venue Name</h4>
+                                                <p className="text-xs">{ bookingDetails.venue_name }</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-x-5">
+                                            <div className="flex flex-col gap-y-1 w-63">
+                                                <h4 className="text-sm font-bold">Event Budget</h4>
+                                                <p className="text-xs">{`₱${bookingDetails.event_budget}`}</p>
+                                            </div>
+                                            <div className="flex flex-col gap-y-1 w-63">
+                                                <h4 className="text-sm font-bold">Desired Date</h4>
+                                                <p className="text-xs">{ new Date(bookingDetails.desired_date).toDateString() }</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-x-5">
+                                            <div className="flex flex-col gap-y-1 w-63">
+                                                <h4 className="text-sm font-bold">Time Schedule</h4>
+                                                <p className="text-xs">{ bookingDetails.time_schedule }</p>
+                                            </div>
+                                            <div className="flex flex-col gap-y-1 w-63">
+                                                <h4 className="text-sm font-bold">No. of Guests</h4>
+                                                <p className="text-xs">{ bookingDetails.guests_no }</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-x-5">
+                                            <div className="flex flex-col gap-y-1 w-63">
+                                                <h4 className="text-sm font-bold">Service Requirements</h4>
+                                                <p className="text-xs">{ bookingDetails.service_requirements }</p>
+                                            </div>
+                                            <div className="flex flex-col gap-y-1 w-63">
+                                                <h4 className="text-sm font-bold">Beverages</h4>
+                                                <p className="text-xs">{ bookingDetails.beverages }</p>
+                                            </div>
+                                        </div>
+                                        <div className="w-custom-textarea flex flex-col gap-y-1">
+                                            <h4 className="text-sm font-bold">Best way to contact you?</h4>
+                                            <p className="text-xs">{ bookingDetails.best_way_contact }</p>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <h4>You currently don't have any bookings.</h4>
+                                )
+                            }
                         </div>
                     </div>
                     <Footer />
