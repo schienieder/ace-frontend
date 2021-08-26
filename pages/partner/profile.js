@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import TopNav from '../../components/partner/TopNav'
 import SideNav from '../../components/partner/SideNav'
 import Footer from '../../components/partner/Footer'
-import PageHeader from '../../components/admin/PageHeader'
 import AuthErrorIcon from '../../components/AuthErrorIcon'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
@@ -107,7 +106,7 @@ export default function profile({ partnerProfile }) {
                 <div className="row-start-2 w-full h-full bg-gray-100">
                     <div className="p-8 flex flex-col items-center gap-y-5 min-h-screen">
                         <div className="w-client-profile-form-container">
-                            <PageHeader text="Business Profile" />
+                        <h4 className="text-xl font-bold">Business Profile</h4>
                         </div>
                         
                         <div className="card w-client-profile-form-container">
