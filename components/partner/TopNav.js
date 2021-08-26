@@ -37,8 +37,8 @@ const TopNav = () => {
         router.push('/login')
     }
     return (
-        <nav className="row-start-1 w-full sticky top-0 z-10 py-3 px-10 bg-teal-700 border-b border-gray-300 flex justify-between items-center">
-            <button className={`${partnerStyles.topNavBtn} color-transition rounded-md bg-transparent focus:outline-none ring-1 ring-offset-2 ring-offset-teal-700 ring-transparent focus:ring-gray-200 focus:ring-offset-gray-200`}>
+        <nav className="row-start-1 w-full top-0 z-10 py-3 px-10 flex justify-between items-center bg-true-100 text-gray-600 border-b border-gray-200">
+            <button className={`${partnerStyles.topNavBtn} color-transition rounded-md bg-transparent focus:outline-none`}>
                 <svg 
                     xmlns="http://www.w3.org/2000/svg" 
                     className="h-6 w-6 text-current" 
@@ -49,11 +49,11 @@ const TopNav = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
             </button>
-            <div className="flex items-center gap-x-3 text-gray-200">
+            <div className="flex items-center gap-x-3 text-gray-600">
                 <Menu as="div">
                     <Menu.Button
                         type="button"
-                        className="flex items-center gap-x-1 text-gray-200 hover:text-white focus:outline-none cursor-pointer p-2"
+                        className="flex items-center gap-x-1 focus:outline-none cursor-pointer p-2"
                     >
                         <svg 
                             xmlns="http://www.w3.org/2000/svg" 
@@ -117,7 +117,7 @@ const TopNav = () => {
                                         <Switch 
                                             checked={ toggleDark }
                                             onChange={ setToggleDark }
-                                            className={`${toggleDark ? 'bg-teal-600' : 'bg-gray-300'} ml-6 rounded-full w-14 p-1 focus:outline-none transition-colors ease-in-out duration-200`}
+                                            className={`${toggleDark ? 'bg-pink-600' : 'bg-gray-300'} ml-6 rounded-full w-14 p-1 focus:outline-none transition-colors ease-in-out duration-200`}
                                         >
                                             <div className={`w-5 h-5 bg-white rounded-full transition ease-in-out duration-200 ${toggleDark ? partnerStyles.toggleDarkOn : partnerStyles.toggleDarkOff}`}></div>
                                         </Switch>

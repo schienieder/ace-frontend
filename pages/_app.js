@@ -1,6 +1,7 @@
 import '../styles/globals.css'
 import Layout from '../components/Layout'
 import Meta from '../components/Meta'
+import "react-datepicker/dist/react-datepicker.css";
 
 function MyApp({ Component, pageProps }) {
   return (

@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import TopNav from '../../components/admin/TopNav'
 import SideNav from '../../components/admin/SideNav'
-import Footer from '../../components/admin/Footer'
-import PageHeader from '../../components/admin/PageHeader'
+import Footer from '../../components/Footer'
+import PageHeader from '../../components/PageHeader'
 import AuthErrorIcon from '../../components/AuthErrorIcon'
 import adminStyles from '../../styles/Admin.module.css'
 import { Dialog, Transition } from '@headlessui/react'
@@ -17,36 +17,16 @@ export default function clients({ clientsList }) {
     console.log(clientsList)
     let [addClientOpen, setAddClientOpen] = useState(false)
     const router = useRouter()
-    const readCookie = () => {
-        try {
-            const jwt_token = Cookies.get('jwt')
-            const decoded_token = jwt_decode(jwt_token)
-            axios({
-                method : 'GET',
-                url : `http://localhost:8000/account/${decoded_token.user_id}`,
-                headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
-            })
-            .then((response) => {
-                response.data.role !== 'admin' ? router.push('/login') : ''
-            })
-            .catch((error) => {
-                Swal.fire({
-                    icon : 'error',
-                    title: 'Error',
-                    text: `${error.response}`,
-                    showCloseButton: true,
-                    confirmButtonColor: '#0F766E',
-                })
-                console.log(error.response)
-            })
-            console.log(jwt_token)
-        }
-        catch {
+    const [userName, setUsername] = useState()
+    const readRole = () => {
+        setUsername(localStorage.getItem('username'))
+        const role = localStorage.getItem('role')
+        if (role !== 'admin') {
             router.push('/login')
         }
     }
-    useEffect(() => {
-        readCookie()
+    useEffect( async () => {
+        await readRole()
     }, [])
     const { register, reset, handleSubmit, formState : { errors } } = useForm()
     const addClient = (data) => {
@@ -138,10 +118,20 @@ export default function clients({ clientsList }) {
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="clients" />
             <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav />
-                <div className="row-start-2 w-full h-full bg-gray-100">
+                <TopNav username={ userName } />
+                <div className="row-start-2 w-full h-full bg-true-100">
                     <div className="p-8 flex flex-col gap-y-5 min-h-screen">
-                        <PageHeader text="Client List" />
+                        <PageHeader text="Client List">
+                            <svg 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                className="h-7 w-7 text-current" 
+                                fill="none" 
+                                viewBox="0 0 24 24" 
+                                stroke="currentColor"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                            </svg>
+                        </PageHeader>
                         <div className="card w-full flex flex-col gap-y-5">
                             <div className="w-full flex justify-between items-center">
                                 <div className={ adminStyles.searchBarContainer }>

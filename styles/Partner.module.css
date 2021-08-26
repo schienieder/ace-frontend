@@ -1,5 +1,5 @@
 .topNavBtn {
-  @apply p-2 flex items-center gap-x-1 text-gray-200 hover:text-white;
+  @apply p-2 flex items-center gap-x-1;
 }
 
 .sideDropDownItem {

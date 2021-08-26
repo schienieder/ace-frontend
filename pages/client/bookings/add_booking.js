@@ -10,8 +10,11 @@ import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
 import Swal from 'sweetalert2'
 import axios from 'axios'
+import DatePicker from 'react-datepicker'
 
 export default function add_booking({ clientProfile }) {
+    const [timeSched, setTimeSched] = useState(null)
+    const [desDate, setDesDate] = useState(null)
     const router = useRouter()
     const readCookie = () => {
         try {
@@ -184,14 +187,25 @@ export default function add_booking({ clientProfile }) {
                                     </div>
                                     <div className="flex flex-col gap-y-1">
                                         <label htmlFor="booking_des_date" className="inputFieldLabel">Desired Date</label>
-                                        <div className="inputContainer">
+                                        <DatePicker 
+                                            selected={ desDate } 
+                                            onChange={(date) => setDesDate(date)}
+                                            className="inputSelect"
+                                            showMonthDropdown
+                                            showYearDropdown
+                                            scrollableYearDropdown
+                                            minDate={new Date()}
+                                            dropdownMode="select"
+                                            isClearable
+                                        />
+                                        {/* <div className="inputContainer">
                                             <input
                                                 type="date"
                                                 className="inputFieldDateTime appearance-none"
                                                 { ...register("booking_des_date", { required: "This field should not be empty!" }) }
                                                 autoComplete="off"
                                             />
-                                        </div>
+                                        </div> */}
                                         { 
                                             errors.booking_des_date && 
                                             <div className="flex items-center gap-x-1 text-red-500">
@@ -205,14 +219,25 @@ export default function add_booking({ clientProfile }) {
                                 <div className="flex gap-x-5">
                                     <div className="flex flex-col gap-y-1">
                                         <label htmlFor="booking_start_time" className="inputFieldLabel">Time Schedule</label>
-                                        <div className="inputContainer">
+                                        <DatePicker 
+                                            selected={ timeSched } 
+                                            onChange={(time) => setTimeSched(time)}
+                                            showTimeSelect
+                                            showTimeSelectOnly
+                                            timeIntervals={15}
+                                            timeCaption="Time"
+                                            dateFormat="h:mm aa"
+                                            isClearable
+                                            className="inputSelect"
+                                        />
+                                        {/* <div className="inputContainer">
                                             <input
                                                 type="time"
                                                 className="inputFieldDateTime appearance-none"
                                                 { ...register("booking_time_sched", { required: "This field should not be empty!" }) }
                                                 autoComplete="off"
                                             />
-                                        </div>
+                                        </div> */}
                                         { 
                                             errors.booking_start_time && 
                                             <div className="flex items-center gap-x-1 text-red-500">

@@ -1,13 +1,13 @@
 .topNavBtn {
-  @apply p-2 flex items-center gap-x-1 text-gray-200 hover:text-white;
+  @apply p-2 flex items-center gap-x-1 focus:outline-none;
 }
 
 .navItem {
-  @apply w-full bg-white dark:bg-gray-900 hover:bg-gray-100 py-5 pl-8 gap-x-3 flex items-center text-gray-600 hover:text-gray-700 transition-colors duration-75 ease-linear cursor-pointer focus:outline-none;
+  @apply w-full bg-white dark:bg-gray-900 hover:bg-gray-50 py-5 pl-8 gap-x-3 flex items-center text-gray-600 hover:text-gray-700 border-l-3 border-white transition-colors duration-75 ease-linear cursor-pointer focus:outline-none;
 }
 
 .navItemActive {
-  @apply w-full bg-gray-100 dark:hover:bg-gray-800 py-5 pl-8 gap-x-3 flex items-center text-teal-700 cursor-pointer border-r-3 border-teal-700 focus:outline-none;
+  @apply w-full bg-gray-50 dark:hover:bg-gray-800 py-5 pl-8 gap-x-3 flex items-center text-pink-600 cursor-pointer border-l-3 border-pink-600 focus:outline-none;
 }
 
 .searchBarContainer {
@@ -79,11 +79,11 @@
 }
 
 .popOverItem {
-  @apply flex items-center gap-x-1 px-5 py-3 text-gray-500 hover:text-teal-700 hover:bg-gray-100 focus:outline-none cursor-pointer;
+  @apply flex items-center gap-x-1 px-5 py-3 text-gray-500 hover:text-pink-600 hover:bg-gray-50 focus:outline-none cursor-pointer;
 }
 
 .popOverItemActive {
-  @apply flex items-center gap-x-1 px-5 py-3 text-teal-700 bg-gray-100 focus:outline-none cursor-pointer;
+  @apply flex items-center gap-x-1 px-5 py-3 text-pink-600 bg-gray-50 focus:outline-none cursor-pointer;
 }
 
 .popOverIcon {

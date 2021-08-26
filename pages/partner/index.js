@@ -51,14 +51,25 @@ export default function index({ partnerProfile }) {
             <SideNav isActive="dashboard" />
             <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
                 <TopNav />
-                <div className="row-start-2 w-full h-full bg-gray-100">
+                <div className="row-start-2 w-full h-full bg-true-100">
                     <div className="p-8 flex flex-col gap-y-5 min-h-screen">
-                        <h4 className="text-xl font-bold">Dashboard</h4>
+                    <div className="flex items-center gap-x-2">
+                        <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            className="h-7 w-7 text-current" 
+                            fill="none" 
+                            viewBox="0 0 24 24" 
+                            stroke="currentColor"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                        </svg>
+                        <h4 className="text-xl font-bold dark:text-gray-300">Dashboard</h4>
+                    </div>
                         <div className="flex flex-col gap-y-5">
                             
                         <div className="cardContainer">
                                 <div className="cardHeader bg-white border-b border-gray-200">
-                                    <h4 className="font-bold text-teal-800">Event Calendar</h4>
+                                    <h4 className="font-bold text-pink-600">Event Calendar</h4>
                                 </div>
                                 <div className="cardBody">
                                     <div className="flex justify-between items-center -mb-2">
@@ -105,7 +116,7 @@ export default function index({ partnerProfile }) {
                                                 return <tr key={cols[0].date} className="text-sm font-medium text-gray-600">
                                                     {cols.map(col => (
                                                     col.date === todayFormatted
-                                                        ? <td key={col.date} className={`${col.classes} p-8 cursor-pointer bg-teal-700 text-gray-100 color-transition`} onClick={() => dateClickHandler(col.date)}>{ col.value }</td>
+                                                        ? <td key={col.date} className={`${col.classes} p-8 cursor-pointer bg-pink-600 text-gray-100 color-transition`} onClick={() => dateClickHandler(col.date)}>{ col.value }</td>
                                                         : <td key={col.date} className={`${col.classes} p-8 cursor-pointer bg-transparent hover:bg-gray-100 color-transition`} onClick={() => dateClickHandler(col.date)}>{ col.value }</td>
                                                     ))}
                                                 </tr>
@@ -121,7 +132,7 @@ export default function index({ partnerProfile }) {
                                 <div className="w-2/5">
                                     <div className="cardContainer">
                                         <div className="cardHeader bg-white border-b border-gray-200">
-                                            <h4 className="font-bold text-teal-800">Profile Information</h4>
+                                            <h4 className="font-bold text-pink-600">Profile Information</h4>
                                         </div>
                                         <div className="cardBody">
                                             <div className="flex flex-col gap-y-1">
@@ -189,7 +200,7 @@ export default function index({ partnerProfile }) {
                                             </div>
                                             <Link href="/partner/profile">
                                                 <button 
-                                                    className="w-full bg-teal-800 hover:bg-teal-700 focus:bg-teal-700 focus:outline-none ring-2 ring-offset-2 ring-transparent ring-offset-transparent focus:ring-offset-gray-100 focus:ring-teal-700 color-transition text-gray-50 font-bold py-2 rounded-md tracking-wide text-sm"
+                                                    className="w-full bg-pink-600 hover:bg-pink-500 focus:outline-none color-transition text-gray-50 font-bold py-2 rounded-lg tracking-wide text-sm"
                                                 >View Profile</button>
                                             </Link>
                                         </div>

@@ -1,57 +1,71 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import TopNav from '../../../components/admin/TopNav'
 import SideNav from '../../../components/admin/SideNav'
-import Footer from '../../../components/admin/Footer'
-import PageHeader from '../../../components/admin/PageHeader'
-import EventCards from '../../../components/admin/events/EventCards'
+import Footer from '../../../components/Footer'
+import PageHeader from '../../../components/PageHeader'
+import Link from 'next/link'
 import AuthErrorIcon from '../../../components/AuthErrorIcon'
 import adminStyles from '../../../styles/Admin.module.css'
-import { Dialog, Transition } from '@headlessui/react'
+import { Dialog, Menu, Transition } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
-import Cookies from 'js-cookie'
-import jwt_decode from 'jwt-decode'
+import Swal from 'sweetalert2'
 
-export default function cards() {
+export default function cards({ clientsList, eventsList }) {
     let [isOpen, setIsOpen] = useState(false)
     const router = useRouter()
-    const axios = require('axios')
-    const readCookie = () => {
-        try {
-            const jwt_token = Cookies.get('jwt')
-            const decoded_token = jwt_decode(jwt_token)
-            axios({
-                method : 'GET',
-                url : `http://localhost:8000/account/${decoded_token.user_id}`,
-                headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
-            })
-            .then((response) => {
-                response.data.role !== 'admin' ? router.push('/login') : ''
-            })
-            .catch((error) => {
-                Swal.fire({
-                    icon : 'error',
-                    title: 'Error',
-                    text: `${error.response}`,
-                    showCloseButton: true,
-                    confirmButtonColor: '#0F766E',
-                })
-                console.log(error.response)
-            })
-            console.log(jwt_token)
-        }
-        catch {
+    const [userName, setUsername] = useState()
+    const readRole = () => {
+        setUsername(localStorage.getItem('username'))
+        const role = localStorage.getItem('role')
+        if (role !== 'admin') {
             router.push('/login')
         }
-        
     }
-    useEffect(() => {
-        readCookie()
+    useEffect( async () => {
+        await readRole()
     }, [])
     const { register, reset, handleSubmit, formState : { errors } } = useForm()
     const addEvent = (data) => {
         console.log(data)
-        reset()
+        // const jwt_token = Cookies.get('jwt')
+        // axios({
+        //     method : 'POST',
+        //     url : 'http://localhost:8000/add_event/',
+        //     headers : {
+        //         'Authorization' : 'Bearer'+' '+jwt_token,
+        //         'Content-Type' : 'application/json'
+        //     },
+        //     data : {
+        //         event_name : data.event_name,
+        //         venue : data.event_venue,
+        //         event_date : data.event_date,
+        //         time_schedule : data.booking_time_sched,
+        //         event_budget : data.event_budget,
+        //         client : data.event_client
+        //     }
+        // }).then(() => {
+        //     reset()
+        //     Swal.fire({
+        //         icon : 'success',
+        //         title: 'Event Creation Successsful',
+        //         timer : 3000,
+        //         text: `Your event has been successfully created!`,
+        //         showCloseButton: true,
+        //         confirmButtonColor: '#0F766E',
+        //     })
+        //     setIsOpen(false)
+        //     router.push('/client/bookings')
+        // }).catch((error) => {
+        //     Swal.fire({
+        //         icon : 'error',
+        //         title: 'Event Creation Error',
+        //         timer : 3000,
+        //         text: error.message,
+        //         showCloseButton: true,
+        //         confirmButtonColor: '#0F766E',
+        //     })
+        // })
     }
     const closeModal = () => {
         setIsOpen(false)
@@ -63,11 +77,21 @@ export default function cards() {
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="events" />
             <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav />
-                <div className="row-start-2 w-full h-full bg-gray-100">
+                <TopNav username={ userName } />
+                <div className="row-start-2 w-full h-full bg-true-100">
                     <div className="p-8 flex flex-col gap-y-5 min-h-screen">
                         <div className="w-full flex justify-between items-center">
-                            <PageHeader text="Event Cards" />
+                            <PageHeader text="Event Calendar">
+                                <svg 
+                                    xmlns="http://www.w3.org/2000/svg" 
+                                    className="h-7 w-7 text-current"
+                                    fill="none" 
+                                    viewBox="0 0 24 24" 
+                                    stroke="currentColor"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+                            </PageHeader>
                             <button
                                 type="button" 
                                 onClick={ openModal }
@@ -87,18 +111,18 @@ export default function cards() {
                             <Transition appear show={isOpen} as={Fragment}>
                                 <Dialog
                                     as="div"
-                                    className="fixed inset-0 z-20 overflow-y-auto backdrop-filter backdrop-blur-sm"
+                                    className="fixed inset-0 z-20 overflow-y-auto backdrop-filter backdrop-brightness-50"
                                     onClose={closeModal}
                                 >
                                 <div className="min-h-screen px-4 text-center">
                                     <Transition.Child
                                         as={Fragment}
-                                        enter="ease-out duration-300"
-                                        enterFrom="opacity-0"
-                                        enterTo="opacity-100"
-                                        leave="ease-in duration-200"
-                                        leaveFrom="opacity-100"
-                                        leaveTo="opacity-0"
+                                        enter="transform transition duration-[150ms]"
+                                        enterFrom="scale-50"
+                                        enterTo="scale-100"
+                                        leave="transform transition duration-[150ms]"
+                                        leaveFrom="scale-100"
+                                        leaveTo="scale-50"
                                     >
                                         <Dialog.Overlay className="fixed inset-0" />
                                     </Transition.Child>
@@ -264,7 +288,7 @@ export default function cards() {
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                                                             </svg>
                                                             <input
-                                                                type="text"
+                                                                type="number"
                                                                 { ...register("event_budget", { required : "This field cannot be empty" }) } 
                                                                 className="inputField"
                                                             />
@@ -283,15 +307,17 @@ export default function cards() {
                                                             className="inputSelect"
                                                             {...register("event_client")}
                                                         >
-                                                            <option value="sample1">Sample 1</option>
-                                                            <option value="sample2">Sample 2</option>
-                                                            <option value="sample3">Sample 3</option>
+                                                            {
+                                                                clientsList.results.map((client) => (
+                                                                    <option value={ client.id }>{ client.first_name + ' ' +client.last_name }</option>
+                                                                ))
+                                                            }
                                                         </select>
                                                     </div>
                                                 </div>
 
                                                 <div className="w-full pr-2 mt-5 flex justify-end gap-x-3">
-                                                    <button 
+                                                    <button
                                                         className="w-24 px-3 py-2 bg-teal-800 hover:bg-teal-700 color-transition border-teal-800 focus:bg-teal-700 ring-2 ring-offset-2 ring-transparent focus:ring-teal-700 focus:outline-none text-gray-50 rounded-sm"
                                                     >
                                                         <p className="text-base font-medium">Save</p>
@@ -313,11 +339,187 @@ export default function cards() {
                                 </Dialog>
                             </Transition>
                         </div>
-                        <EventCards />
+                        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center gap-5">
+                            {/* {
+                                eventsList.results.map((event) => (
+                                    <div
+                                        key={ event.id }
+                                        className="relative card w-full flex flex-col gap-y-6"
+                                    >
+                                        <h4 className="text-base font-semibold capitalize">{ event.event_name }</h4>
+                                        <div className="flex flex-col gap-y-2">
+                                            <div className="flex items-center gap-x-2">
+                                                <svg 
+                                                    xmlns="http://www.w3.org/2000/svg" 
+                                                    className="h-5 w-5 text-teal-700" 
+                                                    fill="none" 
+                                                    viewBox="0 0 24 24" 
+                                                    stroke="currentColor"
+                                                >
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                </svg>
+                                                <p className="text-sm font-medium">Venue Location</p>
+                                            </div>
+                                            <Link href="/admin/events/locations" passHref>
+                                                <a 
+                                                    className="text-gray-500 hover:text-teal-700 hover:underline text-xs"
+                                                >
+                                                    { event.venue }
+                                                </a>
+                                            </Link>
+                                        </div>
+                                        <div className="flex flex-col gap-y-6">
+                                            <div className="w-full flex justify-between">
+                                                <div className="flex items-center gap-x-2">
+                                                    <svg 
+                                                        xmlns="http://www.w3.org/2000/svg" 
+                                                        className="h-5 w-5 text-teal-700" 
+                                                        fill="none" 
+                                                        viewBox="0 0 24 24" 
+                                                        stroke="currentColor"
+                                                    >
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                    <p className="text-sm font-medium">{ event.event_date }</p>
+                                                </div>
+                                                <div className="flex items-center gap-x-2">
+                                                    <svg 
+                                                        xmlns="http://www.w3.org/2000/svg" 
+                                                        className="h-5 w-5 text-teal-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    <p className="text-sm font-medium">{ event.time_schedule }</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-x-2">
+                                                <svg 
+                                                    xmlns="http://www.w3.org/2000/svg" 
+                                                    className="h-5 w-5 text-teal-700" 
+                                                    fill="none" 
+                                                    viewBox="0 0 24 24" 
+                                                    stroke="currentColor"
+                                                >
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                                                </svg>
+                                                <p className="text-sm font-medium">{`₱${event.event_budget}`}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col gap-y-1">
+                                            <div className="flex items-center gap-x-2">
+                                                <p className="text-xs font-medium">Progress</p>
+                                                <p className="text-sm font-normal">40%</p>
+                                            </div>
+                                            <div className="w-full h-2 rounded-md bg-gray-200">
+                                                <div className="w-1/4 h-2 rounded-md bg-teal-600"></div>
+                                            </div>
+                                        </div>
+                                        <Menu as="div" className="w-full flex justify-end">
+                                            <Menu.Button
+                                                className={ adminStyles.cardPopOverBtn }
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" className={ adminStyles.actionBtnIcon } fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
+                                                </svg>
+                                            </Menu.Button>
+                                            <Transition
+                                                as={Fragment}
+                                                enter="transition ease-out duration-100"
+                                                enterFrom="transform opacity-0 scale-95"
+                                                enterTo="transform opacity-100 scale-100"
+                                                leave="transition ease-in duration-75"
+                                                leaveFrom="transform opacity-100 scale-100"
+                                                leaveTo="transform opacity-0 scale-95"
+                                            >
+                                                <Menu.Items className="absolute z-10 w-56 mt-10 bg-white divide-y divide-gray-200 rounded-md shadow-lg border border-gray-300 py-1">
+                                                    <Menu.Item>
+                                                        {({ active }) => (
+                                                        <Link href="/admin/events/tasks">
+                                                        <button
+                                                            className={`${adminStyles.cardPopOverItem} color-transition`}
+                                                        >
+                                                            <svg 
+                                                                xmlns="http://www.w3.org/2000/svg" 
+                                                                className={ adminStyles.actionBtnIcon } 
+                                                                fill="none" 
+                                                                viewBox="0 0 24 24" 
+                                                                stroke="currentColor"
+                                                            >
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                            </svg>
+                                                            <p className="text-xs font-medium">View Event</p>
+                                                        </button>
+                                                        </Link>
+                                                        )}
+                                                    </Menu.Item>
+                                                    <Menu.Item>
+                                                        {({ active }) => (
+                                                        <button
+                                                            className={`${adminStyles.cardPopOverItem} color-transition`}
+                                                        >
+                                                            <svg 
+                                                                xmlns="http://www.w3.org/2000/svg" 
+                                                                className={ adminStyles.actionBtnIcon } 
+                                                                fill="none" 
+                                                                viewBox="0 0 24 24" 
+                                                                stroke="currentColor"
+                                                            >
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                            </svg>
+                                                            <p className="text-xs font-medium">Edit Event</p>
+                                                        </button>
+                                                        )}
+                                                    </Menu.Item>
+                                                    <Menu.Item>
+                                                        {({ active }) => (
+                                                        <button
+                                                            className={`${adminStyles.cardPopOverItem} color-transition`}
+                                                        >
+                                                            <svg 
+                                                                xmlns="http://www.w3.org/2000/svg" 
+                                                                className={ adminStyles.actionBtnIcon }
+                                                                fill="none" 
+                                                                viewBox="0 0 24 24" 
+                                                                stroke="currentColor"
+                                                            >
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                            </svg>
+                                                            <p className="text-xs font-medium">Delete Event</p>
+                                                        </button>
+                                                        )}
+                                                    </Menu.Item>
+                                                </Menu.Items>
+                                            </Transition>
+                                        </Menu>
+                                    </div>
+                                ))
+                            } */}
+                        </div>
                     </div>
                     <Footer />
                 </div>
             </div>
         </div>
     )
+}
+
+export const getServerSideProps = async ({ req }) => {
+    const token = req.cookies.jwt
+    const res1 = await fetch('http://localhost:8000/clients_list/',{
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data1 = await res1.json()
+    const res2 = await fetch('http://localhost:8000/events_list/',{
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data2 = await res2.json()
+    return {
+        props : {
+            clientsList : data1,
+            eventsList : data2
+        }
+    }
 }

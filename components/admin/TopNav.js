@@ -3,41 +3,17 @@ import Link from 'next/link'
 import adminStyles from '../../styles/Admin.module.css'
 import { Menu, Transition, Switch } from '@headlessui/react'
 import { useRouter } from 'next/router'
-import Cookies from 'js-cookie'
-import jwt_decode from 'jwt-decode'
 
-const TopNav = ({ handleDark, dark }) => {
-    const [loggedUsername, setLoggedUserName] = useState('')
-    const axios = require('axios')
+const TopNav = ({ username }) => {
+    const [toggleDark, setToggleDark] = useState(false)
     const router = useRouter()
-    useEffect(() => {
-        try {
-            const jwt_token = Cookies.get('jwt')
-            const decoded_token = jwt_decode(jwt_token)
-            axios({
-                method : 'GET',
-                url : `http://localhost:8000/account/${decoded_token.user_id}`,
-                headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
-            })
-            .then((response) => {
-                setLoggedUserName(response.data.username)
-                console.log(response.data.username)
-            })
-            .catch((error) => {
-                console.log(error.response)
-            })
-        }
-        catch(e) {
-            console.log(e.message)
-        }
-    }, [])
     const handleLogOut = () => {
-        Cookies.remove('jwt')
+        localStorage.clear()
         router.push('/login')
     }
     return (
-        <nav className="row-start-1 w-full sticky top-0 z-20 py-3 px-10 bg-teal-700 border-b border-gray-300 dark:border-gray-700 flex justify-between items-center">
-            <button className={`${adminStyles.topNavBtn} color-transition rounded-md bg-transparent focus:outline-none ring-1 ring-offset-2 ring-offset-teal-700 ring-transparent focus:ring-gray-200 focus:ring-offset-gray-200`}>
+        <nav className="row-start-1 w-full top-0 py-3 px-10 flex justify-between items-center bg-true-100 text-gray-600 border-b border-gray-200">
+            <button className={`${adminStyles.topNavBtn} color-transition rounded-lg bg-transparent focus:outline-none`}>
                 <svg 
                     xmlns="http://www.w3.org/2000/svg" 
                     className="h-6 w-6 text-current" 
@@ -48,13 +24,19 @@ const TopNav = ({ handleDark, dark }) => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
             </button>
-            <div className="flex items-center gap-x-3 text-gray-200">
+            <div className="flex items-center gap-x-3">
                 <Link href="/admin/messages">
                     <a 
                         type="button"
                         className={`${adminStyles.topNavBtn} color-transition`}
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            className="h-6 w-6 text-current" 
+                            fill="none" 
+                            viewBox="0 0 24 24" 
+                            stroke="currentColor"
+                        >
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
                         </svg>
                         <p className="text-sm font-bold capitalize">Messages</p>
@@ -63,7 +45,7 @@ const TopNav = ({ handleDark, dark }) => {
                 <Menu as="div">
                     <Menu.Button
                         type="button"
-                        className="flex items-center gap-x-1 p-2 text-gray-200 hover:text-white focus:outline-none cursor-pointer"
+                        className="flex items-center gap-x-1 p-2 focus:outline-none cursor-pointer"
                     >
                         <svg 
                             xmlns="http://www.w3.org/2000/svg" 
@@ -74,7 +56,7 @@ const TopNav = ({ handleDark, dark }) => {
                         >
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
-                        <p className="text-sm font-bold">{ loggedUsername }</p>
+                        <p className="text-sm font-bold">{ username }</p>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                         </svg>
@@ -105,11 +87,11 @@ const TopNav = ({ handleDark, dark }) => {
                                         </svg>
                                         <p className={ adminStyles.popOverText }>Dark Mode</p>
                                         <Switch 
-                                            checked={ dark }
-                                            onChange={ handleDark }
-                                            className={`${dark ? 'bg-teal-600' : 'bg-gray-300'} ml-6 rounded-full w-14 p-1 focus:outline-none transition-colors ease-in-out duration-200`}
+                                            checked={ toggleDark }
+                                            onChange={ setToggleDark }
+                                            className={`${toggleDark ? 'bg-pink-600' : 'bg-gray-300'} ml-6 rounded-full w-14 p-1 focus:outline-none transition-colors ease-in-out duration-200`}
                                         >
-                                            <div className={`w-5 h-5 bg-white rounded-full transition ease-in-out duration-200 ${dark ? adminStyles.toggleDarkOn : adminStyles.toggleDarkOff}`}></div>
+                                            <div className={`w-5 h-5 bg-white rounded-full transition ease-in-out duration-200 ${toggleDark ? adminStyles.toggleDarkOn : adminStyles.toggleDarkOff}`}></div>
                                         </Switch>
                                     </div>
                                 )}

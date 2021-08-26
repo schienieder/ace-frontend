@@ -1,24 +1,24 @@
 import Nav from '../components/hero/Nav'
 import Hero from '../components/hero/Hero'
-import About from '../components/hero/About'
-import Testimonials from '../components/hero/Testimonials'
 import Awards from '../components/hero/Awards'
+import About from '../components/hero/About'
+import Services from '../components/hero/Services'
+import Testimonials from '../components/hero/Testimonials'
 import Rate from '../components/hero/Rate'
-import Footer from '../components/Footer'
-import ScrollTopBtn from '../components/hero/ScrollTopBtn'
+import Footer from '../components/hero/Footer'
 
 export default function hero() {
   return (
     <>
     <Nav />
-    <div className="min-h-screen w-full grid grid-rows-hero">
+    <div className="min-h-screen w-full bg-white grid grid-rows-hero">
       <Hero />
-      <About />
-      <Testimonials />
       <Awards />
+      <About />
+      <Services />
+      <Testimonials />
       <Rate />
       <Footer />
-      <ScrollTopBtn />
     </div>
     </>
   )

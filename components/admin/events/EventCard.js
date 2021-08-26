@@ -3,10 +3,13 @@ import adminStyles from '../../../styles/Admin.module.css'
 import { Menu, Transition } from '@headlessui/react'
 import Link from 'next/link'
 
-const EventCard = () => {
+const EventCard = ({ key, name, venue, date, time, budget }) => {
     return (
-        <div className="relative card w-full flex flex-col gap-y-6">
-            <h4 className="text-base font-semibold capitalize">Angel Malabarbas Debut</h4>
+        <div
+            key={ key }
+            className="relative card w-full flex flex-col gap-y-6"
+        >
+            <h4 className="text-base font-semibold capitalize">{ name }</h4>
             <div className="flex flex-col gap-y-2">
                 <div className="flex items-center gap-x-2">
                     <svg 
@@ -25,7 +28,7 @@ const EventCard = () => {
                     <a 
                         className="text-gray-500 hover:text-teal-700 hover:underline text-xs"
                     >
-                        Quezon St., Tagum City, Davao del Norte
+                        { venue }
                     </a>
                 </Link>
             </div>
@@ -41,7 +44,7 @@ const EventCard = () => {
                         >
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
-                        <p className="text-sm font-medium">June 26, 2021</p>
+                        <p className="text-sm font-medium">{ date }</p>
                     </div>
                     <div className="flex items-center gap-x-2">
                         <svg 
@@ -49,7 +52,7 @@ const EventCard = () => {
                             className="h-5 w-5 text-teal-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <p className="text-sm font-medium">10:30 PM</p>
+                        <p className="text-sm font-medium">{ time }</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-x-2">
@@ -62,7 +65,7 @@ const EventCard = () => {
                     >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
-                    <p className="text-sm font-medium">₱125000</p>
+                    <p className="text-sm font-medium">{`₱${budget}`}</p>
                 </div>
             </div>
             <div className="flex flex-col gap-y-1">

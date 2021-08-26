@@ -1,29 +1,27 @@
 import Link from 'next/link'
-const Contact = () => {
+
+const Rate = () => {
     return (
-        <div className="row-start-5 w-full h-full flex flex-col justify-center items-center gap-y-5 bg-white">
-            <div className="flex flex-col items-center">
-                <h4 className="text-xl md:text-3xl font-source font-black">Rate Our Services</h4>
-                <p className="text-base">Do you wan't to express your satisfaction?</p>
+        <div className="row-start-6 w-full h-full flex justify-center items-center font-mont bg-white text-gray-800 py-5">
+            <div className="relative h-4/5 w-4/5 bg-gray-100 rounded-xl p-10 flex justify-between items-center">
+                <div className="flex flex-col justify-center gap-y-1">
+                    <h4 className="text-xl md:text-2xl font-source font-black">How was your experience?</h4>
+                    <p className="text-sm">We would really like to know your satisfaction with our services.</p>
+                </div>
+                <div className="flex">
+                    <input
+                        type="file"
+                        className="bg-white w-80 px-3 py-1 rounded-tl-lg rounded-bl-lg"
+                    />
+                    <Link href="/ratings">
+                        <a 
+                            className="px-5 py-2 bg-pink-600 hover:bg-pink-500 color-transition rounded-tr-lg rounded-br-lg text-gray-100 font-bold text-sm md:text-base cursor-pointer tracking-wide"
+                        >Rate</a>
+                    </Link>
+                </div>
             </div>
-            <Link href="/ratings" passHref>
-                <a 
-                    className="h-12 w-36 bg-teal-800 hover:bg-teal-700 text-gray-50 color-transition flex justify-center items-center gap-x-1 rounded-sm"
-                >
-                    <p className="text-base font-bold">Rate Now</p>
-                    <svg 
-                        className="w-5 h-5 text-current" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24" 
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                    </svg>
-                </a>
-            </Link>
         </div>
     )
 }
 
-export default Contact
+export default Rate

@@ -1,51 +1,30 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import TopNav from '../../components/admin/TopNav'
 import SideNav from '../../components/admin/SideNav'
-import Footer from '../../components/admin/Footer'
-import PageHeader from '../../components/admin/PageHeader'
+import Footer from '../../components/Footer'
+import PageHeader from '../../components/PageHeader'
 import adminStyles from '../../styles/Admin.module.css'
 import AuthErrorIcon from '../../components/AuthErrorIcon'
 import { Dialog, Transition } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
-import jwt_decode from 'jwt-decode'
 import Swal from 'sweetalert2'
 import axios from 'axios'
 
 export default function partners({ partnersList }) {
     let [isOpen, setIsOpen] = useState(false)
     const router = useRouter()
-    const readCookie = () => {
-        try {
-            const jwt_token = Cookies.get('jwt')
-            const decoded_token = jwt_decode(jwt_token)
-            axios({
-                method : 'GET',
-                url : `http://localhost:8000/account/${decoded_token.user_id}`,
-                headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
-            })
-            .then((response) => {
-                response.data.role !== 'admin' ? router.push('/login') : ''
-            })
-            .catch((error) => {
-                Swal.fire({
-                    icon : 'error',
-                    title: 'Error',
-                    text: `${error.response}`,
-                    showCloseButton: true,
-                    confirmButtonColor: '#0F766E',
-                })
-                console.log(error.response)
-            })
-            console.log(jwt_token)
-        }
-        catch {
+    const [userName, setUsername] = useState()
+    const readRole = () => {
+        setUsername(localStorage.getItem('username'))
+        const role = localStorage.getItem('role')
+        if (role !== 'admin') {
             router.push('/login')
         }
     }
-    useEffect(() => {
-        readCookie()
+    useEffect( async () => {
+        await readRole()
     }, [])
     const { register, reset, handleSubmit, formState : { errors } } = useForm()
     const addPartner = (data) => {
@@ -137,10 +116,20 @@ export default function partners({ partnersList }) {
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="partners" />
             <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav />
-                <div className="row-start-2 w-full h-full bg-gray-100">
+                <TopNav username={ userName } />
+                <div className="row-start-2 w-full h-full bg-true-100">
                     <div className="p-8 flex flex-col gap-y-5 min-h-screen">
-                        <PageHeader text="Partners List" />
+                        <PageHeader text="Partners List">
+                            <svg 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                className="w-7 h-7 text-current"
+                                fill="none" 
+                                viewBox="0 0 24 24" 
+                                stroke="currentColor"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                        </PageHeader>
                         <div className="card w-full flex flex-col gap-y-5">
                             <div className="w-full flex justify-between items-center">
                                 <div className={ adminStyles.searchBarContainer }>

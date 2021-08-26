@@ -1,9 +1,8 @@
 const NavItem = ({ text }) => {
     return (
-        <a
-        className="uppercase text-sm font-medium hover:text-gray-800"
-        href=""
-        >{ text }</a>
+        <a className="text-sm font-medium hover:text-gray-200 uppercase cursor-pointer">
+            { text }
+        </a>
     )
 }
 

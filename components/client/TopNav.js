@@ -38,7 +38,7 @@ const TopNav = () => {
     }
     return (
         <>
-        <nav className="row-start-1 w-full sticky top-0 z-30 py-3 px-10 bg-teal-700 border-b border-gray-300 flex justify-between items-center">
+        <nav className="row-start-1 w-full top-0 z-20 py-3 px-10 bg-true-100 text-gray-600 border-b border-gray-200 flex justify-between items-center">
             <button className={`${clientStyles.topNavBtn} color-transition`}>
                 <svg 
                     xmlns="http://www.w3.org/2000/svg" 
@@ -50,7 +50,7 @@ const TopNav = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
             </button>
-            <div className="flex items-center gap-x-3 text-gray-200">
+            <div className="flex items-center gap-x-3 text-gray-600">
                 <Menu as="div">
                     <Menu.Button
                         type="button"
@@ -118,7 +118,7 @@ const TopNav = () => {
                                         <Switch 
                                             checked={ toggleDark }
                                             onChange={ setToggleDark }
-                                            className={`${toggleDark ? 'bg-teal-600' : 'bg-gray-300'} ml-6 rounded-full w-14 p-1 focus:outline-none transition-colors ease-in-out duration-200`}
+                                            className={`${toggleDark ? 'bg-pink-600' : 'bg-gray-300'} ml-6 rounded-full w-14 p-1 focus:outline-none transition-colors ease-in-out duration-200`}
                                         >
                                             <div className={`w-5 h-5 bg-white rounded-full transition ease-in-out duration-200 ${toggleDark ? clientStyles.toggleDarkOn : clientStyles.toggleDarkOff}`}></div>
                                         </Switch>

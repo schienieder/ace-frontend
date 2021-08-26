@@ -1,23 +1,18 @@
-import Image from 'next/image'
 const Services = () => {
     return (
-        <div className="row-start-3 w-full h-screen bg-white grid grid-cols-2 gap-y-5 text-gray-800 font-mont">
+        <div className="row-start-5 w-full h-screen bg-white grid grid-cols-1 md:grid-cols-2 gap-y-5 text-gray-800 font-mont">
             <div className="col-start-1 w-full h-full flex flex-col justify-center gap-y-5 p-20">
                 <div className="flex flex-col">
-                    <h4 className="text-xl md:text-3xl font-source font-black">Leo John & Cheryl</h4>
-                    <p className="text-gray-500">Proud Clients of Alas</p>
+                    <h4 className="text-2xl md:text-3xl font-source font-black">Leo John & Cheryl</h4>
+                    <p className="text-sm md:text-base text-gray-500">Proud Clients of Alas</p>
                 </div>
-                <p>
+                <p className="text-sm md:text-base">
                     Thank you so much team Alas! Because of you we are now a happy married couple.
                     Godbless sa inyuhang tanan po and more blessings to come.
                     I pray good health, safety and protection kay daghan pa po nagkinahanglan sa inyuha.
                     Highly recommended team, walay makalupig kudos everyone!
                 </p>
-                {/* <p>
-                    Thank you po. Na overwhelmed jud mi sa inyuhang gibuhat, sa set-up ug sa tanan2 po.
-                    Mutatak jud ang whole team sa amuang huna2 ug kasing2 naging part mo sa amuang big day.
-                </p> */}
-                <p>#Bow not to the king but to the team Alas!</p>
+                <p className="text-sm md:text-base">#Bow not to the king but to the team Alas!</p>
                 <svg 
                     className="w-24 h-24 transform rotate-180 opacity-70 -mt-5"
                     xmlns="http://www.w3.org/2000/svg"  
@@ -30,8 +25,13 @@ const Services = () => {
                     />
                 </svg>
             </div>
-            <div className="col-start-2 flex justify-center items-end p-16">
-                <div className="bg-testimonial-img border-gray-900 bg-cover bg-center w-full h-full"></div>
+            <div className="col-start-2 h-full w-full hidden md:flex flex-col justify-center items-center p-8">
+                <div className="h-full w-full grid grid-cols-2 grid-rows-3 gap-5">
+                    <div className="bg-testimonial-img1  bg-cover bg-center col-start-1 row-span-3 bg-gray-100"></div>
+                    <div className="bg-testimonial-img2  bg-cover bg-center col-start-2 row-span-2 bg-gray-200"></div>
+                    <div className="bg-testimonial-img3  bg-cover bg-center col-start-2 row-span-1 bg-gray-200"></div>
+                </div>
+                {/* <div className="bg-testimonial-img border-gray-900 bg-cover bg-center w-about-img h-full"></div> */}
             </div>
         </div>
     )
