@@ -65,9 +65,28 @@ export default function login() {
     }
     return (
         <div className="relative w-full h-screen bg-gray-200 flex justify-center items-center font-mont text-gray-800 overflow-hidden">
-            <Link href="/">
-                <a className="absolute top-5 left-10 text-2xl font-source font-black">ACE</a>
-            </Link>
+            <nav className="absolute w-full top-0 py-5 px-10 flex justify-between items-center">
+                <Link href="/">
+                    <div className="flex items-center gap-x-3 cursor-pointer">
+                        <Image 
+                            src="/images/logo.svg"
+                            width={ 50 }
+                            height={ 50 }
+                            alt="Logo"
+                        />
+                        <h4 className="text-2xl font-source font-black">Marahuyo</h4>
+                    </div>
+                </Link>
+                <div className="flex gap-x-3 text-gray-600">
+                    <Link href="/login">
+                        <a className="text-base font-medium hover:text-pink-600 color-transition cursor-pointer">Login</a>
+                    </Link>
+                    <div className="border-r border-gray-600"></div>
+                    <Link href="/register">
+                        <a className="text-base font-medium hover:text-pink-600 color-transition cursor-pointer">Register</a>
+                    </Link>
+                </div>
+            </nav>
             <div className="w-custom1 h-4/5 bg-white rounded-xl shadow-sm border-b border-gray-200 grid grid-cols-2">
                 <div className="col-start-1 flex flex-col justify-center items-center">
                     <form
