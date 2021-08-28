@@ -41,7 +41,7 @@ export default function reports() {
                         <div className="card w-full grid grid-cols-custom-layout gap-x-5">
 
                             {/* Chat names part */}
-                            <div className="col-start-1 rounded-md flex flex-col border border-gray-300 p-5 gap-y-3">
+                            <div className="col-start-1 rounded-xl flex flex-col border border-gray-300 p-5 gap-y-3">
                                 <div className="flex flex-col gap-y-2">
                                     <div className="searchBarContainer">
                                         <input 
@@ -51,7 +51,7 @@ export default function reports() {
                                         />
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 
-                                            className="h-5 w-5 text-current" 
+                                            className="inputIcon" 
                                             fill="none" 
                                             viewBox="0 0 24 24" 
                                             stroke="currentColor"
@@ -60,7 +60,7 @@ export default function reports() {
                                         </svg>
                                     </div>
                                     <button 
-                                        className={`${ adminStyles.addBtn } justify-center color-transition`}
+                                        className={`${ adminStyles.addBtn } color-transition`}
                                     >
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 
@@ -88,12 +88,12 @@ export default function reports() {
                             </div>
 
                             {/* Messages part */}
-                            <div className="col-start-2 border border-gray-300 rounded-md flex flex-col p-5 gap-y-5">
+                            <div className="col-start-2 border border-gray-300 rounded-xl flex flex-col p-5 gap-y-5">
                                 <div className="w-full h-full bg-gray-100 rounded-md">
 
                                 </div>
                                 <div className="flex items-center gap-x-3 bottom-0">
-                                    <button className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 text-teal-700 color-transition">
+                                    <button className="p-3 rounded-lg bg-gray-100 hover:bg-gray-200 text-pink-600 color-transition">
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 
                                             className="h-4 w-4 text-current" 
@@ -104,7 +104,7 @@ export default function reports() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                         </svg>
                                     </button>
-                                    <button className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 text-teal-700 color-transition">
+                                    <button className="p-3 rounded-lg bg-gray-100 hover:bg-gray-200 text-pink-600 color-transition">
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 
                                             className="h-4 w-4 text-current" 
@@ -116,15 +116,15 @@ export default function reports() {
                                         </svg>
                                     </button>
                                     <div 
-                                        className="w-full px-3 flex items-center bg-gray-100 text-gray-400 rounded-md focus-within:text-teal-700 border-gray-200 focus-within:border-teal-700 focus-within:ring-1 focus-within:ring-teal-700"
+                                        className="w-full flex gap-x-1 px-2 py-1 items-center border border-gray-300 focus-within:border-gray-600 rounded-lg"
                                     >
                                         <input 
                                             type="text"
-                                            className="flex-1 px-1 bg-transparent placeholder-gray-400 rounded-l-full text-gray-700 text-sm border-none focus:outline-none focus:ring-transparent"
+                                            className="flex-1 px-0 py-0 border-transparent focus:outline-none focus:ring-transparent focus:border-transparent text-sm"
                                             placeholder="Type your message . . ."
                                         />
                                     </div>
-                                    <button className="p-3 rounded-full bg-teal-800 hover:bg-teal-700 text-gray-50 color-transition">
+                                    <button className="p-3 rounded-lg bg-pink-600 hover:bg-pink-500 text-white color-transition">
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 
                                             className="h-4 w-4 text-current transform rotate-90" 

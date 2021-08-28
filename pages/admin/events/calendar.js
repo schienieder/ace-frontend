@@ -86,7 +86,7 @@ export default function cards() {
                                         return <tr key={cols[0].date} className="text-sm font-medium text-gray-600">
                                             {cols.map(col => (
                                             col.date === todayFormatted
-                                                ? <td key={col.date} className={`${col.classes} p-8 cursor-pointer bg-teal-700 text-gray-100 color-transition`} onClick={() => dateClickHandler(col.date)}>{ col.value }</td>
+                                                ? <td key={col.date} className={`${col.classes} p-8 cursor-pointer bg-pink-600 text-white color-transition`} onClick={() => dateClickHandler(col.date)}>{ col.value }</td>
                                                 : <td key={col.date} className={`${col.classes} p-8 cursor-pointer bg-transparent hover:bg-gray-100 color-transition`} onClick={() => dateClickHandler(col.date)}>{ col.value }</td>
                                             ))}
                                         </tr>

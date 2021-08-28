@@ -49,7 +49,7 @@ export default function partners({ partnersList }) {
                 timer : 3000,
                 text: `Business partner ${data.partner_fname} ${data.partner_lname} successfully added!`,
                 showCloseButton: true,
-                confirmButtonColor: '#0F766E',
+                confirmButtonColor: '#DB2777',
             })
             router.push('/admin/partners')
         }).catch((error) => {
@@ -59,7 +59,7 @@ export default function partners({ partnersList }) {
                 timer : 3000,
                 text: error.message,
                 showCloseButton: true,
-                confirmButtonColor: '#0F766E',
+                confirmButtonColor: '#DB2777',
             })
         })
         reset()
@@ -71,7 +71,7 @@ export default function partners({ partnersList }) {
             text: `Delete business partner records of ${partner_name}?`,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#0F766E',
+            confirmButtonColor: '#DB2777',
             cancelButtonColor: '#9CA3AF',
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
@@ -87,7 +87,7 @@ export default function partners({ partnersList }) {
                         icon : 'success',
                         title : 'Deleted!',
                         text : 'Business partner record has been deleted.',
-                        confirmButtonColor: '#0F766E',
+                        confirmButtonColor: '#DB2777',
                         showCloseButton : true,
                         timer : 2000
                     })
@@ -100,7 +100,7 @@ export default function partners({ partnersList }) {
                         timer : 3000,
                         text: error.message,
                         showCloseButton: true,
-                        confirmButtonColor: '#0F766E',
+                        confirmButtonColor: '#DB2777',
                     })
                 })
             }
@@ -132,10 +132,10 @@ export default function partners({ partnersList }) {
                         </PageHeader>
                         <div className="card w-full flex flex-col gap-y-5">
                             <div className="w-full flex justify-between items-center">
-                                <div className={ adminStyles.searchBarContainer }>
+                                <div className="searchBarContainer">
                                     <input 
                                         type="text"
-                                        className={ adminStyles.searchBarInput }
+                                        className="searchBarInput"
                                         placeholder="Search Name . . ."
                                     />
                                     <svg 

@@ -51,7 +51,7 @@ export default function clients({ clientsList }) {
                 timer : 3000,
                 text: `Client ${data.client_fname} ${data.client_lname} successfully added!`,
                 showCloseButton: true,
-                confirmButtonColor: '#0F766E',
+                confirmButtonColor: '#DB2777',
             })
             router.push('/admin/clients')
         }).catch((error) => {
@@ -61,7 +61,7 @@ export default function clients({ clientsList }) {
                 timer : 3000,
                 text: error.message,
                 showCloseButton: true,
-                confirmButtonColor: '#0F766E',
+                confirmButtonColor: '#DB2777',
             })
         })
         reset()
@@ -73,7 +73,7 @@ export default function clients({ clientsList }) {
             text: `Delete client records of ${client_fname} ${client_lname}?`,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#0F766E',
+            confirmButtonColor: '#DB2777',
             cancelButtonColor: '#9CA3AF',
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
@@ -89,7 +89,7 @@ export default function clients({ clientsList }) {
                         icon : 'success',
                         title : 'Deleted!',
                         text : 'Client record has been deleted.',
-                        confirmButtonColor: '#0F766E',
+                        confirmButtonColor: '#DB2777',
                         showCloseButton : true,
                         timer : 2000
                     })
@@ -102,7 +102,7 @@ export default function clients({ clientsList }) {
                         timer : 3000,
                         text: error.message,
                         showCloseButton: true,
-                        confirmButtonColor: '#0F766E',
+                        confirmButtonColor: '#DB2777',
                     })
                 })
             }
@@ -134,10 +134,10 @@ export default function clients({ clientsList }) {
                         </PageHeader>
                         <div className="card w-full flex flex-col gap-y-5">
                             <div className="w-full flex justify-between items-center">
-                                <div className={ adminStyles.searchBarContainer }>
+                                <div className="searchBarContainer">
                                     <input 
                                         type="text"
-                                        className={ adminStyles.searchBarInput }
+                                        className="searchBarInput"
                                         placeholder="Search Name . . ."
                                     />
                                     <svg 

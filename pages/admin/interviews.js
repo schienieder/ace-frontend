@@ -40,15 +40,15 @@ export default function interviews() {
                         </PageHeader>
                         <div className="card w-full flex flex-col gap-y-5">
                         <div className="w-full flex justify-between items-center">
-                                <div className={ adminStyles.searchBarContainer }>
+                                <div className="searchBarContainer">
                                     <input 
                                         type="text"
-                                        className={ adminStyles.searchBarInput }
+                                        className="searchBarInput"
                                         placeholder="Search Name . . ."
                                     />
                                     <svg 
                                         xmlns="http://www.w3.org/2000/svg" 
-                                        className="h-5 w-5 text-current" 
+                                        className="h-4 w-4 text-current" 
                                         fill="none" 
                                         viewBox="0 0 24 24" 
                                         stroke="currentColor"

@@ -51,6 +51,15 @@ module.exports = {
         // custom layout
         'custom-layout': '16rem 1fr',
       },
+      keyframes: {
+        wiggle: {
+          '0%, 100%': { transform: 'rotate(-5deg)' },
+          '50%': { transform: 'rotate(5deg)' },
+        }
+      },
+      animation: {
+        wiggle: 'wiggle 500ms ease-in-out 1s infinite',
+      },
     },
     colors : {
       transparent: 'transparent',

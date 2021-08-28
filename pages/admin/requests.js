@@ -40,10 +40,10 @@ export default function reports() {
                         </PageHeader>
                         <div className="card w-full flex flex-col gap-y-5">
                         <div className="w-full flex justify-between items-center">
-                                <div className={ adminStyles.searchBarContainer }>
+                                <div className="searchBarContainer">
                                     <input 
                                         type="text"
-                                        className={ adminStyles.searchBarInput }
+                                        className="searchBarInput"
                                         placeholder="Search Name . . ."
                                     />
                                     <svg 

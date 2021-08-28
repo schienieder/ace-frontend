@@ -28,7 +28,7 @@ export default function bookings({ bookingsList, clientsList }) {
             text: `Delete ${booking_type} booking on ${ new Date(booking_date).toDateString() }?`,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#0F766E',
+            confirmButtonColor: '#DB2777',
             cancelButtonColor: '#9CA3AF',
             confirmButtonText: 'Yes, delete it!'
         })
@@ -45,7 +45,7 @@ export default function bookings({ bookingsList, clientsList }) {
                         icon : 'success',
                         title : 'Deleted!',
                         text : 'Client booking has been deleted.',
-                        confirmButtonColor: '#0F766E',
+                        confirmButtonColor: '#DB2777',
                         showCloseButton : true,
                         timer : 2000
                     })
@@ -58,7 +58,7 @@ export default function bookings({ bookingsList, clientsList }) {
                         timer : 3000,
                         text: error.message,
                         showCloseButton: true,
-                        confirmButtonColor: '#0F766E',
+                        confirmButtonColor: '#DB2777',
                     })
                 })
             }
@@ -84,15 +84,15 @@ export default function bookings({ bookingsList, clientsList }) {
                         </PageHeader>
                         <div className="card w-full flex flex-col gap-y-5">
                             <div className="w-full flex justify-between items-center">
-                                <div className={ adminStyles.searchBarContainer }>
+                                <div className="searchBarContainer">
                                     <input 
                                         type="text"
-                                        className={ adminStyles.searchBarInput }
+                                        className="searchBarInput"
                                         placeholder="Search Name . . ."
                                     />
                                     <svg 
                                         xmlns="http://www.w3.org/2000/svg" 
-                                        className="h-5 w-5 text-current" 
+                                        className="h-4 w-4 text-current" 
                                         fill="none" 
                                         viewBox="0 0 24 24" 
                                         stroke="currentColor"

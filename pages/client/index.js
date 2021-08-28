@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import SideNav from '../../components/client/SideNav'
 import TopNav from '../../components/client/TopNav'
 import Footer from '../../components/client/Footer'
@@ -6,42 +6,20 @@ import PageHeader from '../../components/client/PageHeader'
 import Link from 'next/link'
 import CalendarHook from '../../components/admin/events/CalendarHook'
 import { useRouter } from 'next/router'
-import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
 
 export default function dashboard({ clientProfile }) {
     const router = useRouter()
-    const axios = require('axios')
-    const readCookie = () => {
-        try {
-            const jwt_token = Cookies.get('jwt')
-            const decoded_token = jwt_decode(jwt_token)
-            axios({
-                method : 'GET',
-                url : `http://localhost:8000/account/${decoded_token.user_id}`,
-                headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
-            })
-            .then((response) => {
-                response.data.role !== 'client' ? router.push('/login') : ''
-            })
-            .catch((error) => {
-                Swal.fire({
-                    icon : 'error',
-                    title: 'Error',
-                    text: `${error.response}`,
-                    showCloseButton: true,
-                    confirmButtonColor: '#0F766E',
-                })
-                console.log(error.response)
-            })
-            console.log(jwt_token)
-        }
-        catch {
+    const [userName, setUsername] = useState()
+    const readRole = () => {
+        setUsername(localStorage.getItem('username'))
+        const role = localStorage.getItem('role')
+        if (role !== 'client') {
             router.push('/login')
         }
     }
-    useEffect(() => {
-        readCookie()
+    useEffect( async () => {
+        await readRole()
     }, [])
     const { calendarRows, selectedDate, todayFormatted, daysShort, monthNames, getNextMonth, getPrevMonth } = CalendarHook()
     const dateClickHandler = date => {
@@ -51,7 +29,7 @@ export default function dashboard({ clientProfile }) {
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="dashboard" />
             <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav />
+                <TopNav username={ userName } />
                 <div className="row-start-2 w-full h-full bg-true-100">
                     <div className="p-8 flex flex-col gap-y-5 min-h-screen">
                         <PageHeader text="Dashboard">
@@ -65,6 +43,24 @@ export default function dashboard({ clientProfile }) {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                             </svg>
                         </PageHeader>
+                        {
+                            clientProfile.first_name || clientProfile.last_name || clientProfile.mobile_number || clientProfile.email || clientProfile.street_address || clientProfile.city || clientProfile.state_province ?
+                            (
+                                <div className="w-full p-5 rounded-lg bg-pink-200 flex justify-center items-center gap-x-1 text-gray-800">
+                                    <svg 
+                                        xmlns="http://www.w3.org/2000/svg" 
+                                        className="h-7 w-7 text-pink-600 animate-wiggle" 
+                                        fill="none" 
+                                        viewBox="0 0 24 24" 
+                                        stroke="currentColor"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                    <p className="font-normal">Profile information incomplete! Proceed <Link href="/client/profile"><a className="text-pink-600 font-bold hover:underline">here</a></Link> to remove this warning.</p>
+                                </div>
+                            )
+                            : ''
+                        }
                         <div className="flex flex-col gap-y-5">
 
                             <div className="cardContainer">

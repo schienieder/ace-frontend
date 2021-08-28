@@ -6,32 +6,9 @@ import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
 
-const TopNav = () => {
+const TopNav = ({ username }) => {
     const [toggleDark, setToggleDark] = useState(false)
-    const [loggedUsername, setLoggedUserName] = useState('')
-    const axios = require('axios')
     const router = useRouter()
-    useEffect(() => {
-        try {
-            const jwt_token = Cookies.get('jwt')
-            const decoded_token = jwt_decode(jwt_token)
-            axios({
-                method : 'GET',
-                url : `http://localhost:8000/account/${decoded_token.user_id}`,
-                headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
-            })
-            .then((response) => {
-                setLoggedUserName(response.data.username)
-                console.log(response.data.username)
-            })
-            .catch((error) => {
-                console.log(error.response)
-            })
-        }
-        catch(e) {
-            console.log(e.message)
-        }
-    }, [])
     const handleLogOut = () => {
         Cookies.remove('jwt')
         router.push('/login')
@@ -65,7 +42,7 @@ const TopNav = () => {
                         >
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
-                        <p className={ clientStyles.navItemText }>{ loggedUsername }</p>
+                        <p className={ clientStyles.navItemText }>{ username }</p>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                         </svg>

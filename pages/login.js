@@ -155,7 +155,7 @@ export default function login() {
                             }
                         </div>
                         <button 
-                            className="px-5 py-2 bg-gradient-to-r bg-pink-600 hover:bg-pink-500 color-transition rounded-lg text-white font-bold text-base tracking-wide"
+                            className="px-5 py-2 bg-pink-600 hover:bg-pink-500 color-transition rounded-lg text-white font-bold text-base tracking-wide"
                         >Login</button>
                         <div className="flex items-center gap-x-1 text-sm mt-2">
                             <p>Don't have an account?</p>
