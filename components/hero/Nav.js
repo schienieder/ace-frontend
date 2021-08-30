@@ -9,13 +9,15 @@ const Nav = () => {
             className="w-full absolute flex items-center justify-between px-10 py-5 font-mont text-gray-800"
         >
             <div className="flex items-center gap-x-3">
-                <Image 
-                    src="/images/logo.svg"
-                    width={ 50 }
-                    height={ 50 }
-                    alt="Logo"
-                />
-                <h4 className="text-2xl font-source font-black">Marahuyo</h4>
+                <Link href="/">
+                    <Image 
+                        src="/images/logo.svg"
+                        width={ 50 }
+                        height={ 50 }
+                        alt="Logo"
+                    />
+                    <h4 className="text-2xl font-source font-black">Marahuyo</h4>
+                </Link>
             </div>
             <div className="flex items-center gap-x-8 text-gray-300 z-10">
                 <NavItem text="About" />

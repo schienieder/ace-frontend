@@ -20,7 +20,7 @@ export default function login() {
         formData.append('password', data.login_pass)
         axios({
             method : 'POST',
-            url : 'http://localhost:8000/api/token/',
+            url : 'https://alas-creatives-backend.herokuapp.com/api/token/',
             headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
             data : formData
         })
@@ -33,7 +33,7 @@ export default function login() {
             localStorage.setItem('jwt', jwt_token)
             axios({
                 method : 'GET',
-                url : `http://localhost:8000/account/${decoded_token.user_id}`,
+                url : `https://alas-creatives-backend.herokuapp.com/account/${decoded_token.user_id}`,
                 headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
             })
             .then((response) => {

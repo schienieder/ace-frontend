@@ -263,7 +263,7 @@ export default function dashboard({ clientProfile }) {
 export const getServerSideProps = async ({ req }) => {
     const token = req.cookies.jwt
     const decoded_token = jwt_decode(token)
-    const res = await fetch(`http://localhost:8000/client_profile/${decoded_token.user_id}`, {
+    const res = await fetch(`https://alas-creatives-backend.herokuapp.com/client_profile/${decoded_token.user_id}`, {
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })

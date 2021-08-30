@@ -11,7 +11,7 @@ export default function register() {
     const router = useRouter()
     const myForm = useForm() // call useForm
     const handleSubmit = async (data) => {
-        await fetch('http://localhost:8000/register/', {
+        await fetch('https://alas-creatives-backend.herokuapp.com/register/', {
             method : "POST",
             headers : {'Content-Type' : 'application/json'},
             body : JSON.stringify({
