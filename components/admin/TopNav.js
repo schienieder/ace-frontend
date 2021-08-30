@@ -11,6 +11,10 @@ const TopNav = ({ username }) => {
         localStorage.clear()
         router.push('/login')
     }
+    const darkEnabled = () => {
+        const mode = localStorage.setItem('dark', 'true')
+        setToggleDark(mode)
+    }
     return (
         <nav className="row-start-1 w-full top-0 py-3 px-10 flex justify-between items-center bg-true-100 text-gray-600 border-b border-gray-200">
             <button className={`${adminStyles.topNavBtn} color-transition rounded-lg bg-transparent focus:outline-none`}>
@@ -88,7 +92,7 @@ const TopNav = ({ username }) => {
                                         <p className={ adminStyles.popOverText }>Dark Mode</p>
                                         <Switch 
                                             checked={ toggleDark }
-                                            onChange={ setToggleDark }
+                                            onChange={ darkEnabled }
                                             className={`${toggleDark ? 'bg-pink-600' : 'bg-gray-300'} ml-6 rounded-full w-14 p-1 focus:outline-none transition-colors ease-in-out duration-200`}
                                         >
                                             <div className={`w-5 h-5 bg-white rounded-full transition ease-in-out duration-200 ${toggleDark ? adminStyles.toggleDarkOn : adminStyles.toggleDarkOff}`}></div>

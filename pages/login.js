@@ -30,6 +30,7 @@ export default function login() {
             cookies.set('jwt', jwt_token, [
                 { httpOnly : true }
             ])
+            localStorage.setItem('jwt', jwt_token)
             axios({
                 method : 'GET',
                 url : `http://localhost:8000/account/${decoded_token.user_id}`,

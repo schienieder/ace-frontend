@@ -89,7 +89,7 @@ export default function reports() {
 
                             {/* Messages part */}
                             <div className="col-start-2 border border-gray-300 rounded-xl flex flex-col p-5 gap-y-5">
-                                <div className="w-full h-full bg-gray-100 rounded-md">
+                                <div className="w-full h-full bg-gray-100 rounded-xl">
 
                                 </div>
                                 <div className="flex items-center gap-x-3 bottom-0">
