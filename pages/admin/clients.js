@@ -30,7 +30,7 @@ export default function clients({ clientsList }) {
     const addClient = (data) => {
         axios({
             method : "POST",
-            url : 'http://localhost:8000/register/',
+            url : 'https://alas-creatives-backend.herokuapp.com/register/',
             headers : {'Content-Type' : 'application/json'},
             data : {
                 first_name : data.client_fname,
@@ -79,7 +79,7 @@ export default function clients({ clientsList }) {
             if (result.isConfirmed) {
                 axios({
                     method : 'DELETE',
-                    url : `http://localhost:8000/client_profile/destroy/${client_id}`,
+                    url : `https://alas-creatives-backend.herokuapp.com/client_profile/destroy/${client_id}`,
                     headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
                 })
                 .then(() => {
@@ -522,7 +522,7 @@ export default function clients({ clientsList }) {
 
 export const getServerSideProps = async ({ req }) => {
     const token = req.cookies.jwt
-    const res = await fetch('http://localhost:8000/clients_list/',{
+    const res = await fetch('https://alas-creatives-backend.herokuapp.com/clients_list/',{
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })

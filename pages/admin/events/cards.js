@@ -505,13 +505,14 @@ export default function cards({ clientsList, eventsList }) {
 }
 
 export const getServerSideProps = async ({ req }) => {
+    const url = 'https://alas-creatives-backend.herokuapp.com/'
     const token = req.cookies.jwt
-    const res1 = await fetch('http://localhost:8000/clients_list/',{
+    const res1 = await fetch(`${url}clients_list/`,{
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })
     const data1 = await res1.json()
-    const res2 = await fetch('http://localhost:8000/events_list/',{
+    const res2 = await fetch(`${url}events_list/`,{
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })

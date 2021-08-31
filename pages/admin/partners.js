@@ -30,7 +30,7 @@ export default function partners({ partnersList }) {
     const addPartner = (data) => {
         axios({
             method : "POST",
-            url : 'http://localhost:8000/register/',
+            url : 'https://alas-creatives-backend.herokuapp.com/register/',
             headers : {'Content-Type' : 'application/json'},
             data : {
                 first_name : data.partner_fname,
@@ -79,7 +79,7 @@ export default function partners({ partnersList }) {
             if (result.isConfirmed) {
                 axios({
                     method : 'DELETE',
-                    url : `http://localhost:8000/partner_profile/destroy/${partner_id}`,
+                    url : `https://alas-creatives-backend.herokuapp.com/partner_profile/destroy/${partner_id}`,
                     headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
                 })
                 .then(() => {
@@ -522,7 +522,7 @@ export default function partners({ partnersList }) {
 
 export const getServerSideProps = async ({ req }) => {
     const token = req.cookies.jwt
-    const res = await fetch('http://localhost:8000/partners_list/', {
+    const res = await fetch('https://alas-creatives-backend.herokuapp.com/partners_list/', {
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })
