@@ -32,6 +32,7 @@
     "universal-cookie": "^4.0.4"
   },
   "devDependencies": {
-    "postcss": "^8.3.6"
+    "postcss": "^8.3.6",
+    "postcss-focus": "^5.0.1"
   }
 }

@@ -1,6 +1,3 @@
-import React from 'react'
-import Image from 'next/image'
-
 const Footer = () => {
     const currDate = new Date()
     const currYear = currDate.getFullYear()
@@ -121,7 +118,6 @@ const Footer = () => {
                     </svg>
                 </div>
             </div>
-
         </div>
     )
 }

@@ -1,4 +1,3 @@
-import React from 'react'
 import NavItem from './NavItem';
 import Link from 'next/link'
 import Image from 'next/image'
@@ -10,6 +9,7 @@ const Nav = () => {
         >
             <div className="flex items-center gap-x-3">
                 <Link href="/">
+                    <>
                     <Image 
                         src="/images/logo.svg"
                         width={ 50 }
@@ -17,6 +17,7 @@ const Nav = () => {
                         alt="Logo"
                     />
                     <h4 className="text-2xl font-source font-black">Marahuyo</h4>
+                    </>
                 </Link>
             </div>
             <div className="flex items-center gap-x-8 text-gray-300 z-10">

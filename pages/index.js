@@ -1,3 +1,4 @@
+import React from 'react'
 import Nav from '../components/hero/Nav'
 import Hero from '../components/hero/Hero'
 import Awards from '../components/hero/Awards'
@@ -9,9 +10,8 @@ import Footer from '../components/hero/Footer'
 
 export default function hero() {
   return (
-    <>
-    <Nav />
     <div className="min-h-screen w-full bg-white grid grid-rows-hero">
+      <Nav />
       <Hero />
       <Awards />
       <About />
@@ -20,6 +20,5 @@ export default function hero() {
       <Rate />
       <Footer />
     </div>
-    </>
   )
 }
