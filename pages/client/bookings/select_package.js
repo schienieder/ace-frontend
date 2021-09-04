@@ -150,23 +150,6 @@ export default function package_list() {
 
                             {/* RESULTS HERE */}
                             <div className="h-full col-start-2 flex flex-col gap-y-5">
-                                {
-                                    eventResults.length ? 
-                                    eventResults.map((event, index) => (
-                                        <div
-                                            key={ index }
-                                            className="flex flex-col gap-y-1 bg-gray-100 rounded-lg p-5"
-                                        >
-                                            <p className="text-sm font-bold">Event: <span className="font-normal">{ event.event }</span></p>
-                                            <p className="text-sm font-bold">Cost: <span className="font-normal">{ event.budget }</span></p>
-                                            <p className="text-sm font-bold">Venue: <span className="font-normal">{ event.venue }</span></p>
-                                            <p className="text-sm font-bold">Add Ons:</p>
-                                            <p className="font-normal">{ event.add_ons }</p>
-                                        </div>
-                                    ))
-                                    :
-                                    <p className="text-base text-center">No results found.</p>
-                                }
                             </div>
                             {/* RESULTS END */}
                         </div>
