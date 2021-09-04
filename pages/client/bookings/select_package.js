@@ -6,53 +6,12 @@ import PageHeader from '../../../components/client/PageHeader'
 import clientStyles from '../../../styles/Client.module.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import Fuse from 'fuse.js'
 import useSWR from 'swr'
 
-const events = [
-    {
-        "event" : "Wedding",
-        "budget" : "180000",
-        "venue" : "D’Veranda",
-        "add_ons" : 'Church Decoration, Same Day Video Edit'
-    },
-    {
-        "event" : "Wedding",
-        "budget" : "190000",
-        "venue" : "Ana Nastassia",
-        "add_ons" : 'Aerial Video, Church Decor, Same Day Video Edit, Van'
-    },
-    {
-        "event" : "Birthday",
-        "budget" : "145000",
-        "venue" : "VJR Arriesgado",
-        "add_ons" : 'Confitte Blasters, Low Lying Fogs'
-    },
-    {
-        "event" : "Wedding",
-        "budget" : "250000",
-        "venue" : "Balay ni Leonora",
-        "add_ons" : 'Unli Photobooth, Aerial Video, Church Decor, Same Day Video Edit, Confitte Blasters, Indoor FireWorks, Low Lying Fogs'
-    },
-    {
-        "event" : "Wedding",
-        "budget" : "200000",
-        "venue" : "Cogon Oasis",
-        "add_ons" : 'Church Decor, Same Day Video Edit, Confitte Blasters, Indoor Fireworks, Low Lying Fogs'
-    },
-    {
-        "event" : "Birthday",
-        "budget" : "190000",
-        "venue" : "Basilios Great Hall",
-        "add_ons" : 'Aerial Video, Confitte Blasters, Same Day Video Edit, Low Lying Fogs'
-    },
-]
-const options = { keys : ["budget", "add_ons"] }
 
 export default function package_list() {
     const router = useRouter()
     const [userName, setUsername] = useState()
-    const [isSearched, setIsSearched] = useState('')
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
         const role = localStorage.getItem('role')
@@ -60,15 +19,9 @@ export default function package_list() {
             router.push('/login')
         }
     }
-    const onSearch = ({ currentTarget }) => {
-        setIsSearched(currentTarget.value);
-    }
     useEffect( async () => {
         await readRole()
     }, [])
-    const fuse = new Fuse(events, options)
-    const results = fuse.search(isSearched)
-    const eventResults = results.map(res => res.item)
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="booking" />
@@ -104,8 +57,6 @@ export default function package_list() {
                                         type="number"
                                         className="searchBarInput"
                                         placeholder="Enter Budget . . ."
-                                        value={ isSearched }
-                                        onChange={ onSearch }
                                     />
                                 </div>
                                 <p className="text-sm font-bold">Add Ons</p>
