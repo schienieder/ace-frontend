@@ -39,7 +39,6 @@ export default function reports() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
                             </svg>
                         </PageHeader>
-                        <CompanySales />
                         <SatisfactionForecast />
                     </div>
                     <Footer />

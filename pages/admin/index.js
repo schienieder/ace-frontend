@@ -3,7 +3,7 @@ import TopNav from '../../components/admin/TopNav'
 import SideNav from '../../components/admin/SideNav'
 import Footer from '../../components/Footer'
 import PageHeader from '../../components/PageHeader'
-import SalesOverview from '../../components/admin/dashboard/SalesOverview'
+import EventsSummary from '../../components/admin/dashboard/EventsSummary'
 import AffiliationRequest from '../../components/admin/dashboard/AffiliationRequest'
 import UpcomingEvents from '../../components/admin/dashboard/UpcomingEvents'
 import { useRouter } from 'next/router'
@@ -39,7 +39,7 @@ export default function dashboard() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                             </svg>
                         </PageHeader>
-                        <SalesOverview />
+                        <EventsSummary />
                         <div className="w-full flex gap-x-5">
                             <AffiliationRequest />
                             <UpcomingEvents />

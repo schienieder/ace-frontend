@@ -3,6 +3,7 @@ import Link from 'next/link'
 import clientStyles from '../../styles/Client.module.css'
 import { Menu, Transition, Switch } from '@headlessui/react'
 import { useRouter } from 'next/router'
+import Cookies from 'js-cookie'
 
 const TopNav = ({ username }) => {
     const [toggleDark, setToggleDark] = useState(false)
@@ -10,6 +11,7 @@ const TopNav = ({ username }) => {
     const handleLogOut = () => {
         localStorage.clear()
         router.push('/login')
+        Cookies.remove('jwt')
     }
     return (
         <>

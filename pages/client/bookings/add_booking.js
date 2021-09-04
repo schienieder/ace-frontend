@@ -32,7 +32,7 @@ export default function add_booking({ clientProfile }) {
         const jwt_token = Cookies.get('jwt')
         axios({
             method : 'POST',
-            url : 'http://localhost:8000/add_booking/',
+            url : 'https://alas-creatives-backend.herokuapp.com/add_booking/',
             headers : {
                 'Authorization' : 'Bearer'+' '+jwt_token,
                 'Content-Type' : 'application/json'
@@ -79,19 +79,29 @@ export default function add_booking({ clientProfile }) {
                 <div className="row-start-2 w-full h-full bg-true-100">
                     <div className="p-8 flex flex-col items-center gap-y-5 min-h-screen">
                         <div className="w-client-profile-form-container">
-                            <PageHeader text="Book Event Schedule" />
+                            <PageHeader text="Book Event">
+                                <svg 
+                                    xmlns="http://www.w3.org/2000/svg" 
+                                    className="h-7 w-7 text-current" 
+                                    fill="none" 
+                                    viewBox="0 0 24 24" 
+                                    stroke="currentColor"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                </svg>
+                            </PageHeader>
                         </div>
                         <div className="card w-client-profile-form-container">
                             <form
                                 onSubmit={ handleSubmit(handleFormSubmit) }
-                                className="w-full rounded-md p-5 flex flex-col items-center border border-gray-300 gap-y-10"
+                                className="w-full rounded-xl p-5 flex flex-col items-center border border-gray-300 gap-y-10"
                             >
                                 {/* type of event & desired date fields */}
                                 <div className="flex gap-x-5">
                                     <div className="flex flex-col gap-y-1">
                                         <label htmlFor="booking_event_type" className="inputFieldLabel">Type of Event</label>
                                         <select
-                                            className="inputSelect"
+                                            className="inputSelect rounded-lg"
                                             {...register("booking_event_type")}
                                         >
                                             <option value="Wedding Event">Wedding Event</option>
@@ -167,25 +177,25 @@ export default function add_booking({ clientProfile }) {
                                     </div>
                                     <div className="flex flex-col gap-y-1">
                                         <label htmlFor="booking_des_date" className="inputFieldLabel">Desired Date</label>
-                                        <DatePicker 
+                                        {/* <DatePicker 
                                             selected={ desDate } 
                                             onChange={(date) => setDesDate(date)}
-                                            className="inputSelect"
+                                            className="inputSelect rounded-lg"
                                             showMonthDropdown
                                             showYearDropdown
                                             scrollableYearDropdown
                                             minDate={new Date()}
                                             dropdownMode="select"
                                             isClearable
-                                        />
-                                        {/* <div className="inputContainer">
+                                        /> */}
+                                        <div className="inputContainer">
                                             <input
                                                 type="date"
                                                 className="inputFieldDateTime appearance-none"
                                                 { ...register("booking_des_date", { required: "This field should not be empty!" }) }
                                                 autoComplete="off"
                                             />
-                                        </div> */}
+                                        </div>
                                         { 
                                             errors.booking_des_date && 
                                             <div className="flex items-center gap-x-1 text-red-500">
@@ -208,7 +218,7 @@ export default function add_booking({ clientProfile }) {
                                             timeCaption="Time"
                                             dateFormat="h:mm aa"
                                             isClearable
-                                            className="inputSelect"
+                                            className="inputSelect rounded-lg"
                                         />
                                         {/* <div className="inputContainer">
                                             <input
@@ -259,7 +269,7 @@ export default function add_booking({ clientProfile }) {
                                     <div className="flex flex-col gap-y-1">
                                         <label htmlFor="booking_service_requirements" className="inputFieldLabel">Service Requirements</label>
                                         <select
-                                            className="inputSelect"
+                                            className="inputSelect rounded-lg"
                                             {...register("booking_service_requirements")}
                                         >
                                             <option value="Plated">Plated</option>
@@ -270,7 +280,7 @@ export default function add_booking({ clientProfile }) {
                                     <div className="flex flex-col gap-y-1">
                                         <label htmlFor="booking_beverages" className="inputFieldLabel">Beverages</label>
                                         <select
-                                            className="inputSelect"
+                                            className="inputSelect rounded-lg"
                                             {...register("booking_beverages")}
                                         >
                                             <option value="Alcoholic">Alcoholic</option>
@@ -332,18 +342,9 @@ export default function add_booking({ clientProfile }) {
                                 </div>
                                 <div className="w-full pl-2">
                                     <button 
-                                        className="max-w-2xl px-3 py-2 bg-teal-700 hover:bg-teal-800 color-transition border-teal-800 focus:bg-teal-800 ring-2 ring-offset-2 ring-transparent focus:ring-teal-800 focus:outline-none text-gray-50 rounded-sm flex justify-center items-center gap-x-1"
+                                        className="px-5 py-2 bg-pink-600 hover:bg-pink-500 rounded-lg text-white color-transition focus:outline-none"
                                     >
-                                        <svg 
-                                            xmlns="http://www.w3.org/2000/svg" 
-                                            className="h-5 w-5 text-current" 
-                                            fill="none" 
-                                            viewBox="0 0 24 24" 
-                                            stroke="currentColor"
-                                        >
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                        </svg>
-                                        <p className="text-sm font-bold">Book Event</p>
+                                        <p className="text-base font-bold tracking-wide">Book Event</p>
                                     </button>
                                 </div>
                                 <p className="pl-2 text-sm"><span className="font-bold">Note:</span> As for the mode of payment, it will be on the contract signing for the finalization of the event.</p>
@@ -360,7 +361,7 @@ export default function add_booking({ clientProfile }) {
 export const getServerSideProps = async ({ req }) => {
     const token = req.cookies.jwt
     const decoded_token = jwt_decode(token)
-    const res = await fetch(`http://localhost:8000/client_profile/${decoded_token.user_id}`, {
+    const res = await fetch(`https://alas-creatives-backend.herokuapp.com/client_profile/${decoded_token.user_id}`, {
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })

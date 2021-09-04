@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 const Hero = () => {
     return (
-        <div className="row-start-1 w-full h-screen bg-gray-100 flex md:grid md:grid-cols-2 md:place-items-center justify-center items-center text-gray-800">
+        <div className="row-start-1 w-full h-screen bg-gray-100 flex md:grid md:grid-cols-2 md:place-items-center justify-center items-center text-gray-800 overflow-hidden">
             <div className="md:col-start-1 flex flex-col items-center md:items-start">
                 <svg 
                     className="w-20 h-20 transform opacity-60 -mt-5"
@@ -25,14 +25,15 @@ const Hero = () => {
                 </Link>
             </div>
             <div 
-                className="hidden h-full w-full md:flex justify-center bg-gradient-to-t from-gray-900 via-gray-800 to-gray-700 col-start-2"
+                className="hidden h-full w-full md:flex justify-center items-end bg-gradient-to-t from-gray-900 via-gray-800 to-gray-700 col-start-2"
             >
                 <Image
                     src="/images/couple.png"
-                    height={ 600 }
-                    width={ 401 }
+                    height={ 650 }
+                    width={ 434 }
                     alt="Couple"
                     priority="true"
+                    className="object-scale-down"
                 />
             </div>
         </div>

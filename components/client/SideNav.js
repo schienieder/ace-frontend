@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import clientStyles from '../../styles/Client.module.css'
 import { Disclosure, Transition } from '@headlessui/react'
 
@@ -8,8 +9,14 @@ const SideNav = ({ isActive }) => {
         <div className="col-start-1 h-screen bg-white border-r border-gray-200 flex flex-col">
             <div className="w-full py-4 flex justify-center items-center gap-x-1 text-gray-800">
                 <Link href="/client">
-                    <div className="flex items-center gap-x-1 cursor-pointer">
-                        <h4 className="text-2xl font-source font-black">ACE</h4>
+                    <div className="flex items-center gap-x-3 cursor-pointer">
+                        <Image 
+                            src="/images/logo.svg"
+                            width={ 50 }
+                            height={ 50 }
+                            alt="Logo"
+                        />
+                        <h4 className="text-2xl font-source font-black">Marahuyo</h4>
                     </div>
                 </Link>
             </div>
@@ -67,7 +74,7 @@ const SideNav = ({ isActive }) => {
                             leaveTo="opacity-0 transform scale-95"
                         >
                             <Disclosure.Panel>
-                                <Link href="/client/bookings/add_booking" passHref>
+                                <Link href="/client/bookings/select_package" passHref>
                                     <a 
                                         className={`${clientStyles.sideDropDownItem} color-transition`}
                                     >

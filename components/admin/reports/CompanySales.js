@@ -56,9 +56,11 @@ const data = [
 ]
 
 const CompanySales = () => {
+    const currDate = new Date()
+    const currYear = currDate.getFullYear()
     return (
         <div className="w-full card flex flex-col gap-y-3">
-            <h4 className="text-base font-bold">Company Sales</h4>
+            <h4 className="text-base font-bold">Events for { currYear }</h4>
             <ResponsiveContainer width="100%" height={400}>
                 <LineChart
                     data={data}

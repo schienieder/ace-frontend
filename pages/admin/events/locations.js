@@ -4,8 +4,29 @@ import SideNav from '../../../components/admin/SideNav'
 import Footer from '../../../components/Footer'
 import PageHeader from '../../../components/PageHeader'
 import { useRouter } from 'next/router'
+import { GoogleMap, useLoadScript } from '@react-google-maps/api'
+import mapStyles from '../../../mapStyles'
+
+const libraries = ["places"]
+const mapContainerStyle = {
+    height : "100%",
+    width : "100%",
+}
+const center = {
+    lat : 7.448212,
+    lng : 125.809425
+}
+const options = {
+    styles : mapStyles,
+    disableDefaultUI : true,
+    zoomControl : true
+}
 
 export default function locations() {
+    const { isLoaded, loadError } = useLoadScript({
+        googleMapsApiKey : "AIzaSyDkS9hAtCVQCjsR1FoWDb8ruSE_A--XW9o",
+        libraries
+    })
     const router = useRouter()
     const [userName, setUsername] = useState()
     const readRole = () => {
@@ -18,6 +39,8 @@ export default function locations() {
     useEffect( async () => {
         await readRole()
     }, [])
+    if (loadError) return <h4 className="text-xl font-bold">Error Loading Maps!</h4>
+    if (!isLoaded) return <h4 className="text-xl font-bold">Maps Loading . . .</h4>
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="events" />
@@ -38,7 +61,12 @@ export default function locations() {
                             </svg>
                         </PageHeader>
                         <div className="card w-full h-screen">
-                            <div className="bg-gray-100 w-full h-full rounded-md"></div>
+                            <GoogleMap 
+                                mapContainerStyle={ mapContainerStyle }
+                                zoom={ 10 }
+                                center={ center }
+                                options={ options }
+                            ></GoogleMap>
                         </div>
                     </div>
                     <Footer />

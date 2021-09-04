@@ -13,3 +13,7 @@
 .authInput {
   @apply flex-1 py-1 px-1 bg-gray-200 border-none focus:outline-none focus:ring-transparent text-sm rounded-sm text-gray-800;
 }
+
+.authCardHeight {
+  height: 486px;
+}

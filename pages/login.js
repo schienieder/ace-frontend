@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form'
 import AuthErrorIcon from '../components/AuthErrorIcon'
 import { useRouter } from 'next/router'
 import jwt_decode from 'jwt-decode'
-import Cookies2 from 'universal-cookie'
 import Cookies from 'js-cookie'
 import axios from 'axios'
 import Swal from 'sweetalert2'
@@ -13,7 +12,6 @@ import Swal from 'sweetalert2'
 export default function login() {
     const router = useRouter()
     const { register, handleSubmit, formState : { errors } } = useForm()
-    const cookies = new Cookies2()
     const onSubmit = async (data) => {
         const formData = new FormData()
         formData.append('username', data.login_uname)
@@ -27,9 +25,7 @@ export default function login() {
         .then((response) => {
             const jwt_token = response.data.access
             let decoded_token = jwt_decode(jwt_token)
-            cookies.set('jwt', jwt_token, [
-                { httpOnly : true }
-            ])
+            Cookies.set('jwt', jwt_token)
             localStorage.setItem('jwt', jwt_token)
             axios({
                 method : 'GET',
@@ -88,7 +84,7 @@ export default function login() {
                     </Link>
                 </div>
             </nav>
-            <div className="w-custom1 h-4/5 bg-white rounded-xl shadow-sm border-b border-gray-200 grid grid-cols-2">
+            <div className={`w-custom1 ${ authStyles.authCardHeight } bg-white rounded-xl shadow-sm border-b border-gray-200 grid grid-cols-2`}>
                 <div className="col-start-1 flex flex-col justify-center items-center">
                     <form
                         onSubmit={ handleSubmit(onSubmit) }

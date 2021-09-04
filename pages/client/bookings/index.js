@@ -4,12 +4,10 @@ import TopNav from '../../../components/client/TopNav'
 import Footer from '../../../components/client/Footer'
 import PageHeader from '../../../components/client/PageHeader'
 import { useRouter } from 'next/router'
-import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
 
 export default function bookings({ bookingDetails }) {
     const router = useRouter()
-    const axios = require('axios')
     const [userName, setUsername] = useState()
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
@@ -29,7 +27,17 @@ export default function bookings({ bookingDetails }) {
                 <div className="row-start-2 w-full h-full bg-true-100">
                     <div className="p-8 flex flex-col items-center gap-y-5 min-h-screen">
                         <div className="w-client-profile-form-container">
-                            <PageHeader text="Booking Details" />
+                            <PageHeader text="Booking Details">
+                                <svg 
+                                    xmlns="http://www.w3.org/2000/svg" 
+                                    className="h-7 w-7 text-current" 
+                                    fill="none" 
+                                    viewBox="0 0 24 24" 
+                                    stroke="currentColor"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                                </svg>
+                            </PageHeader>
                         </div>
                         <div className="card w-client-profile-form-container flex flex-col items-center gap-y-10">
                             {
@@ -94,14 +102,15 @@ export default function bookings({ bookingDetails }) {
 }
 
 export const getServerSideProps = async ({ req }) => {
+    const url = 'https://alas-creatives-backend.herokuapp.com/'
     const token = req.cookies.jwt
     const decoded_token = jwt_decode(token)
-    const res1 = await fetch(`http://localhost:8000/client_profile/${decoded_token.user_id}`, {
+    const res1 = await fetch(`${url}client_profile/${decoded_token.user_id}`, {
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })
     const data1 = await res1.json()
-    const res2 = await fetch(`http://localhost:8000/client_booking/${data1.id}`, {
+    const res2 = await fetch(`${url}client_booking/${data1.id}`, {
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })

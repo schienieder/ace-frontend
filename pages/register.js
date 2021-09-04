@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import authStyles from '../styles/Auth.module.css'
 import { Formiz, FormizStep, useForm } from '@formiz/core'
 import { isEmail, isLength, isMinLength, isNumber, } from '@formiz/validations'
 import MyInputField from '../components/MyInputField'
@@ -72,7 +73,7 @@ export default function register() {
                     </Link>
                 </div>
             </nav>
-            <div className="w-custom1 h-4/5 bg-white rounded-xl shadow-sm border-b border-gray-200 grid grid-cols-2">
+            <div className={`w-custom1 ${ authStyles.authCardHeight } bg-white rounded-xl shadow-sm border-b border-gray-200 grid grid-cols-2`}>
                 <div className="col-start-1 bg-register-img bg-cover bg-center rounded-tl-xl rounded-bl-xl"></div>
                 <div className="col-start-2 flex flex-col justify-center items-center">
                     <Formiz

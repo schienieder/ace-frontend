@@ -67,7 +67,7 @@ export default function profile({ clientProfile }) {
         const jwt_token = Cookies.get('jwt')
         axios({
             method : 'PUT',
-            url : 'http://localhost:8000/client_profile/update',
+            url : 'https://alas-creatives-backend.herokuapp.com/client_profile/update',
             headers : {
                 'Content-Type' : 'application/json',
                 'Authorization' : 'Bearer'+' '+jwt_token
@@ -114,12 +114,22 @@ export default function profile({ clientProfile }) {
                 <div className="row-start-2 w-full h-full bg-true-100">
                     <div className="p-8 flex flex-col items-center gap-y-5 min-h-screen">
                         <div className="w-client-profile-form-container">
-                            <PageHeader text="Client Profile" />
+                            <PageHeader text="Client Profile">
+                                <svg 
+                                    xmlns="http://www.w3.org/2000/svg" 
+                                    className="w-7 h-7 text-current" 
+                                    fill="none" 
+                                    viewBox="0 0 24 24" 
+                                    stroke="currentColor"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                                </svg>
+                            </PageHeader>
                         </div>
                         <div className="card w-client-profile-form-container">
                             <form 
                                 onSubmit={ handleSubmit(handleSubmitForm) }
-                                className="w-full rounded-md p-5 flex flex-col items-center border border-gray-300 gap-y-7"
+                                className="w-full rounded-xl p-5 flex flex-col items-center border border-gray-300 gap-y-7"
                             >
                                 {/* This is for the name field */}
                                 <div className="flex flex-col gap-y-2">
@@ -261,7 +271,7 @@ export default function profile({ clientProfile }) {
                                                 isSearchable
                                             /> */}
                                             <select
-                                                className="inputSelect"
+                                                className="inputSelect rounded-lg"
                                                 {...register("client_sex")}
                                                 defaultValue={ clientProfile.sex || '' }
                                             >
@@ -271,7 +281,7 @@ export default function profile({ clientProfile }) {
                                         </div>
                                         <div className="flex flex-col gap-y-1">
                                             <label htmlFor="profile_birth" className="inputFieldLabel">Birth Date</label>
-                                            <DatePicker 
+                                            {/* <DatePicker 
                                                 selected={ birthDate } 
                                                 onChange={(date) => setBirthDate(date)}
                                                 className="inputSelect"
@@ -280,8 +290,8 @@ export default function profile({ clientProfile }) {
                                                 scrollableYearDropdown
                                                 dropdownMode="select"
                                                 isClearable
-                                            />
-                                            {/* <div className="inputContainer">
+                                            /> */}
+                                            <div className="inputContainer">
                                                 <input
                                                     type="date"
                                                     className="inputFieldDateTime appearance-none"
@@ -289,7 +299,7 @@ export default function profile({ clientProfile }) {
                                                     autoComplete="off"
                                                     defaultValue={ clientProfile.birthdate || '' }
                                                 />
-                                            </div> */}
+                                            </div>
                                             { 
                                                 errors.client_birth && 
                                                 <div className="flex items-center gap-x-1 text-red-500">
@@ -433,9 +443,9 @@ export default function profile({ clientProfile }) {
 
                                 <div className="w-full pl-2">
                                     <button 
-                                        className="w-24 px-3 py-2 bg-teal-800 hover:bg-teal-700 color-transition border-teal-800 focus:bg-teal-700 ring-2 ring-offset-2 ring-transparent focus:ring-teal-700 focus:outline-none text-gray-50 rounded-sm"
+                                        className="px-5 py-2 bg-pink-600 hover:bg-pink-500 rounded-lg text-white color-transition focus:outline-none"
                                     >
-                                        <p className="text-base font-medium">Save</p>
+                                        <p className="text-base font-bold tracking-wide">Save</p>
                                     </button>
                                 </div>
                             </form>
@@ -451,7 +461,7 @@ export default function profile({ clientProfile }) {
 export const getServerSideProps = async ({ req }) => {
     const token = req.cookies.jwt
     const decoded_token = jwt_decode(token)
-    const res = await fetch(`http://localhost:8000/client_profile/${decoded_token.user_id}`, {
+    const res = await fetch(`https://alas-creatives-backend.herokuapp.com/client_profile/${decoded_token.user_id}`, {
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })

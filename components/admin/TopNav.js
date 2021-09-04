@@ -3,13 +3,16 @@ import Link from 'next/link'
 import adminStyles from '../../styles/Admin.module.css'
 import { Menu, Transition, Switch } from '@headlessui/react'
 import { useRouter } from 'next/router'
+import Cookies from 'js-cookie'
 
 const TopNav = ({ username }) => {
     const [toggleDark, setToggleDark] = useState(false)
     const router = useRouter()
+    const cookies = new Cookies()
     const handleLogOut = () => {
         localStorage.clear()
         router.push('/login')
+        Cookies.remove('jwt')
     }
     const darkEnabled = () => {
         const mode = localStorage.setItem('dark', 'true')

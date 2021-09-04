@@ -33,7 +33,7 @@ export default function messages() {
                         <div className="card w-full grid grid-cols-custom-layout gap-x-5">
 
                             {/* Chat names part */}
-                            <div className="col-start-1 rounded-md flex flex-col border border-gray-300 p-5 gap-y-3">
+                            <div className="col-start-1 rounded-lg flex flex-col border border-gray-300 p-5 gap-y-3">
                                 <div className="flex flex-col gap-y-2">
                                     <div className="searchBarContainer">
                                         <input 
@@ -81,7 +81,7 @@ export default function messages() {
 
                             {/* Messages part */}
                             <div className="col-start-2 border border-gray-300 rounded-md flex flex-col p-5 gap-y-5">
-                                <div className="w-full h-full bg-gray-100 rounded-md">
+                                <div className="w-full h-full bg-gray-100 rounded-lg">
 
                                 </div>
                                 <div className="flex items-center gap-x-3 bottom-0">
