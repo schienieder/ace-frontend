@@ -35,6 +35,18 @@ textarea {
   @apply p-5 bg-white dark:bg-gray-900 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl;
 }
 
+.modalAddBtn {
+  @apply px-5 py-2 bg-pink-600 hover:bg-pink-500 rounded-lg text-white;
+}
+
+.modalCloseBtn {
+  @apply px-5 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-pink-600;
+}
+
+.btnText {
+  @apply font-bold text-base tracking-wide;
+}
+
 .searchBarContainer {
   @apply flex gap-x-1 px-2 py-1 items-center border border-gray-300 focus-within:border-gray-600 rounded-lg;
 }

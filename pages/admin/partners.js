@@ -199,8 +199,8 @@ export default function partners({ partnersList }) {
                                             leaveFrom="opacity-100 scale-100"
                                             leaveTo="opacity-0 scale-95"
                                         >
-                                        <div className="inline-block w-client-profile-form-container my-8 p-5 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl border-b border-gray-200 rounded-md">
-                                            <div className="p-5 border border-gray-300 rounded-md">
+                                        <div className="inline-block w-client-profile-form-container my-8 p-5 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl border-b border-gray-200 rounded-xl">
+                                            <div className="p-5 border border-gray-300 rounded-xl">
                                                 
                                                 <div className="w-full flex justify-end">
                                                     <button
@@ -225,7 +225,7 @@ export default function partners({ partnersList }) {
                                                     onSubmit={ handleSubmit(addPartner) }
                                                 >
 
-                                                    <h4 className="text-base font-bold">New Business Partner</h4>
+                                                    <h4 className="text-base font-bold tracking-wide">New Business Partner</h4>
 
                                                     {/* This is for the name field */}
                                                     <div className="flex flex-col gap-y-2">
@@ -413,16 +413,16 @@ export default function partners({ partnersList }) {
 
                                                     <div className="w-full pr-2 mt-5 flex justify-end gap-x-3">
                                                         <button 
-                                                            className="w-24 px-3 py-2 bg-teal-800 hover:bg-teal-700 color-transition border-teal-800 focus:bg-teal-700 ring-2 ring-offset-2 ring-transparent focus:ring-teal-700 focus:outline-none text-gray-50 rounded-sm"
+                                                            className="modalAddBtn color-transition"
                                                         >
-                                                            <p className="text-base font-medium">Save</p>
+                                                            <p className="btnText">Save</p>
                                                         </button>
                                                         <button
                                                             type="button"
-                                                            className="w-24 px-3 py-2 text-teal-700 bg-gray-100 hover:bg-gray-200 focus:outline-none rounded-sm"
+                                                            className="modalCloseBtn color-transition"
                                                             onClick={closeModal}
                                                         >
-                                                            <p className="text-base font-medium">Close</p>
+                                                            <p className="btnText">Close</p>
                                                         </button>
                                                     </div>
 

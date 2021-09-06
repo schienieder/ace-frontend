@@ -9,6 +9,8 @@ import adminStyles from '../../../styles/Admin.module.css'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
+import axios from 'axios'
+import Cookies from 'js-cookie'
 import Swal from 'sweetalert2'
 
 export default function cards({ clientsList, eventsList }) {
@@ -28,44 +30,45 @@ export default function cards({ clientsList, eventsList }) {
     const { register, reset, handleSubmit, formState : { errors } } = useForm()
     const addEvent = (data) => {
         console.log(data)
-        // const jwt_token = Cookies.get('jwt')
-        // axios({
-        //     method : 'POST',
-        //     url : 'http://localhost:8000/add_event/',
-        //     headers : {
-        //         'Authorization' : 'Bearer'+' '+jwt_token,
-        //         'Content-Type' : 'application/json'
-        //     },
-        //     data : {
-        //         event_name : data.event_name,
-        //         venue : data.event_venue,
-        //         event_date : data.event_date,
-        //         time_schedule : data.booking_time_sched,
-        //         event_budget : data.event_budget,
-        //         client : data.event_client
-        //     }
-        // }).then(() => {
-        //     reset()
-        //     Swal.fire({
-        //         icon : 'success',
-        //         title: 'Event Creation Successsful',
-        //         timer : 3000,
-        //         text: `Your event has been successfully created!`,
-        //         showCloseButton: true,
-        //         confirmButtonColor: '#0F766E',
-        //     })
-        //     setIsOpen(false)
-        //     router.push('/client/bookings')
-        // }).catch((error) => {
-        //     Swal.fire({
-        //         icon : 'error',
-        //         title: 'Event Creation Error',
-        //         timer : 3000,
-        //         text: error.message,
-        //         showCloseButton: true,
-        //         confirmButtonColor: '#0F766E',
-        //     })
-        // })
+        const jwt_token = Cookies.get('jwt')
+        console.log(jwt_token)
+        axios({
+            method : 'POST',
+            url : 'https://alas-creatives-backend.herokuapp.com/add_event/',
+            headers : {
+                'Authorization' : 'Bearer'+' '+jwt_token,
+                'Content-Type' : 'application/json'
+            },
+            data : {
+                event_name : data.event_name,
+                venue : data.event_venue,
+                event_date : data.event_date,
+                time_schedule : data.event_time,
+                event_budget : data.event_budget,
+                client : data.event_client
+            }
+        }).then(() => {
+            reset()
+            Swal.fire({
+                icon : 'success',
+                title: 'Event Creation Successsful',
+                timer : 3000,
+                text: `Event has been successfully created!`,
+                showCloseButton: true,
+                confirmButtonColor: '#DB2777',
+            })
+            setIsOpen(false)
+            router.push('/admin/events/cards')
+        }).catch((error) => {
+            Swal.fire({
+                icon : 'error',
+                title: 'Event Creation Error',
+                timer : 3000,
+                text: error.message,
+                showCloseButton: true,
+                confirmButtonColor: '#DB2777',
+            })
+        })
     }
     const closeModal = () => {
         setIsOpen(false)
@@ -143,8 +146,8 @@ export default function cards({ clientsList, eventsList }) {
                                         leaveFrom="opacity-100 scale-100"
                                         leaveTo="opacity-0 scale-95"
                                     >
-                                    <div className="inline-block w-client-profile-form-container my-8 p-5 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl border-b border-gray-200 rounded-md">
-                                        <div className="p-5 border border-gray-300 rounded-md">
+                                    <div className="inline-block w-client-profile-form-container my-8 p-5 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl border-b border-gray-200 rounded-xl">
+                                        <div className="p-5 border border-gray-300 rounded-xl">
                                             
                                             <div className="w-full flex justify-end">
                                                 <button
@@ -273,7 +276,7 @@ export default function cards({ clientsList, eventsList }) {
                                                 </div>
 
                                                 {/* This is for the account fields */}
-                                                <div className="w-custom-textarea pl-1 flex gap-x-5">
+                                                <div className="flex gap-x-5">
 
                                                     <div className="flex flex-col gap-y-1">
                                                         <label className="inputFieldLabel">Client Budget</label>
@@ -304,12 +307,15 @@ export default function cards({ clientsList, eventsList }) {
                                                     <div className="flex flex-col gap-y-1">
                                                         <label className="inputFieldLabel">Event Client</label>
                                                         <select
-                                                            className="inputSelect"
+                                                            className="inputSelect rounded-lg"
                                                             {...register("event_client")}
                                                         >
                                                             {
                                                                 clientsList.results.map((client) => (
-                                                                    <option value={ client.id }>{ client.first_name + ' ' +client.last_name }</option>
+                                                                    <option 
+                                                                        key={ client.id }
+                                                                        value={ client.id }
+                                                                    >{ client.first_name + ' ' +client.last_name }</option>
                                                                 ))
                                                             }
                                                         </select>
@@ -318,16 +324,16 @@ export default function cards({ clientsList, eventsList }) {
 
                                                 <div className="w-full pr-2 mt-5 flex justify-end gap-x-3">
                                                     <button
-                                                        className="w-24 px-3 py-2 bg-teal-800 hover:bg-teal-700 color-transition border-teal-800 focus:bg-teal-700 ring-2 ring-offset-2 ring-transparent focus:ring-teal-700 focus:outline-none text-gray-50 rounded-sm"
+                                                        className="modalAddBtn color-transition"
                                                     >
-                                                        <p className="text-base font-medium">Save</p>
+                                                        <p className="btnText">Save</p>
                                                     </button>
                                                     <button
                                                         type="button"
-                                                        className="w-24 px-3 py-2 text-teal-700 bg-gray-100 hover:bg-gray-200 focus:outline-none rounded-sm"
+                                                        className="modalCloseBtn color-transition"
                                                         onClick={closeModal}
                                                     >
-                                                        <p className="text-base font-medium">Close</p>
+                                                        <p className="btnText">Close</p>
                                                     </button>
                                                 </div>
 
@@ -340,7 +346,7 @@ export default function cards({ clientsList, eventsList }) {
                             </Transition>
                         </div>
                         <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center gap-5">
-                            {/* {
+                            {
                                 eventsList.results.map((event) => (
                                     <div
                                         key={ event.id }
@@ -351,7 +357,7 @@ export default function cards({ clientsList, eventsList }) {
                                             <div className="flex items-center gap-x-2">
                                                 <svg 
                                                     xmlns="http://www.w3.org/2000/svg" 
-                                                    className="h-5 w-5 text-teal-700" 
+                                                    className="h-5 w-5 text-pink-600" 
                                                     fill="none" 
                                                     viewBox="0 0 24 24" 
                                                     stroke="currentColor"
@@ -363,7 +369,7 @@ export default function cards({ clientsList, eventsList }) {
                                             </div>
                                             <Link href="/admin/events/locations" passHref>
                                                 <a 
-                                                    className="text-gray-500 hover:text-teal-700 hover:underline text-xs"
+                                                    className="text-gray-500 hover:text-pink-600 hover:underline text-xs"
                                                 >
                                                     { event.venue }
                                                 </a>
@@ -374,7 +380,7 @@ export default function cards({ clientsList, eventsList }) {
                                                 <div className="flex items-center gap-x-2">
                                                     <svg 
                                                         xmlns="http://www.w3.org/2000/svg" 
-                                                        className="h-5 w-5 text-teal-700" 
+                                                        className="h-5 w-5 text-pink-600" 
                                                         fill="none" 
                                                         viewBox="0 0 24 24" 
                                                         stroke="currentColor"
@@ -386,7 +392,7 @@ export default function cards({ clientsList, eventsList }) {
                                                 <div className="flex items-center gap-x-2">
                                                     <svg 
                                                         xmlns="http://www.w3.org/2000/svg" 
-                                                        className="h-5 w-5 text-teal-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        className="h-5 w-5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                     </svg>
                                                     <p className="text-sm font-medium">{ event.time_schedule }</p>
@@ -395,7 +401,7 @@ export default function cards({ clientsList, eventsList }) {
                                             <div className="flex items-center gap-x-2">
                                                 <svg 
                                                     xmlns="http://www.w3.org/2000/svg" 
-                                                    className="h-5 w-5 text-teal-700" 
+                                                    className="h-5 w-5 text-pink-600" 
                                                     fill="none" 
                                                     viewBox="0 0 24 24" 
                                                     stroke="currentColor"
@@ -411,7 +417,7 @@ export default function cards({ clientsList, eventsList }) {
                                                 <p className="text-sm font-normal">40%</p>
                                             </div>
                                             <div className="w-full h-2 rounded-md bg-gray-200">
-                                                <div className="w-1/4 h-2 rounded-md bg-teal-600"></div>
+                                                <div className="w-1/4 h-2 rounded-md bg-pink-600"></div>
                                             </div>
                                         </div>
                                         <Menu as="div" className="w-full flex justify-end">
@@ -494,7 +500,7 @@ export default function cards({ clientsList, eventsList }) {
                                         </Menu>
                                     </div>
                                 ))
-                            } */}
+                            }
                         </div>
                     </div>
                     <Footer />

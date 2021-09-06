@@ -11,8 +11,8 @@ const TopNav = ({ username }) => {
     const cookies = new Cookies()
     const handleLogOut = () => {
         localStorage.clear()
-        router.push('/login')
         Cookies.remove('jwt')
+        router.push('/login')
     }
     const darkEnabled = () => {
         const mode = localStorage.setItem('dark', 'true')
