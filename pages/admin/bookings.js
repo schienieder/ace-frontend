@@ -10,6 +10,7 @@ import Swal from 'sweetalert2'
 import axios from 'axios'
 
 export default function bookings({ bookingsList, clientsList }) {
+    const api = process.env.NEXT_PUBLIC_DRF_API
     const router = useRouter()
     const [userName, setUsername] = useState()
     const readRole = () => {
@@ -37,7 +38,7 @@ export default function bookings({ bookingsList, clientsList }) {
             if (result.isConfirmed) {
                 axios({
                     method : 'DELETE',
-                    url : `https://alas-creatives-backend.herokuapp.com/client_booking/destroy/${booking_id}`,
+                    url : `${api}client_booking/destroy/${booking_id}`,
                     headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
                 })
                 .then(() => {
@@ -199,14 +200,14 @@ export default function bookings({ bookingsList, clientsList }) {
 }
 
 export const getServerSideProps = async ({ req }) => {
-    const url = 'https://alas-creatives-backend.herokuapp.com/'
+    const api = process.env.NEXT_PUBLIC_DRF_API
     const token = req.cookies.jwt
-    const res1 = await fetch(`${url}bookings_list/`, {
+    const res1 = await fetch(`${api}bookings_list/`, {
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })
     const data1 = await res1.json()
-    const res2 = await fetch(`${url}clients_list/`,{
+    const res2 = await fetch(`${api}clients_list/`,{
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })

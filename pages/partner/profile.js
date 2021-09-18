@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import TopNav from '../../components/partner/TopNav'
 import SideNav from '../../components/partner/SideNav'
 import Footer from '../../components/partner/Footer'
@@ -11,55 +11,27 @@ import Swal from 'sweetalert2'
 import axios from 'axios'
 
 export default function profile({ partnerProfile }) {
+    const api = process.env.NEXT_PUBLIC_DRF_API
     const router = useRouter()
-    const readCookie = () => {
-        try {
-            const jwt_token = Cookies.get('jwt')
-            const decoded_token = jwt_decode(jwt_token)
-            axios({
-                method : 'GET',
-                url : `http://localhost:8000/account/${decoded_token.user_id}`,
-                headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
-            })
-            .then((response) => {
-                response.data.role !== 'partner' ? router.push('/login') : ''
-                axios({
-                    method : 'GET',
-                    url : `http://localhost:8000/partner_profile/${decoded_token.user_id}`,
-                    headers : {'Authorization' : 'Bearer'+' '+jwt_token}
-                })
-                .then((response) => {
-                    console.log(response.data)
-                })
-                .catch((error) => {
-                    console.log(error.response)
-                })
-            })
-            .catch((error) => {
-                Swal.fire({
-                    icon : 'error',
-                    title: 'Error',
-                    text: `${error.response}`,
-                    showCloseButton: true,
-                    confirmButtonColor: '#0F766E',
-                })
-                console.log(error.response)
-            })
-            console.log(jwt_token)
-        }
-        catch {
+    const [userName, setUsername] = useState()
+    const [areaText, setAreaText] = useState(partnerProfile.services_offered)
+    const readRole = () => {
+        setUsername(localStorage.getItem('username'))
+        const role = localStorage.getItem('role')
+        if (role !== 'partner') {
             router.push('/login')
         }
     }
-    useEffect(() => {
-        readCookie()
+    useEffect( async () => {
+        await readRole()
     }, [])
     const { register, handleSubmit, formState : { errors } } = useForm()
     const handleSubmitForm = (data) => {
+        console.log(data.partner_services)
         const jwt_token = Cookies.get('jwt')
         axios({
             method : 'PUT',
-            url : 'http://localhost:8000/partner_profile/update',
+            url : `${api}partner_profile/update`,
             headers : {
                 'Content-Type' : 'application/json',
                 'Authorization' : 'Bearer'+' '+ jwt_token
@@ -74,17 +46,17 @@ export default function profile({ partnerProfile }) {
                 street_address : data.partner_st_add,
                 city : data.partner_city,
                 state_province : data.partner_province,
-                postal_zip : data.partner_zip
+                postal_zip : data.partner_zip,
+                services_offered : data.partner_services,
             }
         }).then(() => {
-            console.log(data)
             Swal.fire({
                 icon : 'success',
                 title: 'Update Successful',
                 timer : 3000,
                 text: `Profile successfully updated!`,
                 showCloseButton: true,
-                confirmButtonColor: '#0F766E',
+                confirmButtonColor: '#DB2777',
             })
             router.push('/partner/profile')
         }).catch(error => {
@@ -94,7 +66,7 @@ export default function profile({ partnerProfile }) {
                 timer : 3000,
                 text: error.message,
                 showCloseButton: true,
-                confirmButtonColor: '#0F766E',
+                confirmButtonColor: '#DB2777',
             })
         })
     }
@@ -102,8 +74,8 @@ export default function profile({ partnerProfile }) {
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="" />
             <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav />
-                <div className="row-start-2 w-full h-full bg-gray-100">
+                <TopNav username={ userName } />
+                <div className="row-start-2 w-full h-full bg-true-100">
                     <div className="p-8 flex flex-col items-center gap-y-5 min-h-screen">
                         <div className="w-client-profile-form-container">
                         <h4 className="text-xl font-bold">Business Profile</h4>
@@ -112,7 +84,7 @@ export default function profile({ partnerProfile }) {
                         <div className="card w-client-profile-form-container">
                             <form
                                 onSubmit={ handleSubmit(handleSubmitForm) }
-                                className="w-full flex flex-col items-center gap-y-6 border border-gray-300 rounded-md p-5"
+                                className="w-full flex flex-col items-center gap-y-6 border border-gray-300 rounded-xl p-5"
                             >
                                 <h4 className="text-base font-bold">Personal Information</h4>
                                 
@@ -438,12 +410,29 @@ export default function profile({ partnerProfile }) {
 
                                 </div>
 
+                                <div className="flex flex-col gap-y-1">
+                                    <label className="inputFieldLabel">Services Offered</label>
+                                    <textarea 
+                                        className="inputTextArea"
+                                        { ...register("partner_services", { required : "This field cannot be empty" }) }
+                                        // onChange={e => setAreaText(e.target.value)}
+                                        defaultValue={ partnerProfile.services_offered }
+                                    ></textarea>
+                                    { 
+                                        errors.partner_services && 
+                                        <div className="flex items-center gap-x-1 text-red-500">
+                                            <AuthErrorIcon />
+                                            <p className="text-xs">{ errors.partner_services.message }</p>
+                                        </div> 
+                                    }
+                                </div>
+
                                 <div className="w-full pl-2">
                                     <button 
                                         type="submit"
-                                        className="w-24 px-3 py-2 bg-teal-800 hover:bg-teal-700 color-transition border-teal-800 focus:bg-teal-700 ring-2 ring-offset-2 ring-transparent focus:ring-teal-700 focus:outline-none text-gray-50 rounded-sm"
+                                        className="px-5 py-2 bg-pink-600 hover:bg-pink-500 rounded-lg text-white color-transition focus:outline-none"
                                     >
-                                        <p className="text-base font-medium">Save</p>
+                                        <p className="text-base font-bold tracking-wide">Save</p>
                                     </button>
                                 </div>
 
@@ -459,9 +448,10 @@ export default function profile({ partnerProfile }) {
 }
 
 export const getServerSideProps = async ({ req }) => {
+    const api = process.env.NEXT_PUBLIC_DRF_API
     const token = req.cookies.jwt
     const decoded_token = jwt_decode(token)
-    const res = await fetch(`http://localhost:8000/partner_profile/${decoded_token.user_id}`, {
+    const res = await fetch(`${api}partner_profile/${decoded_token.user_id}`, {
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })

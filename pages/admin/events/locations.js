@@ -6,7 +6,13 @@ import PageHeader from '../../../components/PageHeader'
 import { useRouter } from 'next/router'
 import { GoogleMap, useLoadScript } from '@react-google-maps/api'
 import mapStyles from '../../../mapStyles'
+import BeatLoader from "react-spinners/BeatLoader";
 
+const override = `
+    display: block;
+    margin: auto;
+    border-color: red;
+`;
 const libraries = ["places"]
 const mapContainerStyle = {
     height : "100%",
@@ -39,8 +45,6 @@ export default function locations() {
     useEffect( async () => {
         await readRole()
     }, [])
-    if (loadError) return <h4 className="text-xl font-bold">Error Loading Maps!</h4>
-    if (!isLoaded) return <h4 className="text-xl font-bold">Maps Loading . . .</h4>
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="events" />
@@ -60,14 +64,41 @@ export default function locations() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
                         </PageHeader>
-                        <div className="card w-full h-screen">
-                            <GoogleMap 
-                                mapContainerStyle={ mapContainerStyle }
-                                zoom={ 10 }
-                                center={ center }
-                                options={ options }
-                            ></GoogleMap>
-                        </div>
+                        {
+                            !isLoaded ? (
+                                <BeatLoader 
+                                    color="#DB2777" 
+                                    css={override} 
+                                    size={35} 
+                                />
+                            ) : (
+                                <div className="card w-full h-screen">
+                                {
+                                    !loadError ? (
+                                        <GoogleMap 
+                                            mapContainerStyle={ mapContainerStyle }
+                                            zoom={ 10 }
+                                            center={ center }
+                                            options={ options }
+                                        ></GoogleMap>
+                                    ) : (
+                                        <div className="flex gap-x-3">
+                                            <svg 
+                                                xmlns="http://www.w3.org/2000/svg" 
+                                                className="h-7 w-7 text-red-600" 
+                                                fill="none" 
+                                                viewBox="0 0 24 24" 
+                                                stroke="currentColor"
+                                            >
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <h4 className="text-xl font-bold dark:text-gray-300">Error Loading Maps</h4>
+                                        </div>
+                                    )
+                                }
+                            </div>
+                            )
+                        }
                     </div>
                     <Footer />
                 </div>

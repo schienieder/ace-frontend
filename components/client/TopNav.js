@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import clientStyles from '../../styles/Client.module.css'
 import { Menu, Transition, Switch } from '@headlessui/react'
@@ -10,8 +10,8 @@ const TopNav = ({ username }) => {
     const router = useRouter()
     const handleLogOut = () => {
         localStorage.clear()
-        router.push('/login')
         Cookies.remove('jwt')
+        router.push('/login')
     }
     return (
         <>

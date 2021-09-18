@@ -47,7 +47,7 @@
 }
 
 .tableDataClass {
-  @apply px-4 py-4 whitespace-nowrap;
+  @apply px-4 py-4 whitespace-nowrap text-sm;
 }
 
 .tableDataTextClass {

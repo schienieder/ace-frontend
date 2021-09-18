@@ -20,7 +20,7 @@ const Hero = () => {
                 <p className="text-gray-500">Witness your dream events with your own eyes.</p>
                 <Link href="/register">
                     <a 
-                        className="px-5 py-2 mt-5 bg-gradient-to-r bg-pink-600 hover:bg-pink-500 color-transition rounded-lg text-white font-bold text-sm md:text-base tracking-wide"
+                        className="px-5 py-2 mt-5 bg-pink-600 hover:bg-pink-500 color-transition rounded-lg text-white font-bold text-sm md:text-base tracking-wide"
                     >Book Now</a>
                 </Link>
             </div>

@@ -74,7 +74,7 @@ const SideNav = ({ isActive }) => {
                             leaveTo="opacity-0 transform scale-95"
                         >
                             <Disclosure.Panel>
-                                <Link href="/client/bookings/select_package" passHref>
+                                <Link href="/client/bookings/select_date" passHref>
                                     <a 
                                         className={`${clientStyles.sideDropDownItem} color-transition`}
                                     >

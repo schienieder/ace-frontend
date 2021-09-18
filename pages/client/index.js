@@ -44,7 +44,7 @@ export default function dashboard({ clientProfile }) {
                             </svg>
                         </PageHeader>
                         {
-                            clientProfile.first_name || clientProfile.last_name || clientProfile.mobile_number || clientProfile.email || clientProfile.street_address || clientProfile.city || clientProfile.state_province ?
+                            !clientProfile.first_name || !clientProfile.last_name || !clientProfile.mobile_number || !clientProfile.email || !clientProfile.street_address || !clientProfile.city || !clientProfile.state_province ?
                             (
                                 <div className="w-full p-5 rounded-lg bg-pink-200 flex justify-center items-center gap-x-1 text-gray-800">
                                     <svg 

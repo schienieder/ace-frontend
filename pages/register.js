@@ -9,10 +9,11 @@ import { useRouter } from 'next/router'
 import Swal from 'sweetalert2'
 
 export default function register() {
+    const api = process.env.NEXT_PUBLIC_DRF_API
     const router = useRouter()
     const myForm = useForm() // call useForm
     const handleSubmit = async (data) => {
-        await fetch('https://alas-creatives-backend.herokuapp.com/register/', {
+        await fetch(`${api}register/`, {
             method : "POST",
             headers : {'Content-Type' : 'application/json'},
             body : JSON.stringify({
@@ -199,7 +200,7 @@ export default function register() {
                                 !myForm.isFirstStep && (
                                 <button 
                                     type="button"
-                                    className="px-5 py-2 bg-gradient-to-r bg-gray-100 hover:bg-gray-200 color-transition rounded-lg text-pink-600 font-bold text-base tracking-wide focus:outline-none"
+                                    className="px-5 py-2 bg-gray-100 hover:bg-gray-200 color-transition rounded-lg text-pink-600 font-bold text-base tracking-wide focus:outline-none"
                                     onClick={myForm.prevStep}
                                 >Previous</button>
                             )}

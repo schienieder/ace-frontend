@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import partnerStyles from '../../styles/Admin.module.css'
 import { Disclosure, Transition } from '@headlessui/react'
 
@@ -8,8 +9,14 @@ const SideNav = ({ isActive }) => {
         <div className="col-start-1 h-screen bg-white border-r border-gray-300 flex flex-col">
             <div className="w-full py-4 flex justify-center text-gray-800">
                 <Link href="/partner">
-                    <div className="flex items-center gap-x-1 cursor-pointer">
-                    <h4 className="text-2xl font-source font-black">ACE</h4>
+                    <div className="flex items-center gap-x-3 cursor-pointer">
+                        <Image 
+                            src="/images/logo.svg"
+                            width={ 50 }
+                            height={ 50 }
+                            alt="Logo"
+                        />
+                        <h4 className="text-2xl font-source font-black">Marahuyo</h4>
                     </div>
                 </Link>
             </div>

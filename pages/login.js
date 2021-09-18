@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import authStyles from '../styles/Auth.module.css'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -8,17 +9,21 @@ import jwt_decode from 'jwt-decode'
 import Cookies from 'js-cookie'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import BeatLoader from "react-spinners/BeatLoader";
 
 export default function login() {
+    const api = process.env.NEXT_PUBLIC_DRF_API
+    const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
     const { register, handleSubmit, formState : { errors } } = useForm()
     const onSubmit = async (data) => {
+        setIsLoading(true)
         const formData = new FormData()
         formData.append('username', data.login_uname)
         formData.append('password', data.login_pass)
         axios({
             method : 'POST',
-            url : 'https://alas-creatives-backend.herokuapp.com/api/token/',
+            url : `${api}api/token/`,
             headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
             data : formData
         })
@@ -26,10 +31,9 @@ export default function login() {
             const jwt_token = response.data.access
             let decoded_token = jwt_decode(jwt_token)
             Cookies.set('jwt', jwt_token)
-            localStorage.setItem('jwt', jwt_token)
             axios({
                 method : 'GET',
-                url : `https://alas-creatives-backend.herokuapp.com/account/${decoded_token.user_id}`,
+                url : `${api}account/${decoded_token.user_id}`,
                 headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
             })
             .then((response) => {
@@ -37,8 +41,10 @@ export default function login() {
                 localStorage.setItem('username', response.data.username)
                 localStorage.setItem('role', response.data.role)
                 router.push(`/${response.data.role}`)
+                setIsLoading(false)
             })
             .catch((error) => {
+                setIsLoading(false)
                 Swal.fire({
                     icon : 'error',
                     title: 'Error',
@@ -50,6 +56,7 @@ export default function login() {
             })
         })
         .catch((error) => {
+            setIsLoading(false)
             Swal.fire({
                     icon : 'error',
                     title: 'Login Error',
@@ -62,6 +69,13 @@ export default function login() {
     }
     return (
         <div className="relative w-full h-screen bg-gray-200 flex justify-center items-center font-mont text-gray-800 overflow-hidden">
+            <div className={`absolute z-10 w-full h-full ${isLoading ? 'flex' : 'hidden'} flex-col justify-center items-center bg-white backdrop-filter backdrop-blur-sm`}>
+                <BeatLoader 
+                    color="#DB2777"
+                    size={35} 
+                />
+                <h4 className="text-base">Processing, please wait</h4>
+            </div>
             <nav className="absolute w-full top-0 py-5 px-10 flex justify-between items-center">
                 <Link href="/">
                     <div className="flex items-center gap-x-3 cursor-pointer">

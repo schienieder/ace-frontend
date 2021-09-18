@@ -10,46 +10,9 @@ import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
 import Swal from 'sweetalert2'
 import axios from 'axios'
-import Select from 'react-select'
-import DatePicker from 'react-datepicker'
 
-const sexOptions = [
-    { value : 'Male', label : 'Male' },
-    { value : 'Female', label : 'Female' }
-]
-const optionStyles = {
-    option : () => ({
-        fontSize : 14,
-        paddingLeft : 8,
-        paddingRight : 8,
-    }),
-    control : (provided, state) => ({
-        ...provided,
-        width : 244,
-        fontSize : 14,
-        color : '#1F2937',
-        backgroundColor : '#E5E7EB',
-        borderColor : '#E5E7EB',
-        borderRadius : 2,
-        cursor : 'pointer'
-    }),
-    input : () => ({
-        paddingTop : 2,
-        paddingTop : 2,
-    })
-}
-const customTheme = (theme) => {
-    return {
-        ...theme,
-        colors : {
-            ...theme.colors,
-            primary25 : '#F3F4F6',
-            primary : '#0F766E'
-        }
-    }
-}
+
 export default function profile({ clientProfile }) {
-    const [birthDate, setBirthDate] = useState(null)
     const router = useRouter()
     const [userName, setUsername] = useState()
     const readRole = () => {
@@ -92,7 +55,7 @@ export default function profile({ clientProfile }) {
                 timer : 3000,
                 text: `Profile successfully updated!`,
                 showCloseButton: true,
-                confirmButtonColor: '#0F766E',
+                confirmButtonColor: '#DB2777',
             })
             router.push('/client/profile')
         }).catch((error) => {
@@ -102,7 +65,7 @@ export default function profile({ clientProfile }) {
                 timer : 3000,
                 text: error.message,
                 showCloseButton: true,
-                confirmButtonColor: '#0F766E',
+                confirmButtonColor: '#DB2777',
             })
         })
     }
@@ -263,13 +226,6 @@ export default function profile({ clientProfile }) {
 
                                     <div className="flex flex-col gap-y-1">
                                             <label htmlFor="profile_sex" className="inputFieldLabel">Sex</label>
-                                            {/* <Select 
-                                                options={ sexOptions }
-                                                theme={ customTheme }
-                                                styles={ optionStyles }
-                                                placeholder="Nothing Selected"
-                                                isSearchable
-                                            /> */}
                                             <select
                                                 className="inputSelect rounded-lg"
                                                 {...register("client_sex")}
@@ -281,16 +237,6 @@ export default function profile({ clientProfile }) {
                                         </div>
                                         <div className="flex flex-col gap-y-1">
                                             <label htmlFor="profile_birth" className="inputFieldLabel">Birth Date</label>
-                                            {/* <DatePicker 
-                                                selected={ birthDate } 
-                                                onChange={(date) => setBirthDate(date)}
-                                                className="inputSelect"
-                                                showMonthDropdown
-                                                showYearDropdown
-                                                scrollableYearDropdown
-                                                dropdownMode="select"
-                                                isClearable
-                                            /> */}
                                             <div className="inputContainer">
                                                 <input
                                                     type="date"

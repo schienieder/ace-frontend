@@ -69,7 +69,7 @@ export default function interview({ clientProfile }) {
                                             <p className="text-xs">{ clientProfile.street_address && clientProfile.city && clientProfile.state_province ? `${clientProfile.street_address}, ${clientProfile.city}, ${clientProfile.state_province}` : 'N/A' }</p>
                                             <Link href="/client/profile">
                                                 <button 
-                                                    className="mt-5 w-full bg-teal-800 hover:bg-teal-700 focus:bg-teal-700 focus:outline-none ring-2 ring-offset-2 ring-transparent ring-offset-transparent focus:ring-offset-gray-100 focus:ring-teal-700 color-transition text-gray-50 font-bold py-2 rounded-md tracking-wide text-sm"
+                                                    className="w-full px-5 py-2 mt-5 bg-pink-600 hover:bg-pink-500 color-transition rounded-lg text-white font-bold text-sm md:text-base tracking-wide"
                                                 >View Profile</button>
                                             </Link>
                                         </div>
@@ -131,7 +131,7 @@ export default function interview({ clientProfile }) {
                                 </div> */}
                                 <div className="cardContainer">
                                     <div className="cardHeader bg-white border-b border-gray-200">
-                                        <h4 className="font-bold text-teal-800">Interview Details</h4>
+                                        <h4 className="font-bold text-pink-600">Interview Details</h4>
                                     </div>
                                     <div className="cardBody">
                                         <div className="flex flex-col gap-y-2">
@@ -183,7 +183,7 @@ export default function interview({ clientProfile }) {
                                 </div>
                                 <div className="cardContainer">
                                     <div className="cardHeader bg-white border-b border-gray-200">
-                                        <h4 className="font-bold text-teal-800">Booking Details</h4>
+                                        <h4 className="font-bold text-pink-600">Booking Details</h4>
                                     </div>
                                     <div className="cardBody">
                                         
@@ -202,7 +202,7 @@ export default function interview({ clientProfile }) {
 export const getServerSideProps = async ({ req }) => {
     const token = req.cookies.jwt
     const decoded_token = jwt_decode(token)
-    const res = await fetch(`http://localhost:8000/client_profile/${decoded_token.user_id}`, {
+    const res = await fetch(`https://alas-creatives-backend.herokuapp.com/client_profile/${decoded_token.user_id}`, {
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })

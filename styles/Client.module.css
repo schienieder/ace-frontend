@@ -39,7 +39,7 @@
 }
 
 .addBtn {
-  @apply px-3 py-2 bg-teal-800 hover:bg-teal-700 focus:bg-teal-700 focus:outline-none ring-2 ring-offset-2 ring-transparent ring-offset-transparent focus:ring-offset-gray-100 focus:ring-teal-700 text-gray-50 flex items-center gap-x-1 rounded-md font-medium;
+  @apply px-5 py-2 bg-pink-600 hover:bg-pink-500 rounded-lg text-white font-bold text-base tracking-wide flex justify-center items-center gap-x-1 focus:outline-none;
 }
 
 .popOverContainer {
