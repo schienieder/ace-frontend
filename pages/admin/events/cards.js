@@ -84,7 +84,7 @@ export default function cards({ clientsList, eventsList }) {
                 <div className="row-start-2 w-full h-full bg-true-100">
                     <div className="p-8 flex flex-col gap-y-5 min-h-screen">
                         <div className="w-full flex justify-between items-center">
-                            <PageHeader text="Event Calendar">
+                            <PageHeader text="Event Cards">
                                 <svg 
                                     xmlns="http://www.w3.org/2000/svg" 
                                     className="h-7 w-7 text-current"
@@ -511,14 +511,14 @@ export default function cards({ clientsList, eventsList }) {
 }
 
 export const getServerSideProps = async ({ req }) => {
-    const url = 'https://alas-creatives-backend.herokuapp.com/'
+    const api = process.env.NEXT_PUBLIC_DRF_API
     const token = req.cookies.jwt
-    const res1 = await fetch(`${url}clients_list/`,{
+    const res1 = await fetch(`${api}clients_list/`,{
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })
     const data1 = await res1.json()
-    const res2 = await fetch(`${url}events_list/`,{
+    const res2 = await fetch(`${api}events_list/`,{
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })

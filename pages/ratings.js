@@ -8,9 +8,9 @@ import PageHeader from '../components/PageHeader'
 export default function ratings() {
     const myForm = useForm() // call useForm
     return (
-        <div className="relative min-h-screen w-full bg-gray-100 flex flex-col justify-center items-center gap-y-5 font-mont text-gray-800">
+            <div className="w-full min-h-screen grid grid-rows-ratings-layout font-mont text-gray-800 bg-true-100">
             <nav 
-                className="w-full absolute flex items-center justify-between top-0 px-10 py-5 font-mont text-gray-800"
+                className="row-start-1 w-full flex items-center justify-between top-0 px-10 py-5 font-mont text-gray-800"
             >
                 <Link href="/">
                     <div className="flex items-center gap-x-3 cursor-pointer">
@@ -42,8 +42,8 @@ export default function ratings() {
                     </Link>
                 </div>
             </nav>
-            <div className="flex flex-col gap-y-5">
-                <PageHeader text="Event Feedback">
+            <div className="row-start-2 w-full flex flex-col justify-center items-center gap-y-5 p-8">
+                <div className="flex items-center gap-x-2 w-custom-textarea">
                     <svg 
                         xmlns="http://www.w3.org/2000/svg" 
                         className="h-7 w-7 text-current" 
@@ -53,13 +53,14 @@ export default function ratings() {
                     >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
                     </svg>
-                </PageHeader>
+                    <h4 className="text-xl font-bold dark:text-gray-300">Event Feedback</h4>
+                </div>
                 <Formiz
                     connect={myForm}
                 >
                     <form
                         onSubmit={myForm.submitStep}
-                        className="w-full flex flex-col gap-y-5"
+                        className="flex flex-col gap-y-5"
                     >
                         <FormizStep
                             name="step1"
@@ -119,6 +120,11 @@ export default function ratings() {
                                     <option value="1">Worst</option>
                                 </select>
                             </div>
+                        </FormizStep>
+                        <FormizStep
+                            name="step3"
+                            className="max-w-lg flex flex-col gap-y-8"
+                        >
                             <div className="card w-full flex flex-col gap-y-5">
                                 <h4 className="text-base font-bold">MC</h4>
                                 <p className="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sed dolor sollicitudin, molestie lectus vitae, tristique neque.</p>
@@ -157,63 +163,6 @@ export default function ratings() {
                                     <option value="2">Bad</option>
                                     <option value="1">Worst</option>
                                 </select>
-                            </div>
-                        </FormizStep>
-                        <FormizStep
-                            name="step3"
-                            className="max-w-lg flex flex-col gap-y-8"
-                        >
-                            <div className="flex gap-x-5">
-                                <div className="flex flex-col gap-y-1">
-                                    <label className="inputFieldLabel">Courtesy & Helpfulness</label>
-                                    <select
-                                        className="inputSelect"
-                                    >
-                                        <option value="Excellent">Excellent</option>
-                                        <option value="Very Good">Very Good</option>
-                                        <option value="Good">Good</option>
-                                        <option value="Fair">Fair</option>
-                                        <option value="Poor">Poor</option>
-                                    </select>
-                                </div>
-                                <div className="flex flex-col gap-y-1">
-                                    <label className="inputFieldLabel">Overall Service Rating?</label>
-                                    <select
-                                        className="inputSelect"
-                                    >
-                                        <option value="Excellent">Excellent</option>
-                                        <option value="Very Good">Very Good</option>
-                                        <option value="Good">Good</option>
-                                        <option value="Fair">Fair</option>
-                                        <option value="Poor">Poor</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div className="flex gap-x-5">
-                                <div className="flex flex-col gap-y-1">
-                                    <label className="inputFieldLabel">How satisfied were you as client, guest or attendee?</label>
-                                    <select
-                                        className="inputSelect"
-                                    >
-                                        <option value="Excellent">Excellent</option>
-                                        <option value="Very Good">Very Good</option>
-                                        <option value="Good">Good</option>
-                                        <option value="Fair">Fair</option>
-                                        <option value="Poor">Poor</option>
-                                    </select>
-                                </div>
-                                <div className="flex flex-col gap-y-1">
-                                    <label className="inputFieldLabel">Overall, how will you rate your event with us?</label>
-                                    <select
-                                        className="inputSelect"
-                                    >
-                                        <option value="Excellent">Excellent</option>
-                                        <option value="Very Good">Very Good</option>
-                                        <option value="Good">Good</option>
-                                        <option value="Fair">Fair</option>
-                                        <option value="Poor">Poor</option>
-                                    </select>
-                                </div>
                             </div>
                         </FormizStep>
                         <div className="flex gap-x-3">

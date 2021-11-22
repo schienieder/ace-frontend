@@ -40,7 +40,7 @@ export default function package_list() {
                         </PageHeader>
                         <div className="w-full grid grid-cols-custom-layout gap-x-5">
                             {/* SEARCH-CATEGORY HERE */}
-                            <div className="col-start-1 rounded-xl flex flex-col border border-gray-300 p-5 gap-y-5">
+                            <div className="col-start-1 rounded-xl flex flex-col bg-white border border-gray-300 p-5 gap-y-5">
                                 <div className="searchBarContainer">
                                     <svg 
                                         xmlns="http://www.w3.org/2000/svg" 

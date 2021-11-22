@@ -44,7 +44,7 @@ export default function select_date() {
                         </div>
                         <div className="w-client-profile-form-container card flex flex-col items-center gap-y-5">
                             <div className="w-57 flex flex-col gap-y-1">
-                                <label htmlFor="profile_birth" className="inputFieldLabel">Choose Date:</label>
+                                <label htmlFor="profile_birth" className="text-sm text-gray-700 font-normal">Select a date that you want your event to be held on:</label>
                                 <div className="inputContainer">
                                     <input
                                         type="date"

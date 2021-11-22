@@ -7,34 +7,18 @@ import { useRouter } from 'next/router'
 import { GoogleMap, useLoadScript } from '@react-google-maps/api'
 import mapStyles from '../../../mapStyles'
 import BeatLoader from "react-spinners/BeatLoader";
-
-const override = `
-    display: block;
-    margin: auto;
-    border-color: red;
-`;
-const libraries = ["places"]
-const mapContainerStyle = {
-    height : "100%",
-    width : "100%",
-}
-const center = {
-    lat : 7.448212,
-    lng : 125.809425
-}
-const options = {
-    styles : mapStyles,
-    disableDefaultUI : true,
-    zoomControl : true
-}
+import ReactMapGL from 'react-map-gl';
 
 export default function locations() {
-    const { isLoaded, loadError } = useLoadScript({
-        googleMapsApiKey : "AIzaSyDkS9hAtCVQCjsR1FoWDb8ruSE_A--XW9o",
-        libraries
-    })
     const router = useRouter()
     const [userName, setUsername] = useState()
+    const [viewport, setViewport] = useState({
+        height : "100%",
+        width : "100%",
+        latitude: 7.448212,
+        longitude: 125.809425,
+        zoom: 8
+    });
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
         const role = localStorage.getItem('role')
@@ -64,7 +48,14 @@ export default function locations() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
                         </PageHeader>
-                        {
+                        <div className="card w-full h-screen">
+                        <ReactMapGL 
+                            {...viewport}
+                            onViewportChange={nextViewport => setViewport(nextViewport)}
+                            mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+                        />
+                        </div>
+                        {/* {
                             !isLoaded ? (
                                 <BeatLoader 
                                     color="#DB2777" 
@@ -98,7 +89,7 @@ export default function locations() {
                                 }
                             </div>
                             )
-                        }
+                        } */}
                     </div>
                     <Footer />
                 </div>

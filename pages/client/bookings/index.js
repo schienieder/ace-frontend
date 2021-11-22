@@ -102,15 +102,15 @@ export default function bookings({ bookingDetails }) {
 }
 
 export const getServerSideProps = async ({ req }) => {
-    const url = 'https://alas-creatives-backend.herokuapp.com/'
+    const api = process.env.NEXT_PUBLIC_DRF_API
     const token = req.cookies.jwt
     const decoded_token = jwt_decode(token)
-    const res1 = await fetch(`${url}client_profile/${decoded_token.user_id}`, {
+    const res1 = await fetch(`${api}client_profile/${decoded_token.user_id}`, {
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })
     const data1 = await res1.json()
-    const res2 = await fetch(`${url}client_booking/${data1.id}`, {
+    const res2 = await fetch(`${api}client_booking/${data1.id}`, {
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })

@@ -14,7 +14,6 @@ export default function profile({ partnerProfile }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const router = useRouter()
     const [userName, setUsername] = useState()
-    const [areaText, setAreaText] = useState(partnerProfile.services_offered)
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
         const role = localStorage.getItem('role')
@@ -30,7 +29,7 @@ export default function profile({ partnerProfile }) {
         console.log(data.partner_services)
         const jwt_token = Cookies.get('jwt')
         axios({
-            method : 'PUT',
+            method : 'PATCH',
             url : `${api}partner_profile/update`,
             headers : {
                 'Content-Type' : 'application/json',

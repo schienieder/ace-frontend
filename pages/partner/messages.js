@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import TopNav from '../../components/partner/TopNav'
 import SideNav from '../../components/partner/SideNav'
 import Footer from '../../components/partner/Footer'
@@ -11,43 +11,23 @@ import axios from 'axios'
 
 export default function messages() {
     const router = useRouter()
-    const readCookie = () => {
-        try {
-            const jwt_token = Cookies.get('jwt')
-            const decoded_token = jwt_decode(jwt_token)
-            axios({
-                method : 'GET',
-                url : `http://localhost:8000/account/${decoded_token.user_id}`,
-                headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
-            })
-            .then((response) => {
-                response.data.role !== 'partner' ? router.push('/login') : ''
-            })
-            .catch((error) => {
-                Swal.fire({
-                    icon : 'error',
-                    title: 'Error',
-                    text: `${error.response}`,
-                    showCloseButton: true,
-                    confirmButtonColor: '#0F766E',
-                })
-                console.log(error.response)
-            })
-            console.log(jwt_token)
-        }
-        catch {
+    const [userName, setUsername] = useState()
+    const readRole = () => {
+        setUsername(localStorage.getItem('username'))
+        const role = localStorage.getItem('role')
+        if (role !== 'partner') {
             router.push('/login')
         }
     }
-    useEffect(() => {
-        readCookie()
+    useEffect( async () => {
+        await readRole()
     }, [])
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="messages" />
             <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav />
-                <div className="row-start-2 w-full h-full bg-gray-100">
+                <TopNav username={ userName } />
+                <div className="row-start-2 w-full h-full bg-true-100">
                     <div className="p-8 flex flex-col gap-y-5 min-h-screen">
                         <h4 className="text-xl font-bold">Messages</h4>
                         <div className="card w-full grid grid-cols-custom-layout gap-x-5">
@@ -100,12 +80,12 @@ export default function messages() {
                             </div>
 
                             {/* Messages part */}
-                            <div className="col-start-2 border border-gray-300 rounded-md flex flex-col p-5 gap-y-5">
-                                <div className="w-full h-full bg-gray-100 rounded-md">
+                            <div className="col-start-2 border border-gray-300 rounded-xl flex flex-col p-5 gap-y-5">
+                                <div className="w-full h-full bg-gray-100 rounded-xl">
 
                                 </div>
                                 <div className="flex items-center gap-x-3 bottom-0">
-                                    <button className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 text-teal-700 color-transition">
+                                    <button className="p-3 rounded-lg bg-gray-100 hover:bg-gray-200 text-pink-600 color-transition">
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 
                                             className="h-4 w-4 text-current" 
@@ -116,7 +96,7 @@ export default function messages() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                         </svg>
                                     </button>
-                                    <button className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 text-teal-700 color-transition">
+                                    <button className="p-3 rounded-lg bg-gray-100 hover:bg-gray-200 text-pink-600 color-transition">
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 
                                             className="h-4 w-4 text-current" 
@@ -128,15 +108,15 @@ export default function messages() {
                                         </svg>
                                     </button>
                                     <div 
-                                        className="w-full px-3 flex items-center bg-gray-100 text-gray-400 rounded-md focus-within:text-teal-700 border-gray-200 focus-within:border-teal-700 focus-within:ring-1 focus-within:ring-teal-700"
+                                        className="w-full flex gap-x-1 px-2 py-1 items-center border border-gray-300 focus-within:border-gray-600 rounded-lg"
                                     >
                                         <input 
                                             type="text"
-                                            className="flex-1 px-1 bg-transparent placeholder-gray-400 rounded-l-full text-gray-700 text-sm border-none focus:outline-none focus:ring-transparent"
+                                            className="flex-1 px-0 py-0 border-transparent focus:outline-none focus:ring-transparent focus:border-transparent text-sm"
                                             placeholder="Type your message . . ."
                                         />
                                     </div>
-                                    <button className="p-3 rounded-full bg-teal-800 hover:bg-teal-700 text-gray-50 color-transition">
+                                    <button className="p-3 rounded-lg bg-pink-600 hover:bg-pink-500 text-white color-transition">
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 
                                             className="h-4 w-4 text-current transform rotate-90" 

@@ -47,6 +47,8 @@ module.exports = {
         'custom-layout': '4.5rem 1fr',
         // rows for calendar
         '7': 'repeat(7, 1fr)',
+        // rows for ratings
+        'ratings-layout' : '90px 1fr',
       },
       gridTemplateColumns: {
         // custom layout
