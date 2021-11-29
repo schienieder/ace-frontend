@@ -76,19 +76,29 @@ export default function login() {
                 />
                 <h4 className="text-base">Processing, please wait</h4>
             </div>
-            <nav className="absolute w-full top-0 py-5 px-10 flex justify-between items-center">
+            <nav className="absolute w-full top-0 py-5 px-5 md:px-10 flex justify-between items-center">
                 <Link href="/">
                     <div className="flex items-center gap-x-3 cursor-pointer">
-                        <Image 
-                            src="/images/logo.svg"
-                            width={ 50 }
-                            height={ 50 }
-                            alt="Logo"
-                        />
+                        <div className="hidden md:block">
+                            <Image 
+                                src="/images/logo.svg"
+                                width={ 50 }
+                                height={ 50 }
+                                alt="Logo"
+                            />
+                        </div>
+                        <div className="block md:hidden">
+                            <Image 
+                                src="/images/logo.svg"
+                                width={ 45 }
+                                height={ 45 }
+                                alt="Logo"
+                            />
+                        </div>
                         <h4 className="text-2xl font-source font-black">Marahuyo</h4>
                     </div>
                 </Link>
-                <div className="flex gap-x-3 text-gray-600">
+                <div className="hidden md:flex gap-x-3 text-gray-600">
                     <Link href="/login">
                         <a className="text-base font-medium hover:text-pink-600 color-transition cursor-pointer">Login</a>
                     </Link>
@@ -98,7 +108,7 @@ export default function login() {
                     </Link>
                 </div>
             </nav>
-            <div className={`w-custom1 ${ authStyles.authCardHeight } bg-white rounded-xl shadow-sm border-b border-gray-200 grid grid-cols-2`}>
+            <div className={`w-custom1 ${ authStyles.authCardHeight } bg-white rounded-xl shadow-sm border-b border-gray-200 grid grid-cols-1 md:grid-cols-2`}>
                 <div className="col-start-1 flex flex-col justify-center items-center">
                     <form
                         onSubmit={ handleSubmit(onSubmit) }

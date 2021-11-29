@@ -1,8 +1,9 @@
 const Services = () => {
     return (
-        <div className="row-start-5 w-full h-screen bg-white grid grid-cols-1 md:grid-cols-2 gap-y-5 text-gray-800 font-mont">
+        <div className="w-full h-auto bg-white grid grid-cols-1 md:grid-cols-2 gap-y-5 text-gray-800 font-mont">
             <div className="col-start-1 w-full h-full flex flex-col justify-center gap-y-5 p-20">
                 <div className="flex flex-col">
+                    <div className="block md:hidden bg-testimonial-img1  bg-cover bg-center w-52 h-52 mb-3 rounded-full"></div>
                     <h4 className="text-2xl md:text-3xl font-source font-black">Leo John & Cheryl</h4>
                     <p className="text-sm md:text-base text-gray-500">Proud Clients of Alas</p>
                 </div>
@@ -27,9 +28,9 @@ const Services = () => {
             </div>
             <div className="col-start-2 h-full w-full hidden md:flex flex-col justify-center items-center p-8">
                 <div className="h-full w-full grid grid-cols-2 grid-rows-3 gap-5">
-                    <div className="bg-testimonial-img1  bg-cover bg-center col-start-1 row-span-3 bg-gray-100"></div>
-                    <div className="bg-testimonial-img2  bg-cover bg-center col-start-2 row-span-2 bg-gray-200"></div>
-                    <div className="bg-testimonial-img3  bg-cover bg-center col-start-2 row-span-1 bg-gray-200"></div>
+                    <div className="bg-testimonial-img1  bg-cover bg-center col-start-1 row-span-3"></div>
+                    <div className="bg-testimonial-img2  bg-cover bg-center col-start-2 row-span-2"></div>
+                    <div className="bg-testimonial-img3  bg-cover bg-center col-start-2 row-span-1"></div>
                 </div>
                 {/* <div className="bg-testimonial-img border-gray-900 bg-cover bg-center w-about-img h-full"></div> */}
             </div>

@@ -1,23 +1,27 @@
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+
 const Footer = () => {
     const currDate = new Date()
     const currYear = currDate.getFullYear()
     return (
-        <div className="row-start-7 w-full h-full flex flex-col text-gray-200">
-            <div className="bg-gray-800 h-3/4 flex justify-around gap-x-10 py-10">
-                <div className="flex flex-col gap-y-3">
-                    <div className="flex items-center gap-x-2">
-                        <svg 
-                            xmlns="http://www.w3.org/2000/svg" 
-                            className="h-6 w-6 text-current" 
-                            fill="none" 
-                            viewBox="0 0 24 24" 
-                            stroke="currentColor"
-                        >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        <p className="text-sm">Osmena Street, Tagum City</p>
-                    </div>
+        <div className="w-full h-full flex flex-col text-gray-200">
+            <div className="bg-gray-800 h-3/4 flex flex-col md:flex-row items-center md:justify-around gap-y-6 gap-x-10 py-8">
+                <div className="flex flex-row md:flex-col gap-x-8 gap-y-3">
+                    <CopyToClipboard text="This is the address of Alas!">
+                        <div className="flex items-center gap-x-2">
+                            <svg 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                className="h-6 w-6 text-current" 
+                                fill="none" 
+                                viewBox="0 0 24 24" 
+                                stroke="currentColor"
+                                >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <p className="hidden md:block text-sm">Osmena Street, Tagum City</p>
+                        </div>
+                    </CopyToClipboard>
                     <div className="flex items-center gap-x-2">
                         <svg 
                             xmlns="http://www.w3.org/2000/svg" 
@@ -28,7 +32,7 @@ const Footer = () => {
                         >
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                         </svg>
-                        <p className="text-sm">+63911202890</p>
+                        <p className="hidden md:block text-sm">+63911202890</p>
                     </div>
                     <div className="flex items-center gap-x-2">
                         <svg 
@@ -40,27 +44,27 @@ const Footer = () => {
                             >
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
-                        <p className="text-sm">ace_cadayona@gmail.com</p>
+                        <p className="hidden md:block text-sm">ace_cadayona@gmail.com</p>
                     </div>
                 </div>
-                <div className="flex flex-col gap-y-2">
-                    <h4 className="font-bold">Company</h4>
-                    <p className="text-sm">About Us</p>
-                    <p className="text-sm">The Team</p>
+                <div className="flex flex-col items-center md:items-start gap-y-2">
+                    <h4 className="text-sm md:text-base font-bold">Company</h4>
+                    <p className="text-xs md:text-sm">About Us</p>
+                    <p className="text-xs md:text-sm">The Team</p>
                 </div>
-                <div className="flex flex-col gap-y-2">
-                    <h4 className="font-bold">Services</h4>
-                    <p className="text-sm">FAQ</p>
-                    <p className="text-sm">Testimonials</p>
+                <div className="flex flex-col items-center md:items-start gap-y-2">
+                    <h4 className="text-sm md:text-base font-bold">Services</h4>
+                    <p className="text-xs md:text-sm">FAQ</p>
+                    <p className="text-xs md:text-sm">Testimonials</p>
                 </div>
-                <div className="flex flex-col gap-y-2">
-                    <h4 className="font-bold">Legal</h4>
-                    <p className="text-sm">Terms & Conditions</p>
-                    <p className="text-sm">Privacy Policy</p>
+                <div className="flex flex-col items-center md:items-start gap-y-2">
+                    <h4 className="text-sm md:text-base font-bold">Legal</h4>
+                    <p className="text-xs md:text-sm">Terms & Conditions</p>
+                    <p className="text-xs md:text-sm">Privacy Policy</p>
                 </div>
             </div>
-            <div className="bg-gray-900 h-1/4 flex justify-between items-center px-20">
-                <div className="flex items-center gap-x-1">
+            <div className="bg-gray-900 h-1/4 flex flex-col md:flex-row justify-between items-center px-20 py-3">
+                <div className="hidden md:flex items-center gap-x-1">
                     <svg 
                         className="w-7 h-7"
                         xmlns="http://www.w3.org/2000/svg"
@@ -73,12 +77,12 @@ const Footer = () => {
                             fill="#E5E7EB"
                         />
                     </svg>
-                    <h4 className="text-sm font-medium border-r border-gray-200 pr-1">Copyright Marahuyo { currYear }</h4>
+                    <h4 className="text-sm font-medium border-r border-gray-200 pr-1">Marahuyo { currYear }</h4>
                     <p className="text-sm font-medium">All Rights Reserved</p>
                 </div>
                 <div className="flex gap-x-5">
                     <svg 
-                        className="w-7 h-7"
+                        className="w-6 h-6 md:w-7 md:h-7"
                         xmlns="http://www.w3.org/2000/svg" 
                         viewBox="0 0 24 24"
                     >
@@ -88,7 +92,7 @@ const Footer = () => {
                         />
                     </svg>
                     <svg 
-                        className="w-7 h-7"
+                        className="w-6 h-6 md:w-7 md:h-7"
                         xmlns="http://www.w3.org/2000/svg" 
                         viewBox="0 0 24 24"
                     >
@@ -107,7 +111,7 @@ const Footer = () => {
                         />
                     </svg>
                     <svg 
-                        className="w-7 h-7"
+                        className="w-6 h-6 md:w-7 md:h-7"
                         xmlns="http://www.w3.org/2000/svg" 
                         viewBox="0 0 24 24"
                     >

@@ -1,7 +1,7 @@
-.aboutFlower {
-  height: 323px;
-  width: 485px;
-  background: url("/images/flowers.jpg");
-  background-size: cover;
-  box-shadow: 15px 18px 0 #1f2937;
+.h_award {
+  height: 18rem;
+}
+
+.h_rate {
+  height: 18rem;
 }

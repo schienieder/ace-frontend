@@ -31,6 +31,15 @@ textarea {
   @apply px-0 py-0 rounded-lg text-sm text-gray-800;
 } */
 
+body {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+html {
+  height: -webkit-fill-available;
+}
+
 .card {
   @apply p-5 bg-white dark:bg-gray-900 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl;
 }

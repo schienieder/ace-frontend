@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 const Hero = () => {
     return (
-        <div className="row-start-1 w-full h-screen bg-gray-100 flex md:grid md:grid-cols-2 md:place-items-center justify-center items-center text-gray-800 overflow-hidden">
+        <div className="row-start-1 w-full h-screen bg-gray-100 flex flex-grow md:grid md:grid-cols-2 md:place-items-center justify-center items-center text-gray-800 overflow-hidden">
             <div className="md:col-start-1 flex flex-col items-center md:items-start">
                 <svg 
                     className="w-20 h-20 transform opacity-60 -mt-5"
@@ -16,8 +16,8 @@ const Hero = () => {
                         fill="#CBD5E1"
                     />
                 </svg>
-                <h4 className="text-3xl md:text-4xl font-source font-black">a <span className="text-pink-600">dream</span> beyond forever</h4>
-                <p className="text-gray-500">Witness your dream events with your own eyes.</p>
+                <h4 className="text-2xl md:text-4xl font-source font-black">a <span className="text-pink-600">dream</span> beyond forever</h4>
+                <p className="text-gray-500 text-xs md:text-base">Witness your dream events with your own eyes.</p>
                 <Link href="/register">
                     <a 
                         className="px-5 py-2 mt-5 bg-pink-600 hover:bg-pink-500 color-transition rounded-lg text-white font-bold text-sm md:text-base tracking-wide"
