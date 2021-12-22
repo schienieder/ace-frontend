@@ -24,7 +24,7 @@ export default function dashboard() {
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="dashboard" />
-            <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
+            <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto overflow-x-hidden">
                 <TopNav username={ userName } />
                 <div className="row-start-2 w-full h-full bg-true-100 dark:bg-gray-800">
                     <div className="p-8 flex flex-col gap-y-5 min-h-screen">

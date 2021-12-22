@@ -84,7 +84,7 @@ export default function cards({ clientsList, eventsList }) {
                 <div className="row-start-2 w-full h-full bg-true-100">
                     <div className="p-8 flex flex-col gap-y-5 min-h-screen">
                         <div className="w-full flex justify-between items-center">
-                            <PageHeader text="Event Cards">
+                            <PageHeader text="Events">
                                 <svg 
                                     xmlns="http://www.w3.org/2000/svg" 
                                     className="h-7 w-7 text-current"
@@ -92,7 +92,7 @@ export default function cards({ clientsList, eventsList }) {
                                     viewBox="0 0 24 24" 
                                     stroke="currentColor"
                                 >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                                 </svg>
                             </PageHeader>
                             <button

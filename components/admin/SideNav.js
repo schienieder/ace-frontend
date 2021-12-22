@@ -36,81 +36,64 @@ const SideNav = ({ isActive }) => {
                     <p className="font-mont font-bold text-sm">Dashboard</p>
                 </a>
             </Link>
-            <Disclosure>
-                {({ open }) => (
-                    <>
-                    <Disclosure.Button className={`${isActive === 'events' ? adminStyles.navItemActive : adminStyles.navItem} ${isActive === 'events' ? 'dark:bg-gray-800' : 'dark:bg-gray-900 hover:bg-gray-800'} flex justify-between pr-6`}>
-                            <div className="flex items-center gap-x-3">
+            <Link href="/admin/events" passHref>
+                <a className={`${isActive === 'events' ? adminStyles.navItemActive : adminStyles.navItem} ${isActive === 'events' ? 'dark:bg-gray-800' : 'dark:bg-gray-900 hover:bg-gray-800'}`}>
+                    <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        className="h-6 w-6 text-current" 
+                        fill="none" 
+                        viewBox="0 0 24 24" 
+                        stroke="currentColor"
+                    >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                    <p className="font-mont font-bold text-sm">Events</p>
+                </a>
+            </Link>
+            {/* <Transition
+                    as={Fragment}
+                    enter="transition ease-in-out duration-200"
+                    enterFrom="opacity-0 transform scale-95"
+                    enterTo="opacity-100 transform scale-100"
+                    leave="transition ease-in-out duration-200"
+                    leaveFrom="opacity-100 transform scale-100"
+                    leaveTo="opacity-0 transform scale-95"
+                >
+                    <Disclosure.Panel>
+                        <Link href="/admin/events/calendar" passHref>
+                            <a 
+                                className={`${adminStyles.sideDropDownItem} color-transition`}
+                            >
                                 <svg 
                                     xmlns="http://www.w3.org/2000/svg" 
-                                    className="h-6 w-6 text-current" 
+                                    className={ adminStyles.sideDropDownIcon }
                                     fill="none" 
                                     viewBox="0 0 24 24" 
                                     stroke="currentColor"
                                 >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
-                                <p className="font-mont font-bold text-sm">Events List</p>
-                            </div>
-                            <svg 
-                                xmlns="http://www.w3.org/2000/svg" 
-                                className={`
-                                    ${open ? 'transform rotate-90 transition ease-in-out duration-200' : 'transform rotate-0 transition ease-in-out duration-200'} 
-                                    h-4 w-4 text-current`} 
-                                fill="none" 
-                                viewBox="0 0 24 24" 
-                                stroke="currentColor"
+                                <p className={ adminStyles.sideDropDownText }>Event Calendar</p>
+                            </a>
+                        </Link>
+                        <Link href="/admin/events/cards" passHref>
+                            <a 
+                                className={`${adminStyles.sideDropDownItem} color-transition`}
                             >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                            </svg>
-                    </Disclosure.Button>
-                    <Transition
-                            as={Fragment}
-                            enter="transition ease-in-out duration-200"
-                            enterFrom="opacity-0 transform scale-95"
-                            enterTo="opacity-100 transform scale-100"
-                            leave="transition ease-in-out duration-200"
-                            leaveFrom="opacity-100 transform scale-100"
-                            leaveTo="opacity-0 transform scale-95"
-                        >
-                            <Disclosure.Panel>
-                                <Link href="/admin/events/calendar" passHref>
-                                    <a 
-                                        className={`${adminStyles.sideDropDownItem} color-transition`}
-                                    >
-                                        <svg 
-                                            xmlns="http://www.w3.org/2000/svg" 
-                                            className={ adminStyles.sideDropDownIcon }
-                                            fill="none" 
-                                            viewBox="0 0 24 24" 
-                                            stroke="currentColor"
-                                        >
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                        </svg>
-                                        <p className={ adminStyles.sideDropDownText }>Event Calendar</p>
-                                    </a>
-                                </Link>
-                                <Link href="/admin/events/cards" passHref>
-                                    <a 
-                                        className={`${adminStyles.sideDropDownItem} color-transition`}
-                                    >
-                                        <svg 
-                                            xmlns="http://www.w3.org/2000/svg" 
-                                            className={ adminStyles.sideDropDownIcon }
-                                            fill="none" 
-                                            viewBox="0 0 24 24" 
-                                            stroke="currentColor"
-                                        >
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                        </svg>
-                                        <p className={ adminStyles.sideDropDownText }>Event Cards</p>
-                                    </a>
-                                </Link>
-                            </Disclosure.Panel>
-                        </Transition>
-                    </>
-                )}
-            </Disclosure>
+                                <svg 
+                                    xmlns="http://www.w3.org/2000/svg" 
+                                    className={ adminStyles.sideDropDownIcon }
+                                    fill="none" 
+                                    viewBox="0 0 24 24" 
+                                    stroke="currentColor"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+                                <p className={ adminStyles.sideDropDownText }>Event Cards</p>
+                            </a>
+                        </Link>
+                    </Disclosure.Panel>
+                </Transition> */}
             <Disclosure>
                 {({ open }) => (
                     <>
