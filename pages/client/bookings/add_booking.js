@@ -10,11 +10,11 @@ import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
 import Swal from 'sweetalert2'
 import axios from 'axios'
+import HoursOptions from '../../../components/admin/events/HoursOptions'
+import MinutesOptions from '../../../components/admin/events/MinutesOptions'
 
 export default function add_booking({ clientProfile }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
-    const [timeSched, setTimeSched] = useState(null)
-    const [desDate, setDesDate] = useState(null)
     const router = useRouter()
     const [userName, setUsername] = useState()
     const readRole = () => {
@@ -42,11 +42,8 @@ export default function add_booking({ clientProfile }) {
                 venue_name : data.booking_venue_name,
                 event_budget : data.booking_budget,
                 desired_date : data.booking_des_date,
-                time_schedule : data.booking_time_sched,
+                time_schedule : data.booking_hour+':'+data.booking_minute+' '+data.booking_schedule,
                 guests_no : data.booking_guests_no,
-                service_requirements : data.booking_service_requirements,
-                beverages : data.booking_beverages,
-                best_way_contact : (data.booking_contact_call || '') + ' ' + (data.booking_contact_text || '') + ' ' + (data.booking_contact_fb || '') + ' ' + (data.booking_contact_email || ''),
                 booked_by : clientProfile.id
             }
         }).then(() => {
@@ -57,7 +54,7 @@ export default function add_booking({ clientProfile }) {
                 timer : 3000,
                 text: `Your booking has been successfully created!`,
                 showCloseButton: true,
-                confirmButtonColor: '#0F766E',
+                confirmButtonColor: '#DB2777',
             })
             router.push('/client/bookings')
         }).catch((error) => {
@@ -67,7 +64,7 @@ export default function add_booking({ clientProfile }) {
                 timer : 3000,
                 text: error.message,
                 showCloseButton: true,
-                confirmButtonColor: '#0F766E',
+                confirmButtonColor: '#DB2777',
             })
         })
     }
@@ -197,22 +194,29 @@ export default function add_booking({ clientProfile }) {
                                 {/* time sched & guests no fields */}
                                 <div className="flex gap-x-5">
                                     <div className="flex flex-col gap-y-1">
-                                        <label htmlFor="booking_start_time" className="inputFieldLabel">Time Schedule</label>
-                                        <div className="inputContainer">
-                                            <input
-                                                type="time"
-                                                className="inputFieldDateTime appearance-none"
-                                                { ...register("booking_time_sched", { required: "This field should not be empty!" }) }
-                                                autoComplete="off"
-                                            />
+                                        <label className="inputFieldLabel">Time Schedule</label>
+                                        <div className='w-63 px-4 py-1 flex items-center justify-between bg-transparent gap-x-5 border border-gray-300 focus-within:border-gray-600 rounded-lg'>
+                                            <select 
+                                                className='customTime'
+                                                {...register("booking_hour")}
+                                            >
+                                                <HoursOptions />
+                                            </select>
+                                            <p className='text-sm font-medium text-gray-800 -mx-6'>:</p>
+                                            <select 
+                                                className='customTime'
+                                                {...register("booking_minute")}
+                                            >
+                                                <MinutesOptions />
+                                            </select>
+                                            <select 
+                                                className='customTime'
+                                                {...register("booking_schedule")}
+                                            >
+                                                <option value="AM">AM</option>
+                                                <option value="PM">PM</option>
+                                            </select>
                                         </div>
-                                        { 
-                                            errors.booking_start_time && 
-                                            <div className="flex items-center gap-x-1 text-red-500">
-                                                <AuthErrorIcon />
-                                                <p className="text-xs">{ errors.booking_start_time.message }</p>
-                                            </div> 
-                                        }
                                     </div>
                                     <div className="flex flex-col gap-y-1">
                                         <label htmlFor="booking_guests_no" className="inputFieldLabel">No. of Guests</label>
@@ -242,87 +246,11 @@ export default function add_booking({ clientProfile }) {
                                         }
                                     </div>
                                 </div>
-                                {/* seating style & service requirements fields */}
-                                <div className="flex gap-x-5">
-                                    <div className="flex flex-col gap-y-1">
-                                        <label htmlFor="booking_service_requirements" className="inputFieldLabel">Service Requirements</label>
-                                        <select
-                                            className="inputSelect rounded-lg"
-                                            {...register("booking_service_requirements")}
-                                        >
-                                            <option value="Plated">Plated</option>
-                                            <option value="Buffet">Buffet</option>
-                                            <option value="Neither Plated or Buffet">Neither</option>
-                                        </select>
-                                    </div>
-                                    <div className="flex flex-col gap-y-1">
-                                        <label htmlFor="booking_beverages" className="inputFieldLabel">Beverages</label>
-                                        <select
-                                            className="inputSelect rounded-lg"
-                                            {...register("booking_beverages")}
-                                        >
-                                            <option value="Alcoholic">Alcoholic</option>
-                                            <option value="Non-Alcoholic">Non-Alcoholic</option>
-                                            <option value="Both Alcoholic & Non-Alcoholic">Both</option>
-                                            <option value="Neither Alcoholic or Non-Alcoholic">Neither</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                {/* best way to contact fields */}
-                                <div className="w-full px-2">
-                                    <div className="flex flex-col gap-y-1">
-                                        <label className="inputFieldLabel">Best way to contact you?</label>
-                                        <div className="flex gap-x-5 mt-3">
-                                            <div className="w-63 flex items-center gap-x-3">
-                                                <input 
-                                                    type="checkbox"
-                                                    value="Phone Call"
-                                                    id="check1"
-                                                    className="inputCheckbox"
-                                                    {...register("booking_contact_call")}
-                                                />
-                                                <label htmlFor="check1" className="text-sm text-gray-800 cursor-pointer">Phone Call</label>
-                                            </div>
-                                            <div className="w-63 flex items-center gap-x-3">
-                                                <input 
-                                                    type="checkbox"
-                                                    value="Text Messages"
-                                                    id="check2"
-                                                    className="inputCheckbox"
-                                                    {...register("booking_contact_text")}
-                                                />
-                                                <label htmlFor="check2" className="text-sm text-gray-800 cursor-pointer">Text Messages</label>
-                                            </div>
-                                        </div>
-                                        <div className="flex gap-x-5 mt-3">
-                                            <div className="w-63 flex items-center gap-x-3">
-                                                <input 
-                                                    type="checkbox"
-                                                    value="Facebook"
-                                                    id="check3"
-                                                    className="inputCheckbox"
-                                                    {...register("booking_contact_fb")}
-                                                />
-                                                <label htmlFor="check3" className="text-sm text-gray-800 cursor-pointer">Facebook</label>
-                                            </div>
-                                            <div className="w-63 flex items-center gap-x-3">
-                                                <input 
-                                                    type="checkbox"
-                                                    value="Email"
-                                                    id="check4"
-                                                    className="inputCheckbox"
-                                                    {...register("booking_contact_email")}
-                                                />
-                                                <label htmlFor="check4" className="text-sm text-gray-800 cursor-pointer">Email</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div className="w-full pl-2">
                                     <button 
                                         className="px-5 py-2 bg-pink-600 hover:bg-pink-500 rounded-lg text-white color-transition focus:outline-none"
                                     >
-                                        <p className="text-base font-bold tracking-wide">Book Event</p>
+                                        <p className="text-base font-bold tracking-wide">Next</p>
                                     </button>
                                 </div>
                                 <p className="pl-2 text-sm"><span className="font-bold">Note:</span> As for the mode of payment, it will be on the contract signing for the finalization of the event.</p>

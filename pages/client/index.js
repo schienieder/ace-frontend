@@ -63,96 +63,74 @@ export default function dashboard({ clientProfile }) {
                         }
                         <div className="flex flex-col gap-y-5">
                             
-                            <div className="flex gap-x-5">
-                                
-                                <div className="w-2/5">
-                                    <div className="cardContainer">
-                                        <div className="cardHeader bg-white border-b border-gray-200">
-                                            <h4 className="font-bold text-pink-600">Client Profile</h4>
-                                        </div>
-                                        <div className="cardBody">
-                                            <div className="flex flex-col gap-y-1">
-                                                <div className="flex items-center gap-x-1">
-                                                    <svg 
-                                                        xmlns="http://www.w3.org/2000/svg" 
-                                                        className="h-5 w-5 text-current" 
-                                                        fill="none" 
-                                                        viewBox="0 0 24 24" 
-                                                        stroke="currentColor"
-                                                    >
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                    </svg>
-                                                    <h4 className="text-sm font-bold">Name</h4>
-                                                </div>
-                                                <p className="text-xs">{ clientProfile.first_name + ' ' + clientProfile.last_name }</p>
-                                            </div>
-                                            <div className="w-full flex justify-between">
-                                                <div className="flex flex-col gap-y-1">
-                                                    <div className="flex items-center gap-x-1">
-                                                        <svg 
-                                                            xmlns="http://www.w3.org/2000/svg" 
-                                                            className="h-5 w-5 text-current" 
-                                                            fill="none" 
-                                                            viewBox="0 0 24 24" 
-                                                            stroke="currentColor"
-                                                        >
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                                        </svg>
-                                                        <h4 className="text-sm font-bold">Mobile Number</h4>
-                                                    </div>
-                                                    <p className="text-xs">{ clientProfile.mobile_number }</p>
-                                                </div>
-                                                <div className="flex flex-col gap-y-1">
-                                                    <div className="flex items-center gap-x-1">
-                                                        <svg 
-                                                            xmlns="http://www.w3.org/2000/svg" 
-                                                            className="h-5 w-5 text-current" 
-                                                            fill="none" 
-                                                            viewBox="0 0 24 24" 
-                                                            stroke="currentColor"
-                                                        >
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                                        </svg>
-                                                        <h4 className="text-sm font-bold">Email Address</h4>
-                                                    </div>
-                                                    <p className="text-xs">{ clientProfile.email }</p>
-                                                </div>
-                                            </div>
-                                            <div className="flex flex-col gap-y-1">
-                                                <div className="flex items-center gap-x-1">
-                                                    <svg 
-                                                        xmlns="http://www.w3.org/2000/svg" 
-                                                        className="h-5 w-5 text-current" 
-                                                        fill="none" 
-                                                        viewBox="0 0 24 24" 
-                                                        stroke="currentColor"
-                                                    >
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                    </svg>
-                                                    <h4 className="text-sm font-bold">Address</h4>
-                                                </div>
-                                                <p className="text-xs">{ clientProfile.street_address && clientProfile.city && clientProfile.state_province ? `${clientProfile.street_address}, ${clientProfile.city}, ${clientProfile.state_province}` : 'N/A' }</p>
-                                            </div>
-                                            <Link href="/client/profile">
-                                                <button 
-                                                    className="w-full bg-pink-600 hover:bg-pink-500 focus:outline-none color-transition text-gray-50 font-bold py-2 rounded-md tracking-wide text-sm"
-                                                >View Profile</button>
-                                            </Link>
-                                        </div>
+                            <div className='grid grid-cols-4 gap-x-5'>
+                                {/* Client Name */}
+                                <div className='card flex flex-col gap-y-3'>
+                                    <div className='flex items-center gap-x-2 text-pink-600'>
+                                        <svg 
+                                            xmlns="http://www.w3.org/2000/svg" 
+                                            className="h-6 w-6 text-current" 
+                                            fill="none" 
+                                            viewBox="0 0 24 24" 
+                                            stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                        </svg>
+                                        <h4 className="text-sm font-bold">Client Name</h4>
                                     </div>
+                                    <p className="text-sm self-end">{ clientProfile.first_name + ' ' + clientProfile.last_name }</p>
                                 </div>
-
-                                <div className="w-3/5">
-                                    <div className="cardContainer">
-                                        <div className="cardHeader bg-white border-b border-gray-200">
-                                            <h4 className="font-bold text-pink-600">Event Summary</h4>
-                                        </div>
-                                        <div className="cardBody">
-                                            
-                                        </div>
+                                {/* Mobile Number */}
+                                <div className='card flex flex-col gap-y-3'>
+                                    <div className='flex items-center gap-x-2 text-pink-600'>
+                                        <svg 
+                                            xmlns="http://www.w3.org/2000/svg" 
+                                            className="h-6 w-6 text-current" 
+                                            fill="none" 
+                                            viewBox="0 0 24 24" 
+                                            stroke="currentColor"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                        </svg>
+                                        <h4 className="text-sm font-bold">Mobile Number</h4>
                                     </div>
+                                    <p className="text-sm self-end">{ clientProfile.mobile_number }</p>
                                 </div>
+                                {/* Email */}
+                                <div className='card flex flex-col gap-y-3'>
+                                    <div className='flex items-center gap-x-2 text-pink-600'>
+                                        <svg 
+                                            xmlns="http://www.w3.org/2000/svg" 
+                                            className="h-6 w-6 text-current" 
+                                            fill="none" 
+                                            viewBox="0 0 24 24" 
+                                            stroke="currentColor"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                        </svg>
+                                        <h4 className="text-sm font-bold">Email</h4>
+                                    </div>
+                                    <p className="text-sm self-end">{ clientProfile.email }</p>
+                                </div>
+                                {/* Address */}
+                                <div className='card flex flex-col gap-y-3'>
+                                    <div className='flex items-center gap-x-2 text-pink-600'>
+                                        <svg 
+                                            xmlns="http://www.w3.org/2000/svg" 
+                                            className="h-6 w-6 text-current" 
+                                            fill="none" 
+                                            viewBox="0 0 24 24" 
+                                            stroke="currentColor"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                        <h4 className="text-sm font-bold">Address</h4>
+                                    </div>
+                                    <p className="text-sm self-end">{ clientProfile.street_address && clientProfile.city ? `${clientProfile.street_address}, ${clientProfile.city}` : 'N/A' }</p>
+                                </div>
+                            </div>
+                            <div className='w-full card'>
+                                <h4 className='text-md text-center'>You currently don't have any bookings. Click <Link href="/client/bookings/add_booking"><a className="text-pink-600 font-bold hover:underline">here</a></Link> to add one!</h4>
                             </div>
                         </div>
                     </div>
