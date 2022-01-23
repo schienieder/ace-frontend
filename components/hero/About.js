@@ -1,6 +1,6 @@
 const About = () => {
     return (
-        <div className="w-full h-screen flex justify-center bg-white text-gray-800 font-mont">
+        <div className="w-full h-auto flex justify-center bg-white text-gray-800 font-mont md:py-20">
             <div className="w-full hidden md:grid grid-cols-2">
                 <div className="col-start-1 w-full h-full flex items-center justify-center">
                     <div className="relative bg-gray-800 w-about-img h-80">

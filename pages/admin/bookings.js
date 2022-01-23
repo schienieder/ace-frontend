@@ -8,6 +8,8 @@ import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import Swal from 'sweetalert2'
 import axios from 'axios'
+import moment from 'moment'
+import Link from 'next/link'
 
 export default function bookings({ bookingsList, clientsList }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
@@ -26,7 +28,7 @@ export default function bookings({ bookingsList, clientsList }) {
     const destroyBooking = (booking_id, booking_type, booking_date) => {
         Swal.fire({
             title: 'Are you sure?',
-            text: `Delete ${booking_type} booking on ${ new Date(booking_date).toDateString() }?`,
+            text: `Remove ${booking_type} booking on ${ moment(booking_date).format('ll') }?`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#DB2777',
@@ -142,28 +144,32 @@ export default function bookings({ bookingsList, clientsList }) {
                                                     <p className={ adminStyles.tableDataTextClass }>{ booking.type_of_event }</p>
                                                 </td>
                                                 <td className="px-4 py-4 whitespace-nowrap">
-                                                    <p className={ adminStyles.tableDataTextClass }>{ new Date(booking.desired_date).toDateString() }</p>
+                                                    <p className={ adminStyles.tableDataTextClass }>{ moment(booking.desired_date).format('ll') }</p>
                                                 </td>
                                                 <td className="px-4 py-4 whitespace-nowrap">
                                                     <p className={ adminStyles.tableDataTextClass }>{`₱${booking.event_budget}`}</p>
                                                 </td>
                                                 <td className="px-4 py-4 whitespace-nowrap">
                                                     <div className="flex gap-x-2">
-                                                        <button
-                                                            type="button"
-                                                            className={`${adminStyles.actionBtn} color-transition`}
+                                                        <Link
+                                                            href={`/admin/booking?booking_id=${booking.id}&client_id=${booking.booked_by}`}
                                                         >
-                                                            <svg 
-                                                                xmlns="http://www.w3.org/2000/svg" 
-                                                                className={`${adminStyles.actionBtnIcon} color-transition`} 
-                                                                fill="none" 
-                                                                viewBox="0 0 24 24" 
-                                                                stroke="currentColor"
+                                                            <button
+                                                                type="button"
+                                                                className={`${adminStyles.actionBtn} color-transition`}
                                                             >
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                                            </svg>
-                                                        </button>
+                                                                <svg 
+                                                                    xmlns="http://www.w3.org/2000/svg" 
+                                                                    className={`${adminStyles.actionBtnIcon} color-transition`} 
+                                                                    fill="none" 
+                                                                    viewBox="0 0 24 24" 
+                                                                    stroke="currentColor"
+                                                                >
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                                </svg>
+                                                            </button>
+                                                        </Link>
                                                         <button
                                                             type="button"
                                                             onClick={ () => destroyBooking(booking.id, booking.type_of_event, booking.desired_date) }

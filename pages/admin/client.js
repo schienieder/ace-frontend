@@ -3,6 +3,7 @@ import TopNav from '../../components/admin/TopNav'
 import SideNav from '../../components/admin/SideNav'
 import Footer from '../../components/Footer'
 import { useRouter } from 'next/router'
+import Image from 'next/image'
 
 export default function partner({ clientProfile }) {
     const router = useRouter()
@@ -30,8 +31,17 @@ export default function partner({ clientProfile }) {
                 <div className="row-start-2 w-full h-full bg-true-100">
                     <div className="p-8 flex flex-col items-center gap-y-5 min-h-screen">
                         <div className="w-2/5 bg-white dark:bg-gray-900 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl flex flex-col items-center gap-y-5 py-10 px-5">
-                            <div className='w-40 h-40 bg-gray-200 rounded-full'></div>
-                            <h4 className='text-xl font-bold mb-5'>{`${ clientProfile.first_name } ${ clientProfile.last_name }`}</h4>
+                            {
+                                clientProfile.profile_image ? <div className='w-40 h-40 bg-gray-200 rounded-full'></div>
+                                : 
+                                <Image 
+                                    src="/images/default.png"
+                                    height={200}
+                                    width={200}
+                                    alt="Default Image"
+                                    className='w-32 h-32 rounded-full'
+                                />
+                            }
                             <div className='flex flex-col gap-y-5'>
                                 <div className='flex items-center gap-x-2'>
                                     <svg 
@@ -99,7 +109,7 @@ export default function partner({ clientProfile }) {
                                     >
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    <p className='text-sm'>{ displayAge(clientProfile.birthdate) + ' years old' }</p>
+                                    <p className='text-sm'>{ clientProfile.birthdate ? displayAge(clientProfile.birthdate) + ' years old' : 'N/A' }</p>
                                 </div>
                                 <div className='flex items-center gap-x-2'>
                                     <svg 
@@ -111,7 +121,7 @@ export default function partner({ clientProfile }) {
                                     >
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                     </svg>
-                                    <p className='text-sm'>{ clientProfile.street_address + ', ' + clientProfile.city }</p>
+                                    <p className='text-sm'>{ clientProfile.street_address && clientProfile.city ? clientProfile.street_address + ', ' + clientProfile.city : 'N/A' }</p>
                                 </div>
                             </div>
                         </div>

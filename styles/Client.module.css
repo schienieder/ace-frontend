@@ -69,3 +69,27 @@
 .toggleDarkOff {
   @apply transform translate-x-0;
 }
+
+.theadClass {
+  @apply bg-gray-100 dark:bg-gray-800;
+}
+
+.tbodyClass {
+  @apply bg-white dark:bg-gray-900 divide-y divide-gray-200;
+}
+
+.tableRowClass {
+  @apply bg-transparent hover:bg-gray-50;
+}
+
+.tableHeadingClass {
+  @apply px-4 py-3;
+}
+
+.tableDataClass {
+  @apply px-4 py-4 whitespace-nowrap text-sm;
+}
+
+.tableDataTextClass {
+  @apply text-sm text-gray-800;
+}

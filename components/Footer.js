@@ -15,7 +15,7 @@ const Footer = () => {
                     fill="#4B5563"
                 />
             </svg>
-            <p className="text-sm border-gray-300 text-gray-600 font-bold">Copyright Marahuyo { currYear } <span className="border-l border-gray-600 pl-1">All Rights Reserved</span></p>
+            <p className="text-sm border-gray-300 text-gray-600 font-bold">Marahuyo { currYear } <span className="border-l border-gray-600 pl-1">All Rights Reserved</span></p>
         </div>
     )
 }

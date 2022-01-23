@@ -3,8 +3,10 @@ import SideNav from '../../../components/client/SideNav'
 import TopNav from '../../../components/client/TopNav'
 import Footer from '../../../components/client/Footer'
 import PageHeader from '../../../components/client/PageHeader'
+import clientStyles from '../../../styles/Client.module.css' 
 import { useRouter } from 'next/router'
 import jwt_decode from 'jwt-decode'
+import moment from 'moment'
 
 export default function bookings({ bookingDetails }) {
     const router = useRouter()
@@ -26,8 +28,8 @@ export default function bookings({ bookingDetails }) {
                 <TopNav username={ userName } />
                 <div className="row-start-2 w-full h-full bg-true-100">
                     <div className="p-8 flex flex-col items-center gap-y-5 min-h-screen">
-                        <div className="w-client-profile-form-container">
-                            <PageHeader text="Booking Details">
+                        <div className="w-full flex justify-between">
+                            <PageHeader text="Event Bookings">
                                 <svg 
                                     xmlns="http://www.w3.org/2000/svg" 
                                     className="h-7 w-7 text-current" 
@@ -35,63 +37,117 @@ export default function bookings({ bookingDetails }) {
                                     viewBox="0 0 24 24" 
                                     stroke="currentColor"
                                 >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                                 </svg>
                             </PageHeader>
+                            <button
+                                type="button"
+                                className={ clientStyles.addBtn }
+                            >
+                                <svg 
+                                    xmlns="http://www.w3.org/2000/svg" 
+                                    className="h-5 w-5 text-current" 
+                                    fill="none" 
+                                    viewBox="0 0 24 24" 
+                                    stroke="currentColor"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                </svg>
+                                <p className="text-sm font-bold">Book Event</p>
+                            </button>
                         </div>
-                        <div className="card w-client-profile-form-container flex flex-col items-center gap-y-10">
-                            {
-                                bookingDetails.id ? (
-                                    <>
-                                        <div className="flex gap-x-5">
-                                            <div className="flex flex-col gap-y-1 w-63">
-                                                <h4 className="text-sm font-bold">Type of Event</h4>
-                                                <p className="text-xs">{ bookingDetails.type_of_event }</p>
-                                            </div>
-                                            <div className="flex flex-col gap-y-1 w-63">
-                                                <h4 className="text-sm font-bold">Venue Name</h4>
-                                                <p className="text-xs">{ bookingDetails.venue_name }</p>
-                                            </div>
-                                        </div>
-                                        <div className="flex gap-x-5">
-                                            <div className="flex flex-col gap-y-1 w-63">
-                                                <h4 className="text-sm font-bold">Event Budget</h4>
-                                                <p className="text-xs">{`₱${bookingDetails.event_budget}`}</p>
-                                            </div>
-                                            <div className="flex flex-col gap-y-1 w-63">
-                                                <h4 className="text-sm font-bold">Desired Date</h4>
-                                                <p className="text-xs">{ new Date(bookingDetails.desired_date).toDateString() }</p>
-                                            </div>
-                                        </div>
-                                        <div className="flex gap-x-5">
-                                            <div className="flex flex-col gap-y-1 w-63">
-                                                <h4 className="text-sm font-bold">Time Schedule</h4>
-                                                <p className="text-xs">{ bookingDetails.time_schedule }</p>
-                                            </div>
-                                            <div className="flex flex-col gap-y-1 w-63">
-                                                <h4 className="text-sm font-bold">No. of Guests</h4>
-                                                <p className="text-xs">{ bookingDetails.guests_no }</p>
-                                            </div>
-                                        </div>
-                                        <div className="flex gap-x-5">
-                                            <div className="flex flex-col gap-y-1 w-63">
-                                                <h4 className="text-sm font-bold">Service Requirements</h4>
-                                                <p className="text-xs">{ bookingDetails.service_requirements }</p>
-                                            </div>
-                                            <div className="flex flex-col gap-y-1 w-63">
-                                                <h4 className="text-sm font-bold">Beverages</h4>
-                                                <p className="text-xs">{ bookingDetails.beverages }</p>
-                                            </div>
-                                        </div>
-                                        <div className="w-custom-textarea flex flex-col gap-y-1">
-                                            <h4 className="text-sm font-bold">Best way to contact you?</h4>
-                                            <p className="text-xs">{ bookingDetails.best_way_contact }</p>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <h4>You currently don't have any bookings.</h4>
-                                )
-                            }
+                        <div className="card w-full flex flex-col items-center gap-y-10">
+                        {
+                            bookingDetails.id ?
+                        <table 
+                            className="min-w-full divide-y divide-gray-200 border-b border-gray-200"
+                        >
+                            <thead className={ clientStyles.theadClass }>
+                                <tr 
+                                    className="text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+                                >
+                                    <th 
+                                        scope="col" 
+                                        className={ clientStyles.tableHeadingClass }
+                                    >
+                                        Event Type
+                                    </th>
+                                    <th 
+                                        scope="col" 
+                                        className={ clientStyles.tableHeadingClass }
+                                    >
+                                        Venue
+                                    </th>
+                                    <th 
+                                        scope="col" 
+                                        className={ clientStyles.tableHeadingClass }
+                                    >
+                                        Budget
+                                    </th>
+                                    <th 
+                                        scope="col" 
+                                        className={ clientStyles.tableHeadingClass }
+                                    >
+                                        Date & Time
+                                    </th>
+                                    <th 
+                                        scope="col" 
+                                        className={ clientStyles.tableHeadingClass }
+                                    >
+                                        Guests No.
+                                    </th>
+                                    <th 
+                                        scope="col" 
+                                        className={ clientStyles.tableHeadingClass }
+                                    >
+                                        Status
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody 
+                                className={ clientStyles.tbodyClass }
+                            >
+                                <tr
+                                    className={`${clientStyles.tableRowClass} color-transition`}
+                                >
+                                    <td 
+                                        className={ clientStyles.tableDataClass }
+                                    >{ bookingDetails.type_of_event }</td>
+                                    <td 
+                                        className={ clientStyles.tableDataClass }
+                                    >{ bookingDetails.venue_name }</td>
+                                    <td 
+                                        className={ clientStyles.tableDataClass }
+                                    >{ bookingDetails.event_budget }</td>
+                                    <td 
+                                        className={ clientStyles.tableDataClass }
+                                    >{ moment(bookingDetails.desired_date).format('ll') + ' ' + bookingDetails.time_schedule }</td>
+                                    <td 
+                                        className={ clientStyles.tableDataClass }
+                                    >{ bookingDetails.guests_no }</td>
+                                    {
+                                        bookingDetails.status === 'Pending' &&
+                                        <td 
+                                            className={`${clientStyles.tableDataClass} text-yellow-500`}
+                                        >{ bookingDetails.status }</td>
+                                    }
+                                    {
+                                        bookingDetails.status === 'Declined' &&
+                                        <td 
+                                            className={`${clientStyles.tableDataClass} text-red-500`}
+                                        >{ bookingDetails.status }</td>
+                                    }
+                                    {
+                                        bookingDetails.status === 'Accepted' &&
+                                        <td 
+                                            className={`${clientStyles.tableDataClass} text-teal-600`}
+                                        >{ bookingDetails.status }</td>
+                                    }
+                                </tr>
+                            </tbody>
+                        </table>
+                            : <h4 className='text-md text-center'>You currently don't have any bookings.</h4>
+                        }
                         </div>
                     </div>
                     <Footer />

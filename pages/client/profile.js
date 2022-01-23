@@ -13,6 +13,7 @@ import axios from 'axios'
 
 
 export default function profile({ clientProfile }) {
+    const api = process.env.NEXT_PUBLIC_DRF_API
     const router = useRouter()
     const [userName, setUsername] = useState()
     const readRole = () => {
@@ -28,25 +29,29 @@ export default function profile({ clientProfile }) {
     const { register, handleSubmit, formState : { errors } } = useForm()
     const handleSubmitForm = (data) => {
         const jwt_token = Cookies.get('jwt')
+        const formData = new FormData()
+        if (data.client_profile.length) {
+            formData.append('profile_image', data.client_profile[0])
+        } 
+        formData.append('first_name', data.client_fname)
+        formData.append('last_name', data.client_lname)
+        formData.append('mobile_number', data.client_mobile)
+        formData.append('email', data.client_email)
+        formData.append('sex', data.client_sex)
+        formData.append('birthdate', data.client_birth)
+        formData.append('street_address', data.client_st_add)
+        formData.append('city', data.client_city)
+        formData.append('state_province', data.client_province)
+        formData.append('postal_zip', data.client_zip)
+        console.log(formData)
         axios({
-            method : 'PUT',
-            url : 'https://alas-creatives-backend.herokuapp.com/client_profile/update',
+            method : 'POST',
+            url : `${api}client_profile/update`,
             headers : {
-                'Content-Type' : 'application/json',
-                'Authorization' : 'Bearer'+' '+jwt_token
+                'Authorization' : 'Bearer'+' '+jwt_token,
+                'Content-Type' : 'multipart/form-data'
             },
-            data : {
-                first_name : data.client_fname,
-                last_name : data.client_lname,
-                mobile_number : data.client_mobile,
-                email : data.client_email,
-                sex : data.client_sex,
-                birthdate : data.client_birth,
-                street_address : data.client_st_add,
-                city : data.client_city,
-                state_province : data.client_province,
-                postal_zip : data.client_zip
-            }
+            data : formData
         }).then(() => {
             console.log(data)
             Swal.fire({
@@ -94,6 +99,18 @@ export default function profile({ clientProfile }) {
                                 onSubmit={ handleSubmit(handleSubmitForm) }
                                 className="w-full rounded-xl p-5 flex flex-col items-center border border-gray-300 gap-y-7"
                             >
+
+                                <div className="w-full flex flex-col gap-y-2">
+                                    <p className="inputFieldLabel">Image</p>
+                                    <div className='inputContainer'>
+                                        <input
+                                            type="file"
+                                            { ...register("client_profile") } 
+                                            className="inputField"
+                                        />
+                                    </div>
+                                </div>
+
                                 {/* This is for the name field */}
                                 <div className="flex flex-col gap-y-2">
                                     <p className="inputFieldLabel">Name</p>

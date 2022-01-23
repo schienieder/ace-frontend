@@ -4,7 +4,7 @@ import TopNav from '../../components/client/TopNav'
 import Footer from '../../components/client/Footer'
 import PageHeader from '../../components/client/PageHeader'
 import Link from 'next/link'
-import CalendarHook from '../../components/admin/events/CalendarHook'
+// import CalendarHook from '../../components/admin/events/CalendarHook'
 import { useRouter } from 'next/router'
 import jwt_decode from 'jwt-decode'
 
@@ -21,10 +21,10 @@ export default function dashboard({ clientProfile }) {
     useEffect( async () => {
         await readRole()
     }, [])
-    const { calendarRows, selectedDate, todayFormatted, daysShort, monthNames, getNextMonth, getPrevMonth } = CalendarHook()
-    const dateClickHandler = date => {
-        console.log(date);
-    }
+    // const { calendarRows, selectedDate, todayFormatted, daysShort, monthNames, getNextMonth, getPrevMonth } = CalendarHook()
+    // const dateClickHandler = date => {
+    //     console.log(date);
+    // }
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="dashboard" />
@@ -62,66 +62,6 @@ export default function dashboard({ clientProfile }) {
                             : ''
                         }
                         <div className="flex flex-col gap-y-5">
-
-                            <div className="cardContainer">
-                                <div className="cardHeader bg-white border-b border-gray-200">
-                                    <h4 className="font-bold text-pink-600">Available Dates</h4>
-                                </div>
-                                <div className="cardBody">
-                                    <div className="flex justify-between items-center -mb-2">
-                                        {/* This is the month name and year */}
-                                        <div className="flex gap-x-3">
-                                            <h4 className="text-sm font-bold">{ monthNames[selectedDate.getMonth()] }</h4>
-                                            <p className="text-sm font-normal">{ selectedDate.getFullYear() }</p>
-                                        </div>
-                                        {/* This is the buttons for next and prev */}
-                                        <div className="flex">
-                                            <button
-                                                type="button" 
-                                                className="flex items-center gap-x-1 px-3 py-1 border border-gray-300 cursor-pointer hover:bg-gray-100 focus:outline-none color-transition rounded-tl-md rounded-bl-md"
-                                                onClick={ getPrevMonth }
-                                            >
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-                                                </svg>
-                                                <p className="font-normal text-sm">Prev</p>
-                                            </button>
-                                            <button
-                                                type="button" 
-                                                className="flex items-center gap-x-1 px-3 py-1 border border-gray-300 cursor-pointer hover:bg-gray-100 focus:outline-none color-transition rounded-tr-md rounded-br-md"
-                                                onClick={ getNextMonth }
-                                            >
-                                                <p className="font-normal text-sm">Next</p>
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <table className="w-full divide-y divide-gray-200">
-                                        <thead className="bg-gray-100">
-                                            <tr className="text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                                                {daysShort.map(day => (
-                                                    <th key={day} className="px-4 py-3">{day}</th>
-                                                ))}
-                                            </tr>
-                                        </thead>
-                                        <tbody className="bg-white divide-y divide-gray-200">
-                                            {
-                                                Object.values(calendarRows).map(cols => {
-                                                return <tr key={cols[0].date} className="text-sm font-medium text-gray-600">
-                                                    {cols.map(col => (
-                                                    col.date === todayFormatted
-                                                        ? <td key={col.date} className={`${col.classes} p-8 cursor-pointer bg-pink-600 text-gray-100 color-transition`} onClick={() => dateClickHandler(col.date)}>{ col.value }</td>
-                                                        : <td key={col.date} className={`${col.classes} p-8 cursor-pointer bg-transparent hover:bg-gray-100 color-transition`} onClick={() => dateClickHandler(col.date)}>{ col.value }</td>
-                                                    ))}
-                                                </tr>
-                                                })
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
                             
                             <div className="flex gap-x-5">
                                 
@@ -206,47 +146,10 @@ export default function dashboard({ clientProfile }) {
                                 <div className="w-3/5">
                                     <div className="cardContainer">
                                         <div className="cardHeader bg-white border-b border-gray-200">
-                                            <h4 className="font-bold text-pink-600">Event Activities</h4>
+                                            <h4 className="font-bold text-pink-600">Event Summary</h4>
                                         </div>
                                         <div className="cardBody">
-                                            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                                <thead className="bg-gray-100 dark:bg-gray-800">
-                                                    <tr className="text-left text-xs font-medium text-gray-700 dark:text-gray-400 uppercase tracking-wider">
-                                                        <th scope="col" className="px-4 py-3">
-                                                            Description
-                                                        </th>
-                                                        <th scope="col" className="px-4 py-3">
-                                                            Status
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
-                                                    <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
-                                                        <td className="px-4 py-4 whitespace-nowrap">
-                                                            <p className="text-sm text-gray-800 dark:text-gray-300">Taste Testing</p>
-                                                        </td>
-                                                        <td className="px-4 py-4 whitespace-nowrap">
-                                                            <p className="text-sm text-gray-800 dark:text-gray-300">On Going</p>
-                                                        </td>
-                                                    </tr>
-                                                    <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
-                                                        <td className="px-4 py-4 whitespace-nowrap">
-                                                            <p className="text-sm text-gray-800 dark:text-gray-300">Gown Fitting</p>
-                                                        </td>
-                                                        <td className="px-4 py-4 whitespace-nowrap">
-                                                            <p className="text-sm text-gray-800 dark:text-gray-300">Completed</p>
-                                                        </td>
-                                                    </tr>
-                                                    <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
-                                                        <td className="px-4 py-4 whitespace-nowrap">
-                                                            <p className="text-sm text-gray-800 dark:text-gray-300">Interview</p>
-                                                        </td>
-                                                        <td className="px-4 py-4 whitespace-nowrap">
-                                                            <p className="text-sm text-gray-800 dark:text-gray-300">Completed</p>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                            
                                         </div>
                                     </div>
                                 </div>

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useCallback, useEffect, useState } from 'react'
 import TopNav from '../../../components/admin/TopNav'
 import SideNav from '../../../components/admin/SideNav'
 import Footer from '../../../components/Footer'
@@ -12,11 +12,20 @@ import { useRouter } from 'next/router'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import Swal from 'sweetalert2'
+import moment from 'moment'
+import HoursOptions from '../../../components/admin/events/HoursOptions'
+import MinutesOptions from '../../../components/admin/events/MinutesOptions'
+import AutocompletePlace from '../../../components/admin/events/AutocompletePlace'
 
 export default function cards({ clientsList, eventsList }) {
+    console.log(eventsList.results[0])
+    const api = process.env.NEXT_PUBLIC_DRF_API
     let [isOpen, setIsOpen] = useState(false)
+    const [isEditOpen, setIsEditOpen] = useState(false);
     const router = useRouter()
     const [userName, setUsername] = useState()
+    const [place, setPlace] = useState()
+    const [editIndex, setEditIndex] = useState(0);
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
         const role = localStorage.getItem('role')
@@ -28,22 +37,30 @@ export default function cards({ clientsList, eventsList }) {
         await readRole()
     }, [])
     const { register, reset, handleSubmit, formState : { errors } } = useForm()
+    const { register : register2, reset : reset2, handleSubmit : handleSubmit2, formState : { errors : errors2 } } = useForm()
+    const handleLocationVal = (place) => {
+        setPlace(place)
+        console.log(place)
+        console.log(place.place_name)
+    }
     const addEvent = (data) => {
         console.log(data)
         const jwt_token = Cookies.get('jwt')
         console.log(jwt_token)
         axios({
             method : 'POST',
-            url : 'https://alas-creatives-backend.herokuapp.com/add_event/',
+            url : `${api}add_event/`,
             headers : {
                 'Authorization' : 'Bearer'+' '+jwt_token,
                 'Content-Type' : 'application/json'
             },
             data : {
                 event_name : data.event_name,
-                venue : data.event_venue,
+                venue_name : place.place_name,
+                venue_lat : place.geometry.coordinates[1],
+                venue_long : place.geometry.coordinates[0],
                 event_date : data.event_date,
-                time_schedule : data.event_time,
+                time_schedule : data.event_hour+':'+data.event_minute+' '+data.event_schedule,
                 event_budget : data.event_budget,
                 client : data.event_client
             }
@@ -58,7 +75,7 @@ export default function cards({ clientsList, eventsList }) {
                 confirmButtonColor: '#DB2777',
             })
             setIsOpen(false)
-            router.push('/admin/events/cards')
+            router.push('/admin/events')
         }).catch((error) => {
             Swal.fire({
                 icon : 'error',
@@ -70,11 +87,102 @@ export default function cards({ clientsList, eventsList }) {
             })
         })
     }
+    const updateEvent = (data) => {
+        console.log(data)
+        const jwt_token = Cookies.get('jwt')
+        console.log(jwt_token)
+        axios({
+            method : 'PUT',
+            url : `${api}update_event/${data.update_event_id}`,
+            headers : {
+                'Authorization' : 'Bearer'+' '+jwt_token,
+                'Content-Type' : 'application/json'
+            },
+            data : {
+                event_name : data.update_event_name,
+                venue_name : place.update_place_name,
+                venue_lat : place.geometry.coordinates[1],
+                venue_long : place.geometry.coordinates[0],
+                event_date : data.update_event_date,
+                time_schedule : data.update_event_hour+':'+data.update_event_minute+' '+data.update_event_schedule,
+                event_budget : data.update_event_budget,
+                client : data.update_event_client
+            }
+        }).then(() => {
+            reset2()
+            Swal.fire({
+                icon : 'success',
+                title: 'Event Creation Successsful',
+                timer : 3000,
+                text: `Event has been successfully created!`,
+                showCloseButton: true,
+                confirmButtonColor: '#DB2777',
+            })
+            setIsOpen(false)
+            router.push('/admin/events')
+        }).catch((error) => {
+            Swal.fire({
+                icon : 'error',
+                title: 'Event Creation Error',
+                timer : 3000,
+                text: error.message,
+                showCloseButton: true,
+                confirmButtonColor: '#DB2777',
+            })
+        })
+    }
+    const deleteEvent = (event_id, event_name) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `Delete event records for ${event_name}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#DB2777',
+            cancelButtonColor: '#9CA3AF',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            const jwt_token = Cookies.get('jwt')
+            if (result.isConfirmed) {
+                axios({
+                    method : 'DELETE',
+                    url : `${api}event/destroy/${event_id}`,
+                    headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
+                })
+                .then(() => {
+                    Swal.fire({
+                        icon : 'success',
+                        title : 'Deleted!',
+                        text : 'Event record has been deleted.',
+                        confirmButtonColor: '#DB2777',
+                        showCloseButton : true,
+                        timer : 2000
+                    })
+                    router.push('/admin/events')
+                })
+                .catch((error) => {
+                    Swal.fire({
+                        icon : 'error',
+                        title: 'Delete Error',
+                        timer : 3000,
+                        text: error.message,
+                        showCloseButton: true,
+                        confirmButtonColor: '#DB2777',
+                    })
+                })
+            }
+        })
+    }
     const closeModal = () => {
         setIsOpen(false)
     }
     const openModal = () => {
         setIsOpen(true)
+    }
+    const closeEditModal = () => {
+        setIsEditOpen(false)
+    }
+    const openEditModal = (event_index) => {
+        setEditIndex(event_index)
     }
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
@@ -111,6 +219,7 @@ export default function cards({ clientsList, eventsList }) {
                                 </svg>
                                 <p className="text-sm font-bold">New Event</p>
                             </button>
+                            {/* Start of Create Modal */}
                             <Transition appear show={isOpen} as={Fragment}>
                                 <Dialog
                                     as="div"
@@ -192,6 +301,7 @@ export default function cards({ clientsList, eventsList }) {
                                                                 type="text"
                                                                 { ...register("event_name", { required : "This field cannot be empty" }) } 
                                                                 className="inputField"
+                                                                autoComplete='off'
                                                             />
                                                         </div>
                                                         { 
@@ -216,19 +326,23 @@ export default function cards({ clientsList, eventsList }) {
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                                             </svg>
-                                                            <input
+                                                            <AutocompletePlace 
+                                                                onSelect={place => handleLocationVal(place)}
+                                                            />
+                                                            {/* <input
                                                                 type="text"
                                                                 { ...register("event_venue", { required : "This field cannot be empty" }) } 
                                                                 className="inputField"
-                                                            />
+                                                                autoComplete='off'
+                                                            /> */}
                                                         </div>
-                                                        { 
+                                                        {/* { 
                                                             errors.event_venue && 
                                                             <div className="flex items-center gap-x-1 text-red-500">
                                                                 <AuthErrorIcon />
                                                                 <p className="text-xs">{ errors.event_venue.message }</p>
                                                             </div> 
-                                                        }
+                                                        } */}
                                                     </div>
 
                                                 </div>
@@ -256,21 +370,28 @@ export default function cards({ clientsList, eventsList }) {
 
                                                     <div className="flex flex-col gap-y-1">
                                                         <label className="inputFieldLabel">Time Schedule</label>
-                                                        <div className="inputContainer">
-                                                            <input
-                                                                type="time"
-                                                                { ...register("event_time", { required : "This field cannot be empty" }) } 
-                                                                className="inputFieldDateTime"
-                                                                autoComplete="off"
-                                                            />
+                                                        <div className='w-63 px-4 py-1 flex items-center justify-between bg-transparent gap-x-5 border border-gray-300 focus-within:border-gray-600 rounded-lg'>
+                                                            <select 
+                                                                className='customTime'
+                                                                {...register("event_hour")}
+                                                            >
+                                                                <HoursOptions />
+                                                            </select>
+                                                            <p className='text-sm font-medium text-gray-800 -mx-6'>:</p>
+                                                            <select 
+                                                                className='customTime'
+                                                                {...register("event_minute")}
+                                                            >
+                                                                <MinutesOptions />
+                                                            </select>
+                                                            <select 
+                                                                className='customTime'
+                                                                {...register("event_schedule")}
+                                                            >
+                                                                <option value="AM">AM</option>
+                                                                <option value="PM">PM</option>
+                                                            </select>
                                                         </div>
-                                                        { 
-                                                            errors.event_time && 
-                                                            <div className="flex items-center gap-x-1 text-red-500">
-                                                                <AuthErrorIcon />
-                                                                <p className="text-xs">{ errors.event_time.message }</p>
-                                                            </div> 
-                                                        }
                                                     </div>
 
                                                 </div>
@@ -294,6 +415,7 @@ export default function cards({ clientsList, eventsList }) {
                                                                 type="number"
                                                                 { ...register("event_budget", { required : "This field cannot be empty" }) } 
                                                                 className="inputField"
+                                                                autoComplete='off'
                                                             />
                                                         </div>
                                                         { 
@@ -331,7 +453,7 @@ export default function cards({ clientsList, eventsList }) {
                                                     <button
                                                         type="button"
                                                         className="modalCloseBtn color-transition"
-                                                        onClick={closeModal}
+                                                        onClick={ closeModal }
                                                     >
                                                         <p className="btnText">Close</p>
                                                     </button>
@@ -344,10 +466,262 @@ export default function cards({ clientsList, eventsList }) {
                                 </div>
                                 </Dialog>
                             </Transition>
+                            {/* End of Create Modal */}
+                            {/* Start of Edit Modal */}
+                            <Transition appear show={isEditOpen} as={Fragment}>
+                                <Dialog
+                                    as="div"
+                                    className="fixed inset-0 z-20 overflow-y-auto backdrop-filter backdrop-brightness-50"
+                                    onClose={closeEditModal}
+                                >
+                                <div className="min-h-screen px-4 text-center">
+                                    <Transition.Child
+                                        as={Fragment}
+                                        enter="transform transition duration-[150ms]"
+                                        enterFrom="scale-50"
+                                        enterTo="scale-100"
+                                        leave="transform transition duration-[150ms]"
+                                        leaveFrom="scale-100"
+                                        leaveTo="scale-50"
+                                    >
+                                        <Dialog.Overlay className="fixed inset-0" />
+                                    </Transition.Child>
+
+                                    {/* This element is to trick the browser into centering the modal contents. */}
+                                    <span
+                                        className="inline-block h-screen align-middle"
+                                        aria-hidden="true"
+                                    >
+                                    &#8203;
+                                    </span>
+                                    <Transition.Child
+                                        as={Fragment}
+                                        enter="ease-out duration-300"
+                                        enterFrom="opacity-0 scale-95"
+                                        enterTo="opacity-100 scale-100"
+                                        leave="ease-in duration-200"
+                                        leaveFrom="opacity-100 scale-100"
+                                        leaveTo="opacity-0 scale-95"
+                                    >
+                                    <div className="inline-block w-client-profile-form-container my-8 p-5 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl border-b border-gray-200 rounded-xl">
+                                        <div className="p-5 border border-gray-300 rounded-xl">
+                                            
+                                            <div className="w-full flex justify-end">
+                                                <button
+                                                    type="button"
+                                                    className="p-2 text-sm font-medium text-gray-400 hover:text-gray-600 color-transition bg-transparent focus:outline-none rounded-full"
+                                                    onClick={closeEditModal}
+                                                >
+                                                    <svg 
+                                                        xmlns="http://www.w3.org/2000/svg" 
+                                                        className="h-5 w-5" 
+                                                        fill="none" 
+                                                        viewBox="0 0 24 24" 
+                                                        stroke="currentColor"
+                                                    >
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            <form 
+                                                className="flex flex-col items-center gap-y-6"
+                                                onSubmit={ handleSubmit2(updateEvent) }
+                                            >
+
+                                                <h4 className="text-base font-bold">Update Event</h4>
+
+                                                {/* This is for the name field */}
+                                                <div className="flex gap-x-5">
+
+                                                    <div className="flex flex-col gap-y-1">
+                                                        <label className="inputFieldLabel">Event Name</label>
+                                                        <div className="inputContainer">
+                                                            <svg 
+                                                                xmlns="http://www.w3.org/2000/svg" 
+                                                                className="inputIcon" 
+                                                                fill="none" 
+                                                                viewBox="0 0 24 24" 
+                                                                stroke="currentColor"
+                                                                >
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                            </svg>
+                                                            <input
+                                                                type="text"
+                                                                { ...register2("update_event_name", { required : "This field cannot be empty" }) } 
+                                                                className="inputField"
+                                                                autoComplete='off'
+                                                                value={eventsList.results[editIndex].event_name}
+                                                            />
+                                                        </div>
+                                                        { 
+                                                            errors2.update_event_name && 
+                                                            <div className="flex items-center gap-x-1 text-red-500">
+                                                                <AuthErrorIcon />
+                                                                <p className="text-xs">{ errors2.update_event_name.message }</p>
+                                                            </div> 
+                                                        }
+                                                    </div>
+
+                                                    <div className="flex flex-col gap-y-1">
+                                                        <label className="inputFieldLabel">Venue Location</label>
+                                                        <div className="inputContainer">
+                                                            <svg 
+                                                                xmlns="http://www.w3.org/2000/svg" 
+                                                                className="inputIcon" 
+                                                                fill="none" 
+                                                                viewBox="0 0 24 24" 
+                                                                stroke="currentColor"
+                                                            >
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                            </svg>
+                                                            <AutocompletePlace 
+                                                                onSelect={place => handleLocationVal(place)}
+                                                            />
+                                                            {/* <input
+                                                                type="text"
+                                                                { ...register("event_venue", { required : "This field cannot be empty" }) } 
+                                                                className="inputField"
+                                                                autoComplete='off'
+                                                            /> */}
+                                                        </div>
+                                                        {/* { 
+                                                            errors.event_venue && 
+                                                            <div className="flex items-center gap-x-1 text-red-500">
+                                                                <AuthErrorIcon />
+                                                                <p className="text-xs">{ errors.event_venue.message }</p>
+                                                            </div> 
+                                                        } */}
+                                                    </div>
+
+                                                </div>
+
+                                                {/* This is for the contact field */}
+                                                <div className="flex gap-x-5">
+
+                                                    <div className="flex flex-col gap-y-1">
+                                                        <label className="inputFieldLabel">Event Date</label>
+                                                        <div className="inputContainer">
+                                                            <input
+                                                                type="date"
+                                                                { ...register2("update_event_date", { required : "This field cannot be empty" }) } 
+                                                                className="inputFieldDateTime"
+                                                                value={eventsList.results[editIndex].event_date}
+                                                            />
+                                                        </div>
+                                                        { 
+                                                            errors2.update_event_date && 
+                                                            <div className="flex items-center gap-x-1 text-red-500">
+                                                                <AuthErrorIcon />
+                                                                <p className="text-xs">{ errors2.update_event_date.message }</p>
+                                                            </div> 
+                                                        }
+                                                    </div>
+
+                                                    <div className="flex flex-col gap-y-1">
+                                                        <label className="inputFieldLabel">Time Schedule</label>
+                                                        <div className='w-63 px-4 py-1 flex items-center justify-between bg-transparent gap-x-5 border border-gray-300 focus-within:border-gray-600 rounded-lg'>
+                                                            <select 
+                                                                className='customTime'
+                                                                {...register2("update_event_hour")}
+                                                            >
+                                                                <HoursOptions />
+                                                            </select>
+                                                            <p className='text-sm font-medium text-gray-800 -mx-6'>:</p>
+                                                            <select 
+                                                                className='customTime'
+                                                                {...register2("update_event_minute")}
+                                                            >
+                                                                <MinutesOptions />
+                                                            </select>
+                                                            <select 
+                                                                className='customTime'
+                                                                {...register2("update_event_schedule")}
+                                                            >
+                                                                <option value="AM">AM</option>
+                                                                <option value="PM">PM</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                {/* This is for the account fields */}
+                                                <div className="flex gap-x-5">
+
+                                                    <div className="flex flex-col gap-y-1">
+                                                        <label className="inputFieldLabel">Client Budget</label>
+                                                        <div className="inputContainer">
+                                                            <svg 
+                                                                xmlns="http://www.w3.org/2000/svg" 
+                                                                className="inputIcon" 
+                                                                fill="none" 
+                                                                viewBox="0 0 24 24" 
+                                                                stroke="currentColor"
+                                                            >
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                                                            </svg>
+                                                            <input
+                                                                type="number"
+                                                                { ...register2("update_event_budget", { required : "This field cannot be empty" }) } 
+                                                                className="inputField"
+                                                                autoComplete='off'
+                                                                value={eventsList.results[editIndex].event_budget}
+                                                            />
+                                                        </div>
+                                                        { 
+                                                            errors2.update_event_budget && 
+                                                            <div className="flex items-center gap-x-1 text-red-500">
+                                                                <AuthErrorIcon />
+                                                                <p className="text-xs">{ errors2.update_event_budget.message }</p>
+                                                            </div> 
+                                                        }
+                                                    </div>
+                                                    <div className="flex flex-col gap-y-1">
+                                                        <label className="inputFieldLabel">Event Client</label>
+                                                        <select
+                                                            className="inputSelect rounded-lg"
+                                                            {...register2("update_event_client")}
+                                                        >
+                                                            {
+                                                                clientsList.results.map((client) => (
+                                                                    <option 
+                                                                        key={ client.id }
+                                                                        value={ client.id }
+                                                                    >{ client.first_name + ' ' +client.last_name }</option>
+                                                                ))
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div className="w-full pr-2 mt-5 flex justify-end gap-x-3">
+                                                    <button
+                                                        className="modalAddBtn color-transition"
+                                                    >
+                                                        <p className="btnText">Save</p>
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="modalCloseBtn color-transition"
+                                                        onClick={ closeEditModal }
+                                                    >
+                                                        <p className="btnText">Close</p>
+                                                    </button>
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                    </Transition.Child>
+                                </div>
+                                </Dialog>
+                            </Transition>
+                            {/* End of Edit Modal */}
                         </div>
-                        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center gap-5">
+                        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center items-stretch gap-5">
                             {
-                                eventsList.results.map((event) => (
+                                eventsList.results.map((event, event_index) => (
                                     <div
                                         key={ event.id }
                                         className="relative card w-full flex flex-col gap-y-6"
@@ -367,11 +741,14 @@ export default function cards({ clientsList, eventsList }) {
                                                 </svg>
                                                 <p className="text-sm font-medium">Venue Location</p>
                                             </div>
-                                            <Link href="/admin/events/locations" passHref>
+                                            <Link 
+                                                href={`/admin/events/locations?lat=${event.venue_lat}&long=${event.venue_long}`}
+                                                passHref
+                                            >
                                                 <a 
                                                     className="text-gray-500 hover:text-pink-600 hover:underline text-xs"
                                                 >
-                                                    { event.venue }
+                                                    { event.venue_name }
                                                 </a>
                                             </Link>
                                         </div>
@@ -387,7 +764,7 @@ export default function cards({ clientsList, eventsList }) {
                                                     >
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                                     </svg>
-                                                    <p className="text-sm font-medium">{ event.event_date }</p>
+                                                    <p className="text-sm font-medium">{ moment(event.event_date).format('ll') }</p>
                                                 </div>
                                                 <div className="flex items-center gap-x-2">
                                                     <svg 
@@ -440,7 +817,13 @@ export default function cards({ clientsList, eventsList }) {
                                                 <Menu.Items className="absolute z-10 w-56 mt-10 bg-white divide-y divide-gray-200 rounded-md shadow-lg border border-gray-300 py-1">
                                                     <Menu.Item>
                                                         {({ active }) => (
-                                                        <Link href="/admin/events/tasks">
+                                                        <Link 
+                                                            as={`/admin/events?event_id=${event.id}`}
+                                                            href={{
+                                                                pathname : "/admin/events/event",
+                                                                query : { id : event.id }
+                                                            }}
+                                                        >
                                                         <button
                                                             className={`${adminStyles.cardPopOverItem} color-transition`}
                                                         >
@@ -463,6 +846,7 @@ export default function cards({ clientsList, eventsList }) {
                                                         {({ active }) => (
                                                         <button
                                                             className={`${adminStyles.cardPopOverItem} color-transition`}
+                                                            onClick={ () => openEditModal(event_index) }
                                                         >
                                                             <svg 
                                                                 xmlns="http://www.w3.org/2000/svg" 
@@ -481,6 +865,7 @@ export default function cards({ clientsList, eventsList }) {
                                                         {({ active }) => (
                                                         <button
                                                             className={`${adminStyles.cardPopOverItem} color-transition`}
+                                                            onClick={ () => deleteEvent(event.id, event.event_name) }
                                                         >
                                                             <svg 
                                                                 xmlns="http://www.w3.org/2000/svg" 
