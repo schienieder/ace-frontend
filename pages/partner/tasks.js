@@ -6,9 +6,13 @@ import partnerStyles from '../../styles/Partner.module.css'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
+import moment from 'moment'
+import PageHeader from '../../components/PageHeader'
+import Swal from 'sweetalert2'
 import axios from 'axios'
 
-export default function tasks() {
+export default function tasks({ requestList, eventsList }) {
+    const api = process.env.NEXT_PUBLIC_DRF_API
     const router = useRouter()
     const [userName, setUsername] = useState()
     const readRole = () => {
@@ -18,95 +22,155 @@ export default function tasks() {
             router.push('/login')
         }
     }
-    useEffect( async () => {
-        await readRole()
+    useEffect(() => {
+        readRole()
     }, [])
+    const confirmCompletion = (request_id) => {
+        Swal.fire({
+            title: 'Task Completion',
+            text: `Are you sure this task is completed?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#DB2777',
+            cancelButtonColor: '#9CA3AF',
+            confirmButtonText: 'Yes, completed!'
+        }).then((result) => {
+            const jwt_token = Cookies.get('jwt')
+            if (result.isConfirmed) {
+                axios({
+                    method : 'PATCH',
+                    url : `${api}request_update/${request_id}`,
+                    headers : {'Authorization' : 'Bearer'+' '+ jwt_token},
+                    data : { task_status : "Completed" }
+                })
+                .then(() => {
+                    Swal.fire({
+                        icon : 'succes',
+                        title : 'Success',
+                        text : 'Task Completion Update Successful.',
+                        confirmButtonColor: '#DB2777',
+                        showCloseButton : true,
+                        timer : 2000
+                    })
+                    router.push('/partner/requests')
+                })
+                .catch((error) => {
+                    Swal.fire({
+                        icon : 'error',
+                        title: 'Error',
+                        timer : 3000,
+                        text: error.message,
+                        showCloseButton: true,
+                        confirmButtonColor: '#DB2777',
+                    })
+                })
+            }
+        })
+    }
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="tasks" />
             <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav username={ userName }  />
+                <TopNav username={ userName } />
                 <div className="row-start-2 w-full h-full bg-true-100">
                     <div className="p-8 flex flex-col gap-y-5 min-h-screen">
-                        <h4 className="text-xl font-bold">Events & Tasks</h4>
-                        <div className="card w-full">
-                        <table className="min-w-full divide-y divide-gray-200 border-b border-gray-200">
-                            <thead className={ partnerStyles.theadClass }>
-                                <tr className="text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                                    <th scope="col" className={ partnerStyles.tableHeadingClass }>
-                                        Event Name
-                                    </th>
-                                    <th scope="col" className={ partnerStyles.tableHeadingClass }>
-                                        Date
-                                    </th>
-                                    <th scope="col" className={ partnerStyles.tableHeadingClass }>
-                                        Venue
-                                    </th>
-                                    <th scope="col" className={ partnerStyles.tableHeadingClass }>
-                                        Task
-                                    </th>
-                                    <th scope="col" className={ partnerStyles.tableHeadingClass }>
-                                        Actions
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody className={ partnerStyles.tbodyClass }>
-                                <tr
-                                    className={`${partnerStyles.tableRowClass} color-transition`}
-                                >
-                                    <td className={ partnerStyles.tableDataClass }>
-                                        <p className={ partnerStyles.tableDataTextClass }>Gwapo & Tangkag Dream Wedding</p>
-                                    </td>
-                                    <td className={ partnerStyles.tableDataClass }>
-                                        <p className="text-sm text-gray-800">July 19, 2022</p>
-                                    </td>
-                                    <td className={ partnerStyles.tableDataClass }>
-                                        <p className={ partnerStyles.tableDataTextClass }>Big 8 Hotel, Tagum City</p>
-                                    </td>
-                                    <td className={ partnerStyles.tableDataClass }>
-                                        <p className={ partnerStyles.tableDataTextClass }>Taste Testing</p>
-                                    </td>
-                                    <td className={ partnerStyles.tableDataClass }>
-                                        <div className="flex gap-x-2">
-                                            <button
-                                                type="button"
-                                                className={`${partnerStyles.actionBtn} color-transition`}
+                        <PageHeader text="Events & Tasks">
+                            <svg 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                className="h-7 w-7 text-current" 
+                                fill="none" 
+                                viewBox="0 0 24 24" 
+                                stroke="currentColor"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                            </svg>
+                        </PageHeader>
+                        <div className="card w-full flex flex-col gap-y-5">
+                        <table className="w-full divide-y divide-gray-200 border-b border-gray-200">
+                                <thead className={ partnerStyles.theadClass }>
+                                    <tr className="text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                        <th scope="col" className={ partnerStyles.tableHeadingClass }>
+                                            Event Name
+                                        </th>
+                                        <th scope="col" className={ partnerStyles.tableHeadingClass }>
+                                            Date & Time
+                                        </th>
+                                        <th scope="col" className={ partnerStyles.tableHeadingClass }>
+                                            Task
+                                        </th>
+                                        <th scope="col" className={ partnerStyles.tableHeadingClass }>
+                                            Venue
+                                        </th>
+                                        <th scope="col" className={ partnerStyles.tableHeadingClass }>
+                                            Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody className={ partnerStyles.tbodyClass }>
+                                    {
+                                        requestList.results.map((request) => (
+                                            <tr 
+                                                className={`${partnerStyles.tableRowClass} color-transition`}
+                                                key={request.id}
                                             >
-                                                <svg 
-                                                    xmlns="http://www.w3.org/2000/svg" 
-                                                    className={ partnerStyles.actionBtnIcon } 
-                                                    fill="none" 
-                                                    viewBox="0 0 24 24" 
-                                                    stroke="currentColor"
-                                                >
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                                </svg>
-                                            </button>
-                                            <button
-                                                type="button"
-                                                className={`${partnerStyles.actionBtn} color-transition`}
-                                                onClick={ () => destroyPartner(partner.id, partner.business_name || partner.first_name + ' ' + partner.last_name) }
-                                            >
-                                                <svg 
-                                                    xmlns="http://www.w3.org/2000/svg" 
-                                                    className={ partnerStyles.actionBtnIcon } 
-                                                    fill="none" 
-                                                    viewBox="0 0 24 24" 
-                                                    stroke="currentColor"
-                                                >
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div className="flex gap-x-2 text-sm">
-                            <p className="font-normal">Total Requests: </p>
-                            <p className="font-bold">9</p>
-                        </div>
+                                                <td className={ partnerStyles.tableDataClass }>
+                                                    <p className={ partnerStyles.tableDataTextClass }>
+                                                        {
+                                                            eventsList.results.map((event) => {
+                                                                if (event.id === request.event) {
+                                                                    return event.event_name
+                                                                }
+                                                            })
+                                                        }
+                                                    </p>
+                                                </td>
+                                                <td className={ partnerStyles.tableDataClass }>
+                                                    <p className="text-sm text-gray-800">
+                                                        {
+                                                            eventsList.results.map((event) => {
+                                                                if (event.id === request.event) {
+                                                                    return moment(event.event_date).format('ll') + ', ' + event.time_schedule
+                                                                }
+                                                            })
+                                                        }
+                                                    </p>
+                                                </td>
+                                                <td className={ partnerStyles.tableDataClass }>
+                                                    <p className={ partnerStyles.tableDataTextClass }>{ request.task }</p>
+                                                </td>
+                                                <td className={`${partnerStyles.tableDataClass} max-w-xs`}>
+                                                    <p className="text-sm text-gray-800 overflow-ellipsis overflow-hidden">
+                                                        {
+                                                            eventsList.results.map((event) => {
+                                                                if (event.id === request.event) {
+                                                                    return event.venue_name
+                                                                }
+                                                            })
+                                                        }
+                                                    </p>
+                                                </td>
+                                                <td className={ partnerStyles.tableDataClass }>
+                                                    <div className="flex gap-x-2">
+                                                        <button
+                                                            type="button"
+                                                            className={`${partnerStyles.actionBtn} color-transition`}
+                                                            onClick={ () => confirmCompletion(request.id) }
+                                                        >
+                                                            <svg xmlns="http://www.w3.org/2000/svg" className={ partnerStyles.actionBtnIcon } fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                            </svg> 
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    }
+                                </tbody>
+                            </table>
+                            <div className="flex gap-x-2 text-sm">
+                                <p className="font-normal">Total Events & Tasks: </p>
+                                <p className="font-bold">{ requestList.count }</p>
+                            </div>
                         </div>
                     </div>
                     <Footer />
@@ -114,4 +178,31 @@ export default function tasks() {
             </div>
         </div>
     )
+}
+
+export const getServerSideProps = async ({ req }) => {
+    const api = process.env.NEXT_PUBLIC_DRF_API
+    const token = req.cookies.jwt
+    const decoded_token = jwt_decode(token)
+    const res1 = await fetch(`${api}partner_profile/${decoded_token.user_id}`,{
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data1 = await res1.json()
+    const res2 = await fetch(`${api}accepted_list/${data1.id}`,{
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data2 = await res2.json()
+    const res3 = await fetch(`${api}events_list/`,{
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data3 = await res3.json()
+    return {
+        props : {
+            requestList : data2,
+            eventsList : data3,
+        }
+    }
 }

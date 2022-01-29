@@ -125,3 +125,7 @@ html {
 .commonBtn {
   @apply px-5 py-2 bg-pink-600 hover:bg-pink-500 rounded-lg text-white font-bold text-base tracking-wide;
 }
+
+.commonBtn2 {
+  @apply px-5 py-2 bg-transparent hover:bg-pink-600 border border-pink-600 rounded-lg text-pink-600 hover:text-white font-bold text-base tracking-wide;
+}

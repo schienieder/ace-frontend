@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import TopNav from '../../../components/admin/TopNav'
 import SideNav from '../../../components/admin/SideNav'
 import Footer from '../../../components/Footer'
@@ -16,9 +16,11 @@ import moment from 'moment'
 import HoursOptions from '../../../components/admin/events/HoursOptions'
 import MinutesOptions from '../../../components/admin/events/MinutesOptions'
 import AutocompletePlace from '../../../components/admin/events/AutocompletePlace'
+import { data } from 'autoprefixer'
 
-export default function cards({ clientsList, eventsList }) {
-    console.log(eventsList.results[0])
+export default function cards({ clientsList, eventsList, totalList, completedList }) {
+    console.log('Total Tasks is:', totalList)
+    console.log('Completed Tasks is:', completedList)
     const api = process.env.NEXT_PUBLIC_DRF_API
     let [isOpen, setIsOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false);
@@ -791,10 +793,10 @@ export default function cards({ clientsList, eventsList }) {
                                         <div className="flex flex-col gap-y-1">
                                             <div className="flex items-center gap-x-2">
                                                 <p className="text-xs font-medium">Progress</p>
-                                                <p className="text-sm font-normal">40%</p>
+                                                <p className="text-sm font-normal">{ completedList[event_index] === 0 ? 0 : Math.round((completedList[event_index] / totalList[event_index]) * 100) }%</p>
                                             </div>
                                             <div className="w-full h-2 rounded-md bg-gray-200">
-                                                <div className="w-1/4 h-2 rounded-md bg-pink-600"></div>
+                                                <div className="h-2 rounded-md bg-pink-600" style={{width : completedList[event_index] === 0 ? 0 : Math.round((completedList[event_index] / totalList[event_index]) * 100) + '%'}}></div>
                                             </div>
                                         </div>
                                         <Menu as="div" className="w-full flex justify-end">
@@ -898,6 +900,10 @@ export default function cards({ clientsList, eventsList }) {
 export const getServerSideProps = async ({ req }) => {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const token = req.cookies.jwt
+    let completed_counter = 0
+    const completed_arr = []
+    let total_counter = 0
+    const total_arr = []
     const res1 = await fetch(`${api}clients_list/`,{
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
@@ -908,10 +914,42 @@ export const getServerSideProps = async ({ req }) => {
         headers : {'Authorization' : 'Bearer'+' '+token}
     })
     const data2 = await res2.json()
+    const res3 = await fetch(`${api}tasks_list`, {
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data3 = await res3.json()
+    const res4 = await fetch(`${api}completed_list`, {
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data4 = await res4.json()
+    // FOR THE TOTAL OVERALL TASKS
+    for (let i = 0; i < data2.results.length; i++) {
+        total_counter = 0
+        for (let j = 0; j < data3.results.length; j++) {
+            if (data3.results[j].event === data2.results[i].id) {
+                total_counter++
+            }
+        }
+        total_arr.push(total_counter++)
+    }
+    // FOR THE TOTAL COMPLETED TASKS
+    for (let i = 0; i < data2.results.length; i++) {
+        completed_counter = 0
+        for (let j = 0; j < data4.results.length; j++) {
+            if (data4.results[j].event === data2.results[i].id) {
+                completed_counter++
+            }
+        }
+        completed_arr.push(completed_counter++)
+    }
     return {
         props : {
             clientsList : data1,
-            eventsList : data2
+            eventsList : data2,
+            totalList : total_arr,
+            completedList : completed_arr
         }
     }
 }

@@ -29,7 +29,7 @@ export default function profile({ partnerProfile }) {
         console.log(data.partner_services)
         const jwt_token = Cookies.get('jwt')
         axios({
-            method : 'PATCH',
+            method : 'POST',
             url : `${api}partner_profile/update`,
             headers : {
                 'Content-Type' : 'application/json',
