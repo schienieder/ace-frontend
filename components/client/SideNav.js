@@ -52,21 +52,6 @@ const SideNav = ({ isActive }) => {
                     <p className="font-mont font-bold text-sm">Event Bookings</p>
                 </a>
             </Link>
-            <Link href="/client/interview" passHref>
-                <a 
-                    className={ isActive === 'interview' ? clientStyles.sideNavItemActive : clientStyles.sideNavItem }
-                >
-                    <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        className={ clientStyles.sideNavIcon } 
-                        fill="none" 
-                        viewBox="0 0 24 24" 
-                        stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <p className="font-mont font-bold text-sm">Interview Schedules</p>
-                </a>
-            </Link>
             <Link href="/client/messages" passHref>
                 <a 
                     className={ isActive === 'messages' ? clientStyles.sideNavItemActive : clientStyles.sideNavItem }
@@ -81,22 +66,6 @@ const SideNav = ({ isActive }) => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
                     </svg>
                     <p className="font-mont font-bold text-sm">Messages</p>
-                </a>
-            </Link>
-            <Link href="/client/event" passHref>
-                <a 
-                    className={ isActive === 'event' ? clientStyles.sideNavItemActive : clientStyles.sideNavItem }
-                >
-                    <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        className={ clientStyles.sideNavIcon } 
-                        fill="none" 
-                        viewBox="0 0 24 24" 
-                        stroke="currentColor"
-                    >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                    <p className="font-mont font-bold text-sm">Event Progress</p>
                 </a>
             </Link>
         </div>

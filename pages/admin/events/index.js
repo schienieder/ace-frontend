@@ -19,8 +19,6 @@ import AutocompletePlace from '../../../components/admin/events/AutocompletePlac
 import { data } from 'autoprefixer'
 
 export default function cards({ clientsList, eventsList, totalList, completedList }) {
-    console.log('Total Tasks is:', totalList)
-    console.log('Completed Tasks is:', completedList)
     const api = process.env.NEXT_PUBLIC_DRF_API
     let [isOpen, setIsOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false);
@@ -552,7 +550,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                                 { ...register2("update_event_name", { required : "This field cannot be empty" }) } 
                                                                 className="inputField"
                                                                 autoComplete='off'
-                                                                value={eventsList.results[editIndex].event_name}
+                                                                value={eventsList.length ? eventsList.results[editIndex].event_name : ''}
                                                             />
                                                         </div>
                                                         { 
@@ -608,7 +606,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                                 type="date"
                                                                 { ...register2("update_event_date", { required : "This field cannot be empty" }) } 
                                                                 className="inputFieldDateTime"
-                                                                value={eventsList.results[editIndex].event_date}
+                                                                value={eventsList.length ? eventsList.results[editIndex].event_date : ''}
                                                             />
                                                         </div>
                                                         { 
@@ -668,7 +666,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                                 { ...register2("update_event_budget", { required : "This field cannot be empty" }) } 
                                                                 className="inputField"
                                                                 autoComplete='off'
-                                                                value={eventsList.results[editIndex].event_budget}
+                                                                value={eventsList.length ? eventsList.results[editIndex].event_budget : ''}
                                                             />
                                                         </div>
                                                         { 

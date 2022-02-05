@@ -1,15 +1,27 @@
-import React, { useState, useEffect } from 'react'
+import React, { Fragment, useState, useEffect, useMemo } from 'react'
 import TopNav from '../../components/admin/TopNav'
 import SideNav from '../../components/admin/SideNav'
 import Footer from '../../components/Footer'
 import PageHeader from '../../components/PageHeader'
-import ChatNames from '../../components/ChatNames'
 import adminStyles from '../../styles/Admin.module.css'
 import { useRouter } from 'next/router'
+import { Dialog, Transition } from '@headlessui/react'
+import { useForm } from 'react-hook-form'
+import axios from 'axios'
+import Cookies from 'js-cookie'
+import Swal from 'sweetalert2'
+import { w3cwebsocket as W3CWebSocket } from 'websocket'
 
-export default function reports() {
+export default function messages({ clientsList, partnersList, clientRooms, partnerRooms, groupRooms }) {
+    const api = process.env.NEXT_PUBLIC_DRF_API
     const router = useRouter()
     const [userName, setUsername] = useState()
+    const [isOpen, setIsOpen] = useState(false);
+    
+    const [userChat, setUserChat] = useState('')
+    const [chatMessages, setChatMessages] = useState([]);
+    const [roomName, setRoomName] = useState('');
+    
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
         const role = localStorage.getItem('role')
@@ -17,9 +29,84 @@ export default function reports() {
             router.push('/login')
         }
     }
-    useEffect( async () => {
-        await readRole()
+    const client = useMemo(() => {
+        return new W3CWebSocket(`ws://localhost:8000/ws/chat/${roomName ? roomName : userName}/`)
+    }, [roomName])
+    useEffect(() => {
+        readRole()
+        client.onopen = () => {
+            console.log('WebSocket Connection Successful!')
+        }
     }, [])
+    useEffect(() => {
+        client.onmessage = (message) => {
+            const serverData = JSON.parse(message.data)
+            if (serverData) {
+                setChatMessages([
+                    ...chatMessages,
+                    serverData
+                ])
+            }
+        }
+    }, [chatMessages])
+    const { register, reset, handleSubmit, formState : { errors } } = useForm()
+    const closeModal = () => {
+        setIsOpen(false)
+    }
+    const openModal = () => {
+        setIsOpen(true)
+    }
+    const addRoomGroup = (data) => {
+        console.log(data)
+        const jwt_token = Cookies.get('jwt')
+        console.log(jwt_token)
+        axios({
+            method : 'POST',
+            url : `${api}add_group_room/`,
+            headers : {
+                'Authorization' : 'Bearer'+' '+jwt_token,
+                'Content-Type' : 'application/json'
+            },
+            data : {
+                room_name : data.room_name,
+                room_key : data.room_key
+            }
+        }).then(() => {
+            reset()
+            Swal.fire({
+                icon : 'success',
+                title: 'Group Creation Successsful',
+                timer : 3000,
+                text: `Group has been successfully created!`,
+                showCloseButton: true,
+                confirmButtonColor: '#DB2777',
+            })
+            setIsOpen(false)
+            router.push('/admin/messages')
+        }).catch((error) => {
+            Swal.fire({
+                icon : 'error',
+                title: 'Server Error',
+                timer : 3000,
+                text: error.message,
+                showCloseButton: true,
+                confirmButtonColor: '#DB2777',
+            })
+        })
+    }
+    const sendChat = (e) => {
+        client.send(JSON.stringify({
+            type : 'message',
+            message : userChat,
+            username : userName
+        }))
+        setUserChat('')
+        e.preventDefault()
+    }
+    const setChat = (data) => {
+        setRoomName(data)
+        setChatMessages([])
+    }
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="" />
@@ -38,6 +125,144 @@ export default function reports() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
                             </svg>
                         </PageHeader>
+                        {/* Start of Create Modal */}
+                        <Transition appear show={isOpen} as={Fragment}>
+                            <Dialog
+                                as="div"
+                                className="fixed inset-0 z-20 overflow-y-auto backdrop-filter backdrop-brightness-50"
+                                onClose={closeModal}
+                            >
+                            <div className="min-h-screen px-4 text-center">
+                                <Transition.Child
+                                    as={Fragment}
+                                    enter="transform transition duration-[150ms]"
+                                    enterFrom="scale-50"
+                                    enterTo="scale-100"
+                                    leave="transform transition duration-[150ms]"
+                                    leaveFrom="scale-100"
+                                    leaveTo="scale-50"
+                                >
+                                    <Dialog.Overlay className="fixed inset-0" />
+                                </Transition.Child>
+
+                                {/* This element is to trick the browser into centering the modal contents. */}
+                                <span
+                                    className="inline-block h-screen align-middle"
+                                    aria-hidden="true"
+                                >
+                                &#8203;
+                                </span>
+                                <Transition.Child
+                                    as={Fragment}
+                                    enter="ease-out duration-300"
+                                    enterFrom="opacity-0 scale-95"
+                                    enterTo="opacity-100 scale-100"
+                                    leave="ease-in duration-200"
+                                    leaveFrom="opacity-100 scale-100"
+                                    leaveTo="opacity-0 scale-95"
+                                >
+                                <div className="inline-block w-client-profile-form-container my-8 p-5 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl border-b border-gray-200 rounded-xl">
+                                    <div className="p-5 border border-gray-300 rounded-xl">
+                                        
+                                        <div className="w-full flex justify-end">
+                                            <button
+                                                type="button"
+                                                className="p-2 text-sm font-medium text-gray-400 hover:text-gray-600 color-transition bg-transparent focus:outline-none rounded-full"
+                                                onClick={closeModal}
+                                            >
+                                                <svg 
+                                                    xmlns="http://www.w3.org/2000/svg" 
+                                                    className="h-5 w-5" 
+                                                    fill="none" 
+                                                    viewBox="0 0 24 24" 
+                                                    stroke="currentColor"
+                                                >
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <form 
+                                            className="flex flex-col items-center gap-y-6"
+                                            onSubmit={ handleSubmit(addRoomGroup) }
+                                        >
+
+                                            <h4 className="text-base font-bold">New Group Chat</h4>
+
+                                            {/* This is for the name field */}
+
+                                            <div className="flex flex-col gap-y-1">
+                                                <label className="inputFieldLabel">Room Name</label>
+                                                <div className="inputContainer">
+                                                    <svg 
+                                                        xmlns="http://www.w3.org/2000/svg" 
+                                                        className="inputIcon" 
+                                                        fill="none" 
+                                                        viewBox="0 0 24 24" 
+                                                        stroke="currentColor"
+                                                        >
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    <input
+                                                        type="text"
+                                                        { ...register("room_name", { required : "This field cannot be empty" }) } 
+                                                        className="w-64 py-0 px-0 border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800"
+                                                        autoComplete='off'
+                                                    />
+                                                </div>
+                                                { 
+                                                    errors.room_name && 
+                                                    <div className="flex items-center gap-x-1 text-red-500">
+                                                        <AuthErrorIcon />
+                                                        <p className="text-xs">{ errors.room_name.message }</p>
+                                                    </div> 
+                                                }
+                                            </div>
+                                                
+                                            <div className="flex flex-col gap-y-1">
+                                                <label className="inputFieldLabel">Room Key</label>
+                                                <div className="inputContainer">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="inputIcon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                                                    </svg>
+                                                    <input
+                                                        type="text"
+                                                        { ...register("room_key", { required : "This field cannot be empty" }) } 
+                                                        className="w-64 py-0 px-0 border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800"
+                                                        autoComplete='off'
+                                                    />
+                                                </div>
+                                                { 
+                                                    errors.room_key && 
+                                                    <div className="flex items-center gap-x-1 text-red-500">
+                                                        <AuthErrorIcon />
+                                                        <p className="text-xs">{ errors.room_key.message }</p>
+                                                    </div> 
+                                                }
+                                            </div>
+
+                                            <div className="w-full pr-2 mt-5 flex justify-end gap-x-3">
+                                                <button
+                                                    className="modalAddBtn color-transition"
+                                                >
+                                                    <p className="btnText">Save</p>
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className="modalCloseBtn color-transition"
+                                                    onClick={ closeModal }
+                                                >
+                                                    <p className="btnText">Close</p>
+                                                </button>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                                </Transition.Child>
+                            </div>
+                            </Dialog>
+                        </Transition>
+                        {/* End of Create Modal */}
                         <div className="card w-full grid grid-cols-custom-layout gap-x-5">
 
                             {/* Chat names part */}
@@ -61,6 +286,7 @@ export default function reports() {
                                     </div>
                                     <button 
                                         className={`${ adminStyles.addBtn } color-transition`}
+                                        onClick={ openModal }
                                     >
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 
@@ -71,29 +297,92 @@ export default function reports() {
                                         >
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                         </svg>
-                                        <p className="text-sm font-bold">New Chat</p>
+                                        <p className="text-sm font-bold">New Group</p>
                                     </button>
                                 </div>
                                 <div className="w-full h-screen py-3 divide-y divide-gray-200 overflow-y-auto">
-                                    <ChatNames name="Angela Debut GC" time="3 seconds ago" />
-                                    <ChatNames name="Kadayawan GC" time="1 minute ago" />
-                                    <ChatNames name="Miakabudo Sewane" time="3 minutes ago" />
-                                    <ChatNames name="Justine Rhei Torres" time="24 minutes ago" />
-                                    <ChatNames name="Ailene Padaplin" time="17 hours ago" />
-                                    <ChatNames name="Pepito Manaloto" time="1 day ago" />
-                                    <ChatNames name="Kim Jeric Buemil" time="2 days ago" />
-                                    <ChatNames name="Henry Mirafuentes" time="3 days ago" />
-                                    <ChatNames name="Ovia Ganza" time="1 week ago" />
+                                    {
+                                        clientsList.results.map(client => (
+                                            clientRooms.results.map((client_room) => (
+                                                client_room.client === client.id ?
+                                                    <div 
+                                                        className="flex items-center gap-x-2 pl-3 py-3 cursor-pointer hover:bg-gray-50 color-transition"
+                                                        key={ client.id }
+                                                        onClick={ () => setChat(client_room.room_name) }
+                                                    >
+                                                        <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                                                        <p className="text-sm font-medium">{ client.first_name+' '+client.last_name }</p>
+                                                    </div>
+                                                    : ''
+                                            ))
+                                        ))
+                                    }
+                                    {
+                                        partnersList.results.map(partner => (
+                                            partnerRooms.results.map((partner_room) => (
+                                                partner_room.partner === partner.id ?
+                                                    <div 
+                                                        className="flex items-center gap-x-2 pl-3 py-3 cursor-pointer hover:bg-gray-50 color-transition"
+                                                        key={ partner.id }
+                                                        onClick={ () => setChat(partner_room.room_name) }
+                                                    >
+                                                        <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                                                        <p className="text-sm font-medium">{ partner.first_name+' '+partner.last_name }</p>
+                                                    </div>
+                                                    : ''
+                                            ))
+                                        ))
+                                    }
+                                    {
+                                        groupRooms.results.map(group => (
+                                            <div 
+                                                className="flex items-center gap-x-2 pl-3 py-3 cursor-pointer hover:bg-gray-50 color-transition"
+                                                key={ group.id }
+                                                onClick={ () => setChat(group.room_key) }
+                                            >
+                                                <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                                                <p className="text-sm font-medium">{ group.room_name }</p>
+                                            </div>
+                                        ))
+                                    }
                                 </div>
                             </div>
 
                             {/* Messages part */}
                             <div className="col-start-2 border border-gray-300 rounded-xl flex flex-col p-5 gap-y-5">
-                                <div className="w-full h-full bg-gray-100 rounded-xl">
-
+                                <div className="w-full h-full bg-gray-100 rounded-xl p-5 flex flex-col gap-y-5">
+                                    {
+                                        chatMessages.map((message, index) => (
+                                            message.username === userName ? 
+                                            <div 
+                                                className='self-end flex gap-x-3 items-center'
+                                                key={index}
+                                            >
+                                                <div className='w-14 h-14 bg-white rounded-full shadow-sm'></div>
+                                                <div className='flex flex-col bg-pink-600 text-white rounded-xl py-3 px-5 shadow-sm'>
+                                                    <h4 className='text-sm font-bold'>{ message.username }</h4>
+                                                    <p className='text-xs'>{ message.message }</p>
+                                                </div>
+                                            </div>
+                                            :
+                                            <div 
+                                                className='flex gap-x-3 items-center'
+                                                key={index}
+                                            >
+                                                <div className='w-14 h-14 bg-white rounded-full shadow-sm'></div>
+                                                <div className='flex flex-col bg-white py-3 px-5 rounded-xl shadow-sm'>
+                                                    <h4 className='text-sm font-bold'>{ message.username }</h4>
+                                                    <p className='text-xs'>{ message.message }</p>
+                                                </div>
+                                            </div>
+                                        ))
+                                    }
                                 </div>
-                                <div className="flex items-center gap-x-3 bottom-0">
-                                    <button className="p-3 rounded-lg bg-gray-100 hover:bg-gray-200 text-pink-600 color-transition">
+                                <form 
+                                    className="flex items-center gap-x-3 bottom-0"
+                                    onSubmit={ sendChat }
+                                >
+                                    {/* <button className="p-3 rounded-lg bg-gray-100 hover:bg-gray-200 text-pink-600 color-transition">
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 
                                             className="h-4 w-4 text-current" 
@@ -114,7 +403,7 @@ export default function reports() {
                                         >
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                                         </svg>
-                                    </button>
+                                    </button> */}
                                     <div 
                                         className="w-full flex gap-x-1 px-2 py-1 items-center border border-gray-300 focus-within:border-gray-600 rounded-lg"
                                     >
@@ -122,6 +411,8 @@ export default function reports() {
                                             type="text"
                                             className="flex-1 px-0 py-0 border-transparent focus:outline-none focus:ring-transparent focus:border-transparent text-sm"
                                             placeholder="Type your message . . ."
+                                            onChange={ e => setUserChat(e.target.value) }
+                                            value={ userChat }
                                         />
                                     </div>
                                     <button className="p-3 rounded-lg bg-pink-600 hover:bg-pink-500 text-white color-transition">
@@ -135,7 +426,7 @@ export default function reports() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                                         </svg>
                                     </button>
-                                </div>
+                                </form>
                             </div>
 
                         </div>
@@ -145,4 +436,43 @@ export default function reports() {
             </div>
         </div>
     )
+}
+
+export const getServerSideProps = async ({ req }) => {
+    const api = process.env.NEXT_PUBLIC_DRF_API
+    const token = req.cookies.jwt
+    const res1 = await fetch(`${api}clients_list/`,{
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data1 = await res1.json()
+    const res2 = await fetch(`${api}partners_list/`, {
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data2 = await res2.json()
+    const res3 = await fetch(`${api}client_rooms/`, {
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data3 = await res3.json()
+    const res4 = await fetch(`${api}partner_rooms/`, {
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data4 = await res4.json()
+    const res5 = await fetch(`${api}all_group_rooms/`, {
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data5 = await res5.json()
+    return {
+        props : {
+            clientsList : data1,
+            partnersList : data2,
+            clientRooms : data3,
+            partnerRooms : data4,
+            groupRooms : data5
+        }
+    }
 }

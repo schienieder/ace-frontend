@@ -88,6 +88,10 @@ html {
   @apply w-63 px-2 py-1 border-transparent text-sm text-gray-800 border border-gray-300 focus-within:border-gray-600 focus:outline-none focus:ring-transparent;
 }
 
+.rateInputSelect {
+  @apply w-full px-2 py-1 border-transparent text-sm text-gray-800 border border-gray-300 focus-within:border-gray-600 focus:outline-none focus:ring-transparent;
+}
+
 .inputTextArea {
   @apply w-custom-textarea px-2 py-1 border border-gray-300 focus-within:border-gray-600 focus:outline-none focus:ring-transparent rounded-lg text-sm;
 }
