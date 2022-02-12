@@ -250,7 +250,7 @@ export default function add_booking({ clientProfile }) {
                                     <button 
                                         className="px-5 py-2 bg-pink-600 hover:bg-pink-500 rounded-lg text-white color-transition focus:outline-none"
                                     >
-                                        <p className="text-base font-bold tracking-wide">Next</p>
+                                        <p className="text-base font-bold tracking-wide">Save</p>
                                     </button>
                                 </div>
                                 <p className="pl-2 text-sm"><span className="font-bold">Note:</span> As for the mode of payment, it will be on the contract signing for the finalization of the event.</p>

@@ -283,13 +283,16 @@ export default function booking({ bookingInfo, clientInfo }) {
                                     </div>
                                 </div>
                                 {/* Guests & Status End */}
-                                <div className="w-full flex justify-end">
+                                <div className="w-full flex justify-end gap-x-5">
                                     <button 
                                         className="px-5 py-2 bg-pink-600 hover:bg-pink-500 rounded-lg text-white color-transition focus:outline-none"
                                         onClick={ openModal }
                                     >
                                         <p className="text-base font-bold tracking-wide">Set Interview</p>
                                     </button>
+                                    <button 
+                                        className='commonBtn2 color-transition'
+                                    >Decline</button>
                                 </div>
                             </div>
                         </div>

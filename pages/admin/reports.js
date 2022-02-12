@@ -3,11 +3,16 @@ import TopNav from '../../components/admin/TopNav'
 import SideNav from '../../components/admin/SideNav'
 import Footer from '../../components/Footer'
 import PageHeader from '../../components/PageHeader'
-import SatisfactionForecast from '../../components/admin/reports/SatisfactionForecast'
-import CompanySales from '../../components/admin/reports/CompanySales'
+import VenueForecast from '../../components/admin/reports/VenueForecast'
+import CateringForecast from '../../components/admin/reports/CateringForecast'
+import StylingForecast from '../../components/admin/reports/StylingForecast'
+import MCForecast from '../../components/admin/reports/MCForecast'
+import PresentationForecast from '../../components/admin/reports/PresentationForecast'
+import CoutesyForecast from '../../components/admin/reports/CourtesyRate'
 import { useRouter } from 'next/router'
 
-export default function reports() {
+export default function reports({ venueForecast, cateringForecast, stylingForecast, mcForecast, presentationForecast, courtesyForecast }) {
+    
     const router = useRouter()
     const [userName, setUsername] = useState()
     const readRole = () => {
@@ -17,8 +22,8 @@ export default function reports() {
             router.push('/login')
         }
     }
-    useEffect( async () => {
-        await readRole()
+    useEffect(() => {
+        readRole()
     }, [])
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
@@ -26,7 +31,7 @@ export default function reports() {
             <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto overflow-x-hidden">
                 <TopNav username={ userName } />
                 <div className="row-start-2 w-full h-full bg-true-100">
-                    <div className="p-8 flex flex-col gap-y-5 min-h-screen">
+                    <div className="p-8 flex flex-col gap-y-8 min-h-screen">
                         <PageHeader text="Reports">
                             <svg 
                                 xmlns="http://www.w3.org/2000/svg" 
@@ -39,11 +44,62 @@ export default function reports() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
                             </svg>
                         </PageHeader>
-                        <SatisfactionForecast />
+                        <h4 className="text-base font-bold">Client Satisfaction Forecast</h4>
+                        <VenueForecast data={ venueForecast } />
+                        <CateringForecast data={ cateringForecast } />
+                        <StylingForecast data={ stylingForecast } />
+                        <MCForecast data={ mcForecast } />
+                        <PresentationForecast data={ presentationForecast } />
+                        <CoutesyForecast data={ courtesyForecast } />
                     </div>
                     <Footer />
                 </div>
             </div>
         </div>
     )
+}
+
+export const getServerSideProps = async ({ req }) => {
+    const api = process.env.NEXT_PUBLIC_DRF_API
+    const token = req.cookies.jwt
+    const res1 = await fetch(`${api}venue_forecast/`,{
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data1 = await res1.json()
+    const res2 = await fetch(`${api}catering_forecast/`,{
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data2 = await res2.json()
+    const res3 = await fetch(`${api}styling_forecast/`,{
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data3 = await res3.json()
+    const res4 = await fetch(`${api}mc_forecast/`,{
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data4 = await res4.json()
+    const res5 = await fetch(`${api}presentation_forecast/`,{
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data5 = await res5.json()
+    const res6 = await fetch(`${api}coutesy_forecast/`,{
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data6 = await res6.json()
+    return {
+        props : {
+            venueForecast : data1,
+            cateringForecast : data2,
+            stylingForecast : data3,
+            mcForecast : data4,
+            presentationForecast : data5,
+            courtesyForecast : data6
+        }
+    }
 }
