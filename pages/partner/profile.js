@@ -217,12 +217,22 @@ export default function profile({ partnerProfile }) {
 
                                 <h4 className="text-base font-bold mt-5">Business Information</h4>
                                 
+                                <div className="w-full flex flex-col gap-y-2">
+                                    <p className="inputFieldLabel">Business Permit / Work Profile</p>
+                                    <div className='inputContainer'>
+                                        <input
+                                            type="file"
+                                            { ...register("partner_permit") } 
+                                            className="inputField"
+                                        />
+                                    </div>
+                                </div>
 
                                 {/* This is for the company name & business type fields */}
                                 <div className="flex gap-x-5">
 
                                     <div className="flex flex-col gap-y-1">
-                                        <label className="inputFieldLabel">Business Name</label>
+                                        <label className="inputFieldLabel">Business / Work Name</label>
                                         <div className="inputContainer">
                                             <svg 
                                                 xmlns="http://www.w3.org/2000/svg" 
@@ -250,7 +260,7 @@ export default function profile({ partnerProfile }) {
                                     </div>
 
                                     <div className="flex flex-col gap-y-1">
-                                    <label className="inputFieldLabel">Type of Business</label>
+                                    <label className="inputFieldLabel">Type of Business / Work</label>
                                         <div className="inputContainer">
                                             <svg 
                                                 xmlns="http://www.w3.org/2000/svg" 
@@ -415,7 +425,7 @@ export default function profile({ partnerProfile }) {
                                         className="inputTextArea"
                                         { ...register("partner_services", { required : "This field cannot be empty" }) }
                                         // onChange={e => setAreaText(e.target.value)}
-                                        defaultValue={ partnerProfile.services_offered }
+                                        defaultValue={ partnerProfile.services_offered || '' }
                                     ></textarea>
                                     { 
                                         errors.partner_services && 

@@ -27,8 +27,8 @@ export default function booking({ bookingInfo, clientInfo }) {
             router.push('/login')
         }
     }
-    useEffect( async () => {
-        await readRole()
+    useEffect(() => {
+        readRole()
     }, [])
     const setSchedule = (data) => {
         closeModal()
@@ -57,7 +57,7 @@ export default function booking({ bookingInfo, clientInfo }) {
                 showCloseButton: true,
                 confirmButtonColor: '#DB2777',
             })
-            router.push('/admin/bookings')
+            router.push('/admin/interviews')
         }).catch(error => {
             Swal.fire({
                 icon : 'error',
@@ -67,6 +67,48 @@ export default function booking({ bookingInfo, clientInfo }) {
                 showCloseButton: true,
                 confirmButtonColor: '#DB2777',
             })
+        })
+    }
+    const declineBooking = (booking_id) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `Decline client booking?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#DB2777',
+            cancelButtonColor: '#9CA3AF',
+            confirmButtonText: 'Yes, decline it!'
+        }).then((result) => {
+            const jwt_token = Cookies.get('jwt')
+            if (result.isConfirmed) {
+                axios({
+                    method : 'PATCH',
+                    url : `${api}booking/update/${booking_id}`,
+                    headers : {'Authorization' : 'Bearer'+' '+ jwt_token},
+                    data : { status : 'Declined' }
+                })
+                .then(() => {
+                    Swal.fire({
+                        icon : 'success',
+                        title : 'Declined!',
+                        text : 'Client booking has been declined.',
+                        confirmButtonColor: '#DB2777',
+                        showCloseButton : true,
+                        timer : 2000
+                    })
+                    router.push('/admin/bookings')
+                })
+                .catch((error) => {
+                    Swal.fire({
+                        icon : 'error',
+                        title: 'Server Error',
+                        timer : 3000,
+                        text: error.message,
+                        showCloseButton: true,
+                        confirmButtonColor: '#DB2777',
+                    })
+                })
+            }
         })
     }
     const closeModal = () => {
@@ -292,6 +334,7 @@ export default function booking({ bookingInfo, clientInfo }) {
                                     </button>
                                     <button 
                                         className='commonBtn2 color-transition'
+                                        onClick={ () => declineBooking(bookingInfo.id) }
                                     >Decline</button>
                                 </div>
                             </div>

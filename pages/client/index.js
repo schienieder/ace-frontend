@@ -191,7 +191,7 @@ export default function dashboard({ clientProfile, bookingInfo, interviewInfo, e
                                 }
                                 </div>
                                 <div className='w-full flex gap-x-5'>
-                                    <div className='w-1/2 flex flex-col gap-y-5'>
+                                    <div className='w-2/5 flex flex-col gap-y-5'>
                                         <h4 className='text-md font-bold -mb-3 mt-3'>Client Profile</h4>
                                         <div className='bg-white dark:bg-gray-900 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl w-full flex flex-col gap-y-10 px-10 py-8'>
                                             {/* Name & Number Start */}
@@ -247,24 +247,25 @@ export default function dashboard({ clientProfile, bookingInfo, interviewInfo, e
                                             </div>
                                             {/* Email & Birthdate End */}
                                             {/* Address Start */}
-                                            <div className='flex justify-between'>
-                                                {/* Address Start */}
-                                                <div className='flex flex-col gap-y-2'>
-                                                    <div className='flex gap-x-1 items-center'>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                        </svg>
-                                                        <h4 className='font-bold text-sm'>Address</h4>
-                                                    </div>
-                                                    <p className='text-sm'>{ clientProfile.street_address || clientProfile.city || clientProfile.state_province || clientProfile.postal_zip ? clientProfile.street_address+', '+clientProfile.city+', '+clientProfile.state_province+', '+clientProfile.postal_zip : 'N/A' }</p>
+                                            <div className='flex flex-col gap-y-2'>
+                                                <div className='flex gap-x-1 items-center'>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    </svg>
+                                                    <h4 className='font-bold text-sm'>Address</h4>
                                                 </div>
-                                                {/* Address End */}
+                                                <p className='text-sm'>{ clientProfile.street_address || clientProfile.city || clientProfile.state_province || clientProfile.postal_zip ? clientProfile.street_address+', '+clientProfile.city+', '+clientProfile.state_province+', '+clientProfile.postal_zip : 'N/A' }</p>
                                             </div>
                                             {/* Address End */}
+                                            <Link href="/client/profile">
+                                                <button 
+                                                    className="w-full bg-pink-600 hover:bg-pink-500 focus:outline-none color-transition text-gray-50 font-bold py-2 rounded-lg tracking-wide text-sm"
+                                                >View Profile</button>
+                                            </Link>
                                         </div>
                                     </div>
-                                    <div className='w-1/2 flex flex-col gap-y-5'>
+                                    <div className='w-3/5 flex flex-col gap-y-5'>
                                         <h4 className='text-md font-bold -mb-3 mt-3'>Interview Schedule</h4>
                                         <div className='flex-grow bg-white dark:bg-gray-900 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl w-full flex flex-col gap-y-10 px-10 py-8'>
                                         {

@@ -44,191 +44,144 @@ export default function index({ partnerProfile }) {
                         </svg>
                         <h4 className="text-xl font-bold dark:text-gray-300">Dashboard</h4>
                     </div>
+                    {
+                        !partnerProfile.first_name || !partnerProfile.last_name || !partnerProfile.mobile_number || !partnerProfile.email || !partnerProfile.street_address || !partnerProfile.city || !partnerProfile.state_province || !partnerProfile.business_name || !partnerProfile.type_of_business || !partnerProfile.services_offered ?
+                            <div className="w-full p-5 rounded-lg bg-white flex justify-center items-center gap-x-1 text-gray-800">
+                                <svg 
+                                    xmlns="http://www.w3.org/2000/svg" 
+                                    className="h-7 w-7 text-pink-600 animate-wiggle" 
+                                    fill="none" 
+                                    viewBox="0 0 24 24" 
+                                    stroke="currentColor"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                                <p className="font-normal">Profile information incomplete! Proceed <Link href="/partner/profile"><a className="text-pink-600 font-bold hover:underline">here</a></Link> to remove this warning.</p>
+                            </div>
+                        : ''
+                    }
                         <div className="flex flex-col gap-y-5">
                             
-                        <div className="cardContainer">
-                                <div className="cardHeader bg-white border-b border-gray-200">
-                                    <h4 className="font-bold text-pink-600">Event Calendar</h4>
-                                </div>
-                                <div className="cardBody">
-                                    <div className="flex justify-between items-center -mb-2">
-                                        {/* This is the month name and year */}
-                                        <div className="flex gap-x-3">
-                                            <h4 className="text-sm font-bold">{ monthNames[selectedDate.getMonth()] }</h4>
-                                            <p className="text-sm font-normal">{ selectedDate.getFullYear() }</p>
-                                        </div>
-                                        {/* This is the buttons for next and prev */}
-                                        <div className="flex">
-                                            <button
-                                                type="button" 
-                                                className="flex items-center gap-x-1 px-3 py-1 border border-gray-300 cursor-pointer hover:bg-gray-100 focus:outline-none color-transition rounded-tl-md rounded-bl-md"
-                                                onClick={ getPrevMonth }
-                                            >
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-                                                </svg>
-                                                <p className="font-normal text-sm">Prev</p>
-                                            </button>
-                                            <button
-                                                type="button" 
-                                                className="flex items-center gap-x-1 px-3 py-1 border border-gray-300 cursor-pointer hover:bg-gray-100 focus:outline-none color-transition rounded-tr-md rounded-br-md"
-                                                onClick={ getNextMonth }
-                                            >
-                                                <p className="font-normal text-sm">Next</p>
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <table className="w-full divide-y divide-gray-200">
-                                        <thead className="bg-gray-100">
-                                            <tr className="text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                                                {daysShort.map(day => (
-                                                    <th key={day} className="px-4 py-3">{day}</th>
-                                                ))}
-                                            </tr>
-                                        </thead>
-                                        <tbody className="bg-white divide-y divide-gray-200">
-                                            {
-                                                Object.values(calendarRows).map(cols => {
-                                                return <tr key={cols[0].date} className="text-sm font-medium text-gray-600">
-                                                    {cols.map(col => (
-                                                    col.date === todayFormatted
-                                                        ? <td key={col.date} className={`${col.classes} p-8 cursor-pointer bg-pink-600 text-gray-100 color-transition`} onClick={() => dateClickHandler(col.date)}>{ col.value }</td>
-                                                        : <td key={col.date} className={`${col.classes} p-8 cursor-pointer bg-transparent hover:bg-gray-100 color-transition`} onClick={() => dateClickHandler(col.date)}>{ col.value }</td>
-                                                    ))}
-                                                </tr>
-                                                })
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
 
                             <div className="flex gap-x-5">
                                 
-                                <div className="w-2/5">
-                                    <div className="cardContainer">
-                                        <div className="cardHeader bg-white border-b border-gray-200">
-                                            <h4 className="font-bold text-pink-600">Profile Information</h4>
+                                <div className="w-2/5 flex flex-col gap-y-5">
+                                    <h4 className="font-bold -mb-3 mt-3">Profile Information</h4>
+                                    <div className="bg-white dark:bg-gray-900 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl w-full flex flex-col gap-y-10 px-10 py-8">
+                                        <div className="flex flex-col gap-y-1">
+                                            <div className="flex items-center gap-x-1">
+                                                <svg 
+                                                    xmlns="http://www.w3.org/2000/svg" 
+                                                    className="h-5 w-5 text-pink-600" 
+                                                    fill="none" 
+                                                    viewBox="0 0 24 24" 
+                                                    stroke="currentColor"
+                                                >
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                </svg>
+                                                <h4 className="text-sm font-bold">Name</h4>
+                                            </div>
+                                            <p className="text-xs">{ partnerProfile.first_name + ' ' + partnerProfile.last_name }</p>
                                         </div>
-                                        <div className="cardBody">
+                                        <div className="w-full flex justify-between">
                                             <div className="flex flex-col gap-y-1">
                                                 <div className="flex items-center gap-x-1">
                                                     <svg 
                                                         xmlns="http://www.w3.org/2000/svg" 
-                                                        className="h-5 w-5 text-current" 
+                                                        className="h-5 w-5 text-pink-600" 
                                                         fill="none" 
                                                         viewBox="0 0 24 24" 
                                                         stroke="currentColor"
                                                     >
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                                     </svg>
-                                                    <h4 className="text-sm font-bold">Name</h4>
+                                                    <h4 className="text-sm font-bold">Mobile Number</h4>
                                                 </div>
-                                                <p className="text-xs">{ partnerProfile.first_name + ' ' + partnerProfile.last_name }</p>
-                                            </div>
-                                            <div className="w-full flex justify-between">
-                                                <div className="flex flex-col gap-y-1">
-                                                    <div className="flex items-center gap-x-1">
-                                                        <svg 
-                                                            xmlns="http://www.w3.org/2000/svg" 
-                                                            className="h-5 w-5 text-current" 
-                                                            fill="none" 
-                                                            viewBox="0 0 24 24" 
-                                                            stroke="currentColor"
-                                                        >
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                                        </svg>
-                                                        <h4 className="text-sm font-bold">Mobile Number</h4>
-                                                    </div>
-                                                    <p className="text-xs">{ partnerProfile.mobile_number }</p>
-                                                </div>
-                                                <div className="flex flex-col gap-y-1">
-                                                    <div className="flex items-center gap-x-1">
-                                                        <svg 
-                                                            xmlns="http://www.w3.org/2000/svg" 
-                                                            className="h-5 w-5 text-current" 
-                                                            fill="none" 
-                                                            viewBox="0 0 24 24" 
-                                                            stroke="currentColor"
-                                                        >
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                                        </svg>
-                                                        <h4 className="text-sm font-bold">Email Address</h4>
-                                                    </div>
-                                                    <p className="text-xs">{ partnerProfile.email }</p>
-                                                </div>
+                                                <p className="text-xs">{ partnerProfile.mobile_number }</p>
                                             </div>
                                             <div className="flex flex-col gap-y-1">
                                                 <div className="flex items-center gap-x-1">
                                                     <svg 
                                                         xmlns="http://www.w3.org/2000/svg" 
-                                                        className="h-5 w-5 text-current" 
+                                                        className="h-5 w-5 text-pink-600" 
                                                         fill="none" 
                                                         viewBox="0 0 24 24" 
                                                         stroke="currentColor"
                                                     >
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                                     </svg>
-                                                    <h4 className="text-sm font-bold">Address</h4>
+                                                    <h4 className="text-sm font-bold">Email Address</h4>
                                                 </div>
-                                                <p className="text-xs">{ partnerProfile.street_address && partnerProfile.city && partnerProfile.state_province ? `${partnerProfile.street_address}, ${partnerProfile.city}, ${partnerProfile.state_province}` : 'N/A' }</p>
+                                                <p className="text-xs">{ partnerProfile.email }</p>
                                             </div>
-                                            <Link href="/partner/profile">
-                                                <button 
-                                                    className="w-full bg-pink-600 hover:bg-pink-500 focus:outline-none color-transition text-gray-50 font-bold py-2 rounded-lg tracking-wide text-sm"
-                                                >View Profile</button>
-                                            </Link>
                                         </div>
+                                        <div className="flex flex-col gap-y-1">
+                                            <div className="flex items-center gap-x-1">
+                                                <svg 
+                                                    xmlns="http://www.w3.org/2000/svg" 
+                                                    className="h-5 w-5 text-pink-600" 
+                                                    fill="none" 
+                                                    viewBox="0 0 24 24" 
+                                                    stroke="currentColor"
+                                                >
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                </svg>
+                                                <h4 className="text-sm font-bold">Address</h4>
+                                            </div>
+                                            <p className="text-xs">{ partnerProfile.street_address && partnerProfile.city && partnerProfile.state_province ? `${partnerProfile.street_address}, ${partnerProfile.city}, ${partnerProfile.state_province}` : 'N/A' }</p>
+                                        </div>
+                                        <Link href="/partner/profile">
+                                            <button 
+                                                className="w-full bg-pink-600 hover:bg-pink-500 focus:outline-none color-transition text-gray-50 font-bold py-2 rounded-lg tracking-wide text-sm"
+                                            >View Profile</button>
+                                        </Link>
                                     </div>
                                 </div>
 
-                                <div className="card w-3/5">
-                                    <div className="w-full flex justify-between">
-                                        <h4 className="font-bold">Upcoming Events</h4>
-                                        <a className="text-xs text-gray-500 hover:text-blue-600 cursor-pointer">View All</a>
+                                <div className="w-3/5 flex flex-col gap-y-5">
+                                    <h4 className="font-bold -mb-3 mt-3">Upcoming Events</h4>
+                                    <div className="flex-grow bg-white dark:bg-gray-900 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl w-full flex flex-col gap-y-10 p-5">
+                                        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                            <thead className="bg-gray-100 dark:bg-gray-800">
+                                                <tr className="text-left text-xs font-medium text-gray-700 dark:text-gray-400 uppercase tracking-wider">
+                                                    <th scope="col" className="px-4 py-3">
+                                                        Event Name
+                                                    </th>
+                                                    <th scope="col" className="px-4 py-3">
+                                                        Date
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
+                                                <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
+                                                    <td className="px-4 py-4 whitespace-nowrap">
+                                                        <p className="text-sm text-gray-800 dark:text-gray-300">A Decade & Eight - Ailene Padaplin</p>
+                                                    </td>
+                                                    <td className="px-4 py-4 whitespace-nowrap">
+                                                        <p className="text-sm text-gray-800 dark:text-gray-300">July 13, 2021</p>
+                                                    </td>
+                                                </tr>
+                                                <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
+                                                    <td className="px-4 py-4 whitespace-nowrap">
+                                                        <p className="text-sm text-gray-800 dark:text-gray-300">Pepito & Pepita Wedding</p>
+                                                    </td>
+                                                    <td className="px-4 py-4 whitespace-nowrap">
+                                                        <p className="text-sm text-gray-800 dark:text-gray-300">July 14, 2021</p>
+                                                    </td>
+                                                </tr>
+                                                <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
+                                                    <td className="px-4 py-4 whitespace-nowrap">
+                                                        <p className="text-sm text-gray-800 dark:text-gray-300">Kadayawan sa Dabaw Sponsorship</p>
+                                                    </td>
+                                                    <td className="px-4 py-4 whitespace-nowrap">
+                                                        <p className="text-sm text-gray-800 dark:text-gray-300">July 15, 2021</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <a className="text-xs text-gray-500 hover:text-blue-600 cursor-pointer self-end">View All</a>
                                     </div>
-                                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                        <thead className="bg-gray-100 dark:bg-gray-800">
-                                            <tr className="text-left text-xs font-medium text-gray-700 dark:text-gray-400 uppercase tracking-wider">
-                                                <th scope="col" className="px-4 py-3">
-                                                    Event Name
-                                                </th>
-                                                <th scope="col" className="px-4 py-3">
-                                                    Date
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
-                                            <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
-                                                <td className="px-4 py-4 whitespace-nowrap">
-                                                    <p className="text-sm text-gray-800 dark:text-gray-300">A Decade & Eight - Ailene Padaplin</p>
-                                                </td>
-                                                <td className="px-4 py-4 whitespace-nowrap">
-                                                    <p className="text-sm text-gray-800 dark:text-gray-300">July 13, 2021</p>
-                                                </td>
-                                            </tr>
-                                            <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
-                                                <td className="px-4 py-4 whitespace-nowrap">
-                                                    <p className="text-sm text-gray-800 dark:text-gray-300">Pepito & Pepita Wedding</p>
-                                                </td>
-                                                <td className="px-4 py-4 whitespace-nowrap">
-                                                    <p className="text-sm text-gray-800 dark:text-gray-300">July 14, 2021</p>
-                                                </td>
-                                            </tr>
-                                            <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
-                                                <td className="px-4 py-4 whitespace-nowrap">
-                                                    <p className="text-sm text-gray-800 dark:text-gray-300">Kadayawan sa Dabaw Sponsorship</p>
-                                                </td>
-                                                <td className="px-4 py-4 whitespace-nowrap">
-                                                    <p className="text-sm text-gray-800 dark:text-gray-300">July 15, 2021</p>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
                                 </div>
                             </div>
                         </div>

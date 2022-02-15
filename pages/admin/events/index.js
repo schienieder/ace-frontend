@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState, useRef } from 'react'
 import TopNav from '../../../components/admin/TopNav'
 import SideNav from '../../../components/admin/SideNav'
 import Footer from '../../../components/Footer'
@@ -16,7 +16,6 @@ import moment from 'moment'
 import HoursOptions from '../../../components/admin/events/HoursOptions'
 import MinutesOptions from '../../../components/admin/events/MinutesOptions'
 import AutocompletePlace from '../../../components/admin/events/AutocompletePlace'
-import { data } from 'autoprefixer'
 
 export default function cards({ clientsList, eventsList, totalList, completedList }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
@@ -25,7 +24,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
     const router = useRouter()
     const [userName, setUsername] = useState()
     const [place, setPlace] = useState()
-    const [editIndex, setEditIndex] = useState(0);
+    const editIndex = useRef(0)
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
         const role = localStorage.getItem('role')
@@ -33,8 +32,8 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
             router.push('/login')
         }
     }
-    useEffect( async () => {
-        await readRole()
+    useEffect(() => {
+        readRole()
     }, [])
     const { register, reset, handleSubmit, formState : { errors } } = useForm()
     const { register : register2, reset : reset2, handleSubmit : handleSubmit2, formState : { errors : errors2 } } = useForm()
@@ -44,6 +43,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
         console.log(place.place_name)
     }
     const addEvent = (data) => {
+        let payment_status = data.package_cost === data.client_payment ? "Fully Paid" : "Partially Paid"
         console.log(data)
         const jwt_token = Cookies.get('jwt')
         console.log(jwt_token)
@@ -56,12 +56,15 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
             },
             data : {
                 event_name : data.event_name,
-                venue_name : place.place_name,
+                venue_location : place.place_name,
+                venue_name : data.venue_name,
                 venue_lat : place.geometry.coordinates[1],
                 venue_long : place.geometry.coordinates[0],
-                event_date : data.event_date,
+                package_cost : data.package_cost,
+                client_payment : data.client_payment,
+                payment_status : payment_status,
+                date_schedule : data.date_schedule,
                 time_schedule : data.event_hour+':'+data.event_minute+' '+data.event_schedule,
-                event_budget : data.event_budget,
                 client : data.event_client
             }
         }).then(() => {
@@ -88,42 +91,49 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
         })
     }
     const updateEvent = (data) => {
-        console.log(data)
+        let payment_status = data.update_package_cost === data.update_client_payment ? "Fully Paid" : "Partially Paid"
+        let time_sched = data.update_event_hour+':'+data.update_event_minute+' '+data.update_event_schedule
+        let formData = {
+            event_name : data.update_event_name,
+            venue_name : data.update_venue_name,
+            package_cost : data.update_package_cost,
+            client_payment : data.update_client_payment,
+            payment_status : payment_status,
+            date_schedule : data.update_date_schedule,
+            time_schedule : time_sched,
+            client : data.update_event_client
+        }
+        if (place) {
+            formData["venue_location"] = place.place_name
+            formData["venue_lat"] = place.geometry.coordinates[1]
+            formData["venue_long"] = place.geometry.coordinates[0]
+        }
         const jwt_token = Cookies.get('jwt')
         console.log(jwt_token)
         axios({
-            method : 'PUT',
+            method : 'PATCH',
             url : `${api}update_event/${data.update_event_id}`,
             headers : {
                 'Authorization' : 'Bearer'+' '+jwt_token,
                 'Content-Type' : 'application/json'
             },
-            data : {
-                event_name : data.update_event_name,
-                venue_name : place.update_place_name,
-                venue_lat : place.geometry.coordinates[1],
-                venue_long : place.geometry.coordinates[0],
-                event_date : data.update_event_date,
-                time_schedule : data.update_event_hour+':'+data.update_event_minute+' '+data.update_event_schedule,
-                event_budget : data.update_event_budget,
-                client : data.update_event_client
-            }
+            data : formData
         }).then(() => {
             reset2()
             Swal.fire({
                 icon : 'success',
-                title: 'Event Creation Successsful',
+                title: 'Update Successsful',
                 timer : 3000,
-                text: `Event has been successfully created!`,
+                text: `Event has been successfully updated!`,
                 showCloseButton: true,
                 confirmButtonColor: '#DB2777',
             })
-            setIsOpen(false)
+            setIsEditOpen(false)
             router.push('/admin/events')
         }).catch((error) => {
             Swal.fire({
                 icon : 'error',
-                title: 'Event Creation Error',
+                title: 'Event Update Error',
                 timer : 3000,
                 text: error.message,
                 showCloseButton: true,
@@ -157,6 +167,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                         showCloseButton : true,
                         timer : 2000
                     })
+                    editIndex.current = 0
                     router.push('/admin/events')
                 })
                 .catch((error) => {
@@ -182,7 +193,9 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
         setIsEditOpen(false)
     }
     const openEditModal = (event_index) => {
-        setEditIndex(event_index)
+        reset2()
+        setIsEditOpen(true)
+        editIndex.current = event_index
     }
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
@@ -282,7 +295,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
 
                                                 <h4 className="text-base font-bold">New Event</h4>
 
-                                                {/* This is for the name field */}
+                                                {/* This is for the event name field and venue location */}
                                                 <div className="flex gap-x-5">
 
                                                     <div className="flex flex-col gap-y-1">
@@ -329,41 +342,89 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                             <AutocompletePlace 
                                                                 onSelect={place => handleLocationVal(place)}
                                                             />
-                                                            {/* <input
-                                                                type="text"
-                                                                { ...register("event_venue", { required : "This field cannot be empty" }) } 
-                                                                className="inputField"
-                                                                autoComplete='off'
-                                                            /> */}
                                                         </div>
-                                                        {/* { 
-                                                            errors.event_venue && 
-                                                            <div className="flex items-center gap-x-1 text-red-500">
-                                                                <AuthErrorIcon />
-                                                                <p className="text-xs">{ errors.event_venue.message }</p>
-                                                            </div> 
-                                                        } */}
                                                     </div>
 
                                                 </div>
 
-                                                {/* This is for the contact field */}
+                                                {/* This is for the venue name & package cost */}
                                                 <div className="flex gap-x-5">
 
                                                     <div className="flex flex-col gap-y-1">
-                                                        <label className="inputFieldLabel">Event Date</label>
+                                                        <label className="inputFieldLabel">Venue Name</label>
+                                                        <div className="inputContainer">
+                                                            <svg 
+                                                                xmlns="http://www.w3.org/2000/svg" 
+                                                                className="inputIcon" 
+                                                                fill="none" 
+                                                                viewBox="0 0 24 24" 
+                                                                stroke="currentColor"
+                                                            >
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                                            </svg>
+                                                            <input
+                                                                type="text"
+                                                                { ...register("venue_name", { required : "This field cannot be empty" }) } 
+                                                                className="inputField"
+                                                                autoComplete='off'
+                                                            />
+                                                        </div>
+                                                        { 
+                                                            errors.event_name && 
+                                                            <div className="flex items-center gap-x-1 text-red-500">
+                                                                <AuthErrorIcon />
+                                                                <p className="text-xs">{ errors.event_name.message }</p>
+                                                            </div> 
+                                                        }
+                                                    </div>
+
+                                                    <div className="flex flex-col gap-y-1">
+                                                        <label className="inputFieldLabel">Package Cost</label>
+                                                        <div className="inputContainer">
+                                                            <svg 
+                                                                xmlns="http://www.w3.org/2000/svg" 
+                                                                className="inputIcon" 
+                                                                fill="none" 
+                                                                viewBox="0 0 24 24" 
+                                                                stroke="currentColor"
+                                                            >
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                                                            </svg>
+                                                            <input
+                                                                type="number"
+                                                                { ...register("package_cost", { required : "This field cannot be empty" }) } 
+                                                                className="inputField"
+                                                                autoComplete='off'
+                                                            />
+                                                        </div>
+                                                        { 
+                                                            errors.package_cost && 
+                                                            <div className="flex items-center gap-x-1 text-red-500">
+                                                                <AuthErrorIcon />
+                                                                <p className="text-xs">{ errors.package_cost.message }</p>
+                                                            </div> 
+                                                        }
+                                                    </div>
+
+                                                </div>
+
+                                                {/* This is for the schedule fields */}
+                                                <div className="flex gap-x-5">
+
+                                                    <div className="flex flex-col gap-y-1">
+                                                        <label className="inputFieldLabel">Date Schedule</label>
                                                         <div className="inputContainer">
                                                             <input
                                                                 type="date"
-                                                                { ...register("event_date", { required : "This field cannot be empty" }) } 
+                                                                { ...register("date_schedule", { required : "This field cannot be empty" }) } 
                                                                 className="inputFieldDateTime"
                                                             />
                                                         </div>
                                                         { 
-                                                            errors.event_date && 
+                                                            errors.date_schedule && 
                                                             <div className="flex items-center gap-x-1 text-red-500">
                                                                 <AuthErrorIcon />
-                                                                <p className="text-xs">{ errors.event_date.message }</p>
+                                                                <p className="text-xs">{ errors.date_schedule.message }</p>
                                                             </div> 
                                                         }
                                                     </div>
@@ -396,11 +457,11 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
 
                                                 </div>
 
-                                                {/* This is for the account fields */}
+                                                {/* This is for the payment & client fields */}
                                                 <div className="flex gap-x-5">
 
                                                     <div className="flex flex-col gap-y-1">
-                                                        <label className="inputFieldLabel">Client Budget</label>
+                                                        <label className="inputFieldLabel">Client Payment</label>
                                                         <div className="inputContainer">
                                                             <svg 
                                                                 xmlns="http://www.w3.org/2000/svg" 
@@ -413,16 +474,16 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                             </svg>
                                                             <input
                                                                 type="number"
-                                                                { ...register("event_budget", { required : "This field cannot be empty" }) } 
+                                                                { ...register("client_payment", { required : "This field cannot be empty" }) } 
                                                                 className="inputField"
                                                                 autoComplete='off'
                                                             />
                                                         </div>
                                                         { 
-                                                            errors.event_budget && 
+                                                            errors.client_payment && 
                                                             <div className="flex items-center gap-x-1 text-red-500">
                                                                 <AuthErrorIcon />
-                                                                <p className="text-xs">{ errors.event_budget.message }</p>
+                                                                <p className="text-xs">{ errors.client_payment.message }</p>
                                                             </div> 
                                                         }
                                                     </div>
@@ -546,11 +607,16 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                             </svg>
                                                             <input
+                                                                type="hidden"
+                                                                { ...register2("update_event_id") }
+                                                                defaultValue={eventsList.results.length ? eventsList.results[editIndex.current].id : ''}
+                                                            />
+                                                            <input
                                                                 type="text"
                                                                 { ...register2("update_event_name", { required : "This field cannot be empty" }) } 
                                                                 className="inputField"
                                                                 autoComplete='off'
-                                                                value={eventsList.length ? eventsList.results[editIndex].event_name : ''}
+                                                                defaultValue={ eventsList.results.length ? eventsList.results[editIndex.current].event_name : '' }
                                                             />
                                                         </div>
                                                         { 
@@ -575,23 +641,74 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                                             </svg>
-                                                            <AutocompletePlace 
+                                                            <AutocompletePlace
                                                                 onSelect={place => handleLocationVal(place)}
+                                                                defaultPlace={ eventsList.results.length ? eventsList.results[editIndex.current].venue_location : '' }
                                                             />
-                                                            {/* <input
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                {/* This is for the venue name & package cost */}
+                                                <div className="flex gap-x-5">
+
+                                                    <div className="flex flex-col gap-y-1">
+                                                        <label className="inputFieldLabel">Venue Name</label>
+                                                        <div className="inputContainer">
+                                                            <svg 
+                                                                xmlns="http://www.w3.org/2000/svg" 
+                                                                className="h-6 w-6" 
+                                                                fill="none" 
+                                                                viewBox="0 0 24 24" 
+                                                                stroke="currentColor"
+                                                            >
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                                            </svg>
+                                                            <input
                                                                 type="text"
-                                                                { ...register("event_venue", { required : "This field cannot be empty" }) } 
+                                                                { ...register2("update_venue_name", { required : "This field cannot be empty" }) } 
                                                                 className="inputField"
                                                                 autoComplete='off'
-                                                            /> */}
+                                                                defaultValue={ eventsList.results.length ? eventsList.results[editIndex.current].venue_name : '' }
+                                                            />
                                                         </div>
-                                                        {/* { 
-                                                            errors.event_venue && 
+                                                        { 
+                                                            errors.update_venue_name && 
                                                             <div className="flex items-center gap-x-1 text-red-500">
                                                                 <AuthErrorIcon />
-                                                                <p className="text-xs">{ errors.event_venue.message }</p>
+                                                                <p className="text-xs">{ errors.update_venue_name.message }</p>
                                                             </div> 
-                                                        } */}
+                                                        }
+                                                    </div>
+
+                                                    <div className="flex flex-col gap-y-1">
+                                                        <label className="inputFieldLabel">Package Cost</label>
+                                                        <div className="inputContainer">
+                                                            <svg 
+                                                                xmlns="http://www.w3.org/2000/svg" 
+                                                                className="inputIcon" 
+                                                                fill="none" 
+                                                                viewBox="0 0 24 24" 
+                                                                stroke="currentColor"
+                                                            >
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                                                            </svg>
+                                                            <input
+                                                                type="number"
+                                                                { ...register2("update_package_cost", { required : "This field cannot be empty" }) } 
+                                                                className="inputField"
+                                                                autoComplete='off'
+                                                                defaultValue={ eventsList.results.length ? eventsList.results[editIndex.current].package_cost : '' }
+                                                            />
+                                                        </div>
+                                                        { 
+                                                            errors.update_package_cost && 
+                                                            <div className="flex items-center gap-x-1 text-red-500">
+                                                                <AuthErrorIcon />
+                                                                <p className="text-xs">{ errors.update_package_cost.message }</p>
+                                                            </div> 
+                                                        }
                                                     </div>
 
                                                 </div>
@@ -600,20 +717,20 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                 <div className="flex gap-x-5">
 
                                                     <div className="flex flex-col gap-y-1">
-                                                        <label className="inputFieldLabel">Event Date</label>
+                                                        <label className="inputFieldLabel">Date Schedule</label>
                                                         <div className="inputContainer">
                                                             <input
                                                                 type="date"
-                                                                { ...register2("update_event_date", { required : "This field cannot be empty" }) } 
+                                                                { ...register2("update_date_schedule", { required : "This field cannot be empty" }) } 
                                                                 className="inputFieldDateTime"
-                                                                value={eventsList.length ? eventsList.results[editIndex].event_date : ''}
+                                                                defaultValue={ eventsList.results.length ? eventsList.results[editIndex.current].date_schedule : '' }
                                                             />
                                                         </div>
                                                         { 
-                                                            errors2.update_event_date && 
+                                                            errors2.update_date_schedule && 
                                                             <div className="flex items-center gap-x-1 text-red-500">
                                                                 <AuthErrorIcon />
-                                                                <p className="text-xs">{ errors2.update_event_date.message }</p>
+                                                                <p className="text-xs">{ errors2.update_date_schedule.message }</p>
                                                             </div> 
                                                         }
                                                     </div>
@@ -650,7 +767,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                 <div className="flex gap-x-5">
 
                                                     <div className="flex flex-col gap-y-1">
-                                                        <label className="inputFieldLabel">Client Budget</label>
+                                                        <label className="inputFieldLabel">Client Payment</label>
                                                         <div className="inputContainer">
                                                             <svg 
                                                                 xmlns="http://www.w3.org/2000/svg" 
@@ -663,17 +780,17 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                             </svg>
                                                             <input
                                                                 type="number"
-                                                                { ...register2("update_event_budget", { required : "This field cannot be empty" }) } 
+                                                                { ...register2("update_client_payment", { required : "This field cannot be empty" }) } 
                                                                 className="inputField"
                                                                 autoComplete='off'
-                                                                value={eventsList.length ? eventsList.results[editIndex].event_budget : ''}
+                                                                defaultValue={ eventsList.results.length ? eventsList.results[editIndex.current].client_payment : '' }
                                                             />
                                                         </div>
                                                         { 
-                                                            errors2.update_event_budget && 
+                                                            errors2.update_client_payment && 
                                                             <div className="flex items-center gap-x-1 text-red-500">
                                                                 <AuthErrorIcon />
-                                                                <p className="text-xs">{ errors2.update_event_budget.message }</p>
+                                                                <p className="text-xs">{ errors2.update_client_payment.message }</p>
                                                             </div> 
                                                         }
                                                     </div>
@@ -682,6 +799,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                         <select
                                                             className="inputSelect rounded-lg"
                                                             {...register2("update_event_client")}
+                                                            defaultValue={ eventsList.results.length ? eventsList.results[editIndex.current].client : ''} 
                                                         >
                                                             {
                                                                 clientsList.results.map((client) => (
@@ -739,7 +857,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                                 </svg>
-                                                <p className="text-sm font-medium">Venue Location</p>
+                                                <p className="text-sm font-medium">Venue Name</p>
                                             </div>
                                             <Link 
                                                 href={`/admin/events/locations?lat=${event.venue_lat}&long=${event.venue_long}`}
@@ -764,7 +882,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                     >
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                                     </svg>
-                                                    <p className="text-sm font-medium">{ moment(event.event_date).format('ll') }</p>
+                                                    <p className="text-sm font-medium">{ moment(event.date_schedule).format('ll') }</p>
                                                 </div>
                                                 <div className="flex items-center gap-x-2">
                                                     <svg 
@@ -785,7 +903,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                 >
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                                                 </svg>
-                                                <p className="text-sm font-medium">{`₱${event.event_budget}`}</p>
+                                                <p className="text-sm font-medium">{`₱${event.package_cost}`}</p>
                                             </div>
                                         </div>
                                         <div className="flex flex-col gap-y-1">

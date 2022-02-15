@@ -69,9 +69,10 @@ export default class AutocompletePlace extends Component {
     constructor(props) {
         super(props)
         this.state = {
-        search: '',
+        search: this.props.defaultPlace || '',
         results: [],
         isLoading: false,
+        defaultPlace : this.props.defaultPlace
         }
         this.handleSearchChange = this.handleSearchChange.bind(this)
 
@@ -122,10 +123,10 @@ export default class AutocompletePlace extends Component {
                 <input 
                     className="inputField" 
                     type="text" 
-                    value={this.state.search} 
                     name="event_venue"
                     id="event_venue"
                     onChange={this.handleSearchChange} 
+                    value={ this.state.search }
                     placeholder="Type an address"
                     autoComplete='off'
                 />

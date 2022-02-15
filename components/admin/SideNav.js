@@ -264,23 +264,84 @@ const SideNav = ({ isActive }) => {
                 </>
                 )}
             </Disclosure>
-            <Link href="/admin/reports" passHref>
-                <a 
-                    className={`${isActive === 'reports' ? adminStyles.navItemActive : adminStyles.navItem} ${isActive === 'reports' ? 'dark:bg-gray-800' : 'dark:bg-gray-900 hover:bg-gray-800'}`}
-                >
-                    <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        className="h-6 w-6 text-current" 
-                        fill="none" 
-                        viewBox="0 0 24 24" 
-                        stroke="currentColor"
+            <Disclosure>
+                {({ open }) => (
+                    <>
+                    <Disclosure.Button 
+                        className={`${isActive === 'reports' ? adminStyles.navItemActive : adminStyles.navItem} ${isActive === 'reports' ? 'dark:bg-gray-800' : 'dark:bg-gray-900 hover:bg-gray-800'} flex justify-between pr-6`}
                     >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
-                    </svg>
-                    <p className="font-mont font-bold text-sm">Reports</p>
-                </a>
-            </Link>
+                        <div className="flex items-center gap-x-3">
+                            <svg 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                className="h-6 w-6 text-current" 
+                                fill="none" 
+                                viewBox="0 0 24 24" 
+                                stroke="currentColor"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                            </svg>
+                            <p className="font-mont font-bold text-sm">Reports</p>
+                        </div>
+                        <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            className={`
+                                ${open ? 'transform rotate-90 transition ease-in-out duration-200' : 'transform rotate-0 transition ease-in-out duration-200'} 
+                                h-4 w-4 text-current`} 
+                            fill="none" 
+                            viewBox="0 0 24 24" 
+                            stroke="currentColor"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </Disclosure.Button>
+                    <Transition
+                        as={Fragment}
+                        enter="transition ease-in-out duration-200"
+                        enterFrom="opacity-0 transform scale-95"
+                        enterTo="opacity-100 transform scale-100"
+                        leave="transition ease-in-out duration-200"
+                        leaveFrom="opacity-100 transform scale-100"
+                        leaveTo="opacity-0 transform scale-95"
+                    >
+                        <Disclosure.Panel className="w-full flex flex-col">
+                            <Link href="/admin/payments" passHref>
+                                <a 
+                                    className={`${adminStyles.sideDropDownItem} color-transition`}
+                                >
+                                    <svg 
+                                        xmlns="http://www.w3.org/2000/svg" 
+                                        className={ adminStyles.sideDropDownIcon }
+                                        fill="none" 
+                                        viewBox="0 0 24 24" 
+                                        stroke="currentColor"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                    <p className={ adminStyles.sideDropDownText }>Payment Logs</p>
+                                </a>
+                            </Link>
+                            <Link href="/admin/reports" passHref>
+                                <a 
+                                    className={`${adminStyles.sideDropDownItem} color-transition`}
+                                >
+                                    <svg 
+                                        xmlns="http://www.w3.org/2000/svg" 
+                                        className={ adminStyles.sideDropDownIcon }
+                                        fill="none" 
+                                        viewBox="0 0 24 24" 
+                                        stroke="currentColor"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    <p className={ adminStyles.sideDropDownText }>Satisfaction Forecast</p>
+                                </a>
+                            </Link>
+                        </Disclosure.Panel>
+                    </Transition>
+                </>
+                )}
+            </Disclosure>
         </div>
     )
 }

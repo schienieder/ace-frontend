@@ -64,18 +64,23 @@ export default function event({ eventInfo, clientInfo, taskList, partnerList }) 
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
-                                    <h4 className='font-bold'>Date & Time</h4>
+                                    <h4 className='font-bold'>Schedule</h4>
                                 </div>
-                                <p className='text-sm self-end'>{ moment(eventInfo.event_date).format('ll')+', '+eventInfo.time_schedule }</p>
+                                <p className='text-xs self-end'>{ moment(eventInfo.event_date).format('ll')+', '+eventInfo.time_schedule }</p>
                             </div>
                             <div className='card flex flex-col gap-y-5'>
                                 <div className='flex items-center gap-x-1'>
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                                     </svg>
-                                    <h4 className='font-bold'>Budget</h4>
+                                    <h4 className='font-bold'>Payment</h4>
                                 </div>
-                                <p className='text-sm self-end'>₱{ eventInfo.event_budget }</p>
+                                {
+                                    eventInfo.payment_status == "Partially Paid" ?
+                                        <p className='text-sm self-end text-yellow-500'>{ eventInfo.payment_status }</p>
+                                    :
+                                        <p className='text-sm self-end text-teal-600'>{ eventInfo.payment_status }</p>
+                                }
                             </div>
                         </div>
                         <div className="card w-full flex flex-col gap-y-5">
