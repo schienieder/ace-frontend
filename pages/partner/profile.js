@@ -21,13 +21,28 @@ export default function profile({ partnerProfile }) {
             router.push('/login')
         }
     }
-    useEffect( async () => {
-        await readRole()
+    useEffect(() => {
+        readRole()
     }, [])
     const { register, handleSubmit, formState : { errors } } = useForm()
     const handleSubmitForm = (data) => {
-        console.log(data.partner_services)
         const jwt_token = Cookies.get('jwt')
+        const formData = new FormData()
+        if (data.partner_permit.length) {
+            formData.append('permit_profile', data.partner_permit[0])
+        }
+        formData.append('first_name', data.partner_fname)
+        formData.append('last_name', data.partner_lname)
+        formData.append('mobile_number', data.partner_mobile)
+        formData.append('email', data.partner_email)
+        formData.append('business_name', data.partner_bus_name)
+        formData.append('type_of_business', data.partner_tob)
+        formData.append('street_address', data.partner_st_add)
+        formData.append('city', data.partner_city)
+        formData.append('state_province', data.partner_province)
+        formData.append('postal_zip', data.partner_zip)
+        formData.append('services_offered', data.partner_services)
+        console.log(formData)
         axios({
             method : 'POST',
             url : `${api}partner_profile/update`,
@@ -35,19 +50,7 @@ export default function profile({ partnerProfile }) {
                 'Content-Type' : 'application/json',
                 'Authorization' : 'Bearer'+' '+ jwt_token
             },
-            data : {
-                first_name : data.partner_fname,
-                last_name : data.partner_lname,
-                mobile_number : data.partner_mobile,
-                email : data.partner_email,
-                business_name : data.partner_bus_name,
-                type_of_business : data.partner_tob,
-                street_address : data.partner_st_add,
-                city : data.partner_city,
-                state_province : data.partner_province,
-                postal_zip : data.partner_zip,
-                services_offered : data.partner_services,
-            }
+            data : formData
         }).then(() => {
             Swal.fire({
                 icon : 'success',
@@ -218,7 +221,7 @@ export default function profile({ partnerProfile }) {
                                 <h4 className="text-base font-bold mt-5">Business Information</h4>
                                 
                                 <div className="w-full flex flex-col gap-y-2">
-                                    <p className="inputFieldLabel">Business Permit / Work Profile</p>
+                                    <p className="inputFieldLabel">Business Permit <span className='font-medium'>/</span> Work Profile</p>
                                     <div className='inputContainer'>
                                         <input
                                             type="file"
@@ -232,7 +235,7 @@ export default function profile({ partnerProfile }) {
                                 <div className="flex gap-x-5">
 
                                     <div className="flex flex-col gap-y-1">
-                                        <label className="inputFieldLabel">Business / Work Name</label>
+                                        <label className="inputFieldLabel">Business <span className='font-medium'>/</span> Work Name</label>
                                         <div className="inputContainer">
                                             <svg 
                                                 xmlns="http://www.w3.org/2000/svg" 
@@ -260,7 +263,7 @@ export default function profile({ partnerProfile }) {
                                     </div>
 
                                     <div className="flex flex-col gap-y-1">
-                                    <label className="inputFieldLabel">Type of Business / Work</label>
+                                    <label className="inputFieldLabel">Type of Business <span className='font-medium'>/</span> Work</label>
                                         <div className="inputContainer">
                                             <svg 
                                                 xmlns="http://www.w3.org/2000/svg" 

@@ -23,8 +23,8 @@ export default function profile({ clientProfile }) {
             router.push('/login')
         }
     }
-    useEffect( async () => {
-        await readRole()
+    useEffect(() => {
+        readRole()
     }, [])
     const { register, handleSubmit, formState : { errors } } = useForm()
     const handleSubmitForm = (data) => {
@@ -411,6 +411,13 @@ export default function profile({ clientProfile }) {
                                         <p className="text-base font-bold tracking-wide">Save</p>
                                     </button>
                                 </div>
+
+                                <div className='self-start flex flex-col gap-y-1 text-xs'>
+                                    <h4 className='text-sm font-medium'>Note:</h4>
+                                    <p>This website follows the Data Privacy Act of the Philippines or <a href="https://www.privacy.gov.ph/data-privacy-act/" target="_blank" rel="noreferrer" className='text-pink-600 font-medium hover:underline'>RA 10173</a>, all 
+                                    information collected in this website are confidential and will not be shared into anyone.</p>
+                                </div>
+
                             </form>
                         </div>
                     </div>

@@ -8,7 +8,7 @@ import AffiliationRequest from '../../components/admin/dashboard/AffiliationRequ
 import UpcomingEvents from '../../components/admin/dashboard/UpcomingEvents'
 import { useRouter } from 'next/router'
 
-export default function dashboard() {
+export default function dashboard({ affiliations, events }) {
     const router = useRouter()
     const [userName, setUsername] = useState()
     const readRole = () => {
@@ -18,8 +18,8 @@ export default function dashboard() {
             router.push('/login')
         }
     }
-    useEffect( async () => {
-        await readRole()
+    useEffect(() => {
+        readRole()
     }, [])
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
@@ -41,8 +41,8 @@ export default function dashboard() {
                         </PageHeader>
                         <EventsSummary />
                         <div className="w-full flex gap-x-5">
-                            <AffiliationRequest />
-                            <UpcomingEvents />
+                            <AffiliationRequest data={ affiliations } />
+                            <UpcomingEvents data={ events } />
                         </div>
                     </div>
                     <Footer />
@@ -50,4 +50,25 @@ export default function dashboard() {
             </div>
         </div>
     )
+}
+
+export const getServerSideProps = async ({ req }) => {
+    const api = process.env.NEXT_PUBLIC_DRF_API
+    const jwt = req.cookies.jwt
+    const res1 = await fetch(`${api}dashboard_affiliations/`, {
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+jwt}
+    })
+    const data1 = await res1.json()
+    const res2 = await fetch(`${api}dashboard_events/`, {
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+jwt}
+    })
+    const data2 = await res2.json()
+    return {
+        props : {
+            affiliations : data1,
+            events : data2,
+        }
+    }
 }

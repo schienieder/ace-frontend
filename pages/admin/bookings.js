@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import TopNav from '../../components/admin/TopNav'
 import SideNav from '../../components/admin/SideNav'
 import Footer from '../../components/Footer'
@@ -10,9 +10,74 @@ import Swal from 'sweetalert2'
 import axios from 'axios'
 import moment from 'moment'
 import Link from 'next/link'
+import CommonTable2 from '../../components/CommonTable2'
 
-export default function bookings({ bookingsList, clientsList }) {
+export default function bookings({ bookingsList }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
+    const data = useMemo(() => bookingsList, [bookingsList.length])
+    const bookingColumns = useMemo(() => [
+        {
+            Header : 'Client Name',
+            accessor : 'client_name'
+        },
+        {
+            Header : 'Event Type',
+            accessor : 'type_of_event'
+        },
+        {
+            Header : 'Desired Date',
+            accessor : 'desired_date',
+            Cell : ({row}) => (
+                <p>{ moment(row.original.desired_date).format('LL') }</p>
+            )
+        },
+        {
+            Header : 'Event Budget',
+            accessor : 'event_budget'
+        },
+        {
+            Header : 'Actions',
+            accessor : 'id',
+            Cell : ({row}) => (
+                <div className="flex gap-x-2">
+                    <Link
+                        href={`/admin/booking?booking_id=${row.original.id}&client_id=${row.original.booked_by}`}
+                    >
+                        <button
+                            type="button"
+                            className={`${adminStyles.actionBtn} color-transition`}
+                        >
+                            <svg 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                className={`${adminStyles.actionBtnIcon} color-transition`} 
+                                fill="none" 
+                                viewBox="0 0 24 24" 
+                                stroke="currentColor"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </button>
+                    </Link>
+                    <button
+                        type="button"
+                        onClick={ () => destroyBooking(row.original.id, row.original.type_of_event, row.original.desired_date) }
+                        className={`${adminStyles.actionBtn} color-transition`}
+                    >
+                        <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            className={ adminStyles.actionBtnIcon } 
+                            fill="none" 
+                            viewBox="0 0 24 24" 
+                            stroke="currentColor"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </button>
+                </div>
+            )
+        },
+    ], [])
     const router = useRouter()
     const [userName, setUsername] = useState()
     const readRole = () => {
@@ -22,8 +87,8 @@ export default function bookings({ bookingsList, clientsList }) {
             router.push('/login')
         }
     }
-    useEffect( async () => {
-        await readRole()
+    useEffect(() => {
+        readRole()
     }, [])
     const destroyBooking = (booking_id, booking_type, booking_date) => {
         Swal.fire({
@@ -86,116 +151,7 @@ export default function bookings({ bookingsList, clientsList }) {
                             </svg>
                         </PageHeader>
                         <div className="card w-full flex flex-col gap-y-5">
-                            <div className="w-full flex justify-between items-center">
-                                <div className="searchBarContainer">
-                                    <input 
-                                        type="text"
-                                        className="searchBarInput"
-                                        placeholder="Search Name . . ."
-                                    />
-                                    <svg 
-                                        xmlns="http://www.w3.org/2000/svg" 
-                                        className="h-4 w-4 text-current" 
-                                        fill="none" 
-                                        viewBox="0 0 24 24" 
-                                        stroke="currentColor"
-                                    >
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <table className="min-w-full divide-y divide-gray-200 border-b border-gray-200">
-                                <thead className={ adminStyles.theadClass }>
-                                    <tr className="text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                                        <th scope="col" className={ adminStyles.tableHeadingClass }>
-                                            Client Name
-                                        </th>
-                                        <th scope="col" className={ adminStyles.tableHeadingClass }>
-                                            Event Type
-                                        </th>
-                                        <th scope="col" className={ adminStyles.tableHeadingClass }>
-                                            Desired Date
-                                        </th>
-                                        <th scope="col" className={ adminStyles.tableHeadingClass }>
-                                            Budget
-                                        </th>
-                                        <th scope="col" className={ adminStyles.tableHeadingClass }>
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className={ adminStyles.tbodyClass }>
-                                    {
-                                        bookingsList.results.map((booking) => (
-                                            <tr
-                                                key={ booking.id } 
-                                                className={`${adminStyles.tableRowClass} color-transition`}
-                                            >
-                                                <td className={ adminStyles.tableDataClass }>
-                                                    <p className={ adminStyles.tableDataTextClass }>{
-                                                        clientsList.results.map((client) => {
-                                                            if (client.id === booking.booked_by) {
-                                                                return client.first_name + ' ' + client.last_name
-                                                            }
-                                                        })
-                                                    }</p>
-                                                </td>
-                                                <td className="px-4 py-4 whitespace-nowrap">
-                                                    <p className={ adminStyles.tableDataTextClass }>{ booking.type_of_event }</p>
-                                                </td>
-                                                <td className="px-4 py-4 whitespace-nowrap">
-                                                    <p className={ adminStyles.tableDataTextClass }>{ moment(booking.desired_date).format('ll') }</p>
-                                                </td>
-                                                <td className="px-4 py-4 whitespace-nowrap">
-                                                    <p className={ adminStyles.tableDataTextClass }>{`₱${booking.event_budget}`}</p>
-                                                </td>
-                                                <td className="px-4 py-4 whitespace-nowrap">
-                                                    <div className="flex gap-x-2">
-                                                        <Link
-                                                            href={`/admin/booking?booking_id=${booking.id}&client_id=${booking.booked_by}`}
-                                                        >
-                                                            <button
-                                                                type="button"
-                                                                className={`${adminStyles.actionBtn} color-transition`}
-                                                            >
-                                                                <svg 
-                                                                    xmlns="http://www.w3.org/2000/svg" 
-                                                                    className={`${adminStyles.actionBtnIcon} color-transition`} 
-                                                                    fill="none" 
-                                                                    viewBox="0 0 24 24" 
-                                                                    stroke="currentColor"
-                                                                >
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                                                </svg>
-                                                            </button>
-                                                        </Link>
-                                                        <button
-                                                            type="button"
-                                                            onClick={ () => destroyBooking(booking.id, booking.type_of_event, booking.desired_date) }
-                                                            className={`${adminStyles.actionBtn} color-transition`}
-                                                        >
-                                                            <svg 
-                                                                xmlns="http://www.w3.org/2000/svg" 
-                                                                className={ adminStyles.actionBtnIcon } 
-                                                                fill="none" 
-                                                                viewBox="0 0 24 24" 
-                                                                stroke="currentColor"
-                                                            >
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                            </svg>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))
-                                    }
-                                </tbody>
-                            </table>
-                            <div className="flex gap-x-2 text-sm">
-                                <p className="font-normal">Total Bookings: </p>
-                                <p className="font-bold">{ bookingsList.count }</p>
-                            </div>
+                            <CommonTable2 columns={ bookingColumns } data={ data } />
                         </div>
                     </div>
                     <Footer />
@@ -218,10 +174,15 @@ export const getServerSideProps = async ({ req }) => {
         headers : {'Authorization' : 'Bearer'+' '+token}
     })
     const data2 = await res2.json()
+    let bookings_copy = data1.results
+    for (let i = 0; i < data2.results.length; i++) {
+        for (let j = 0; j < data1.results.length; j++) {
+            data2.results[i].id === data1.results[j].booked_by ? bookings_copy[j].client_name = data2.results[i].first_name+" "+data2.results[i].last_name : ''
+        }
+    }
     return {
         props : {
-            bookingsList : data1,
-            clientsList : data2
+            bookingsList : bookings_copy,
         }
     }
 }

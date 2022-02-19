@@ -16,8 +16,9 @@ import moment from 'moment'
 import HoursOptions from '../../../components/admin/events/HoursOptions'
 import MinutesOptions from '../../../components/admin/events/MinutesOptions'
 import AutocompletePlace from '../../../components/admin/events/AutocompletePlace'
+import { ExportToCsv } from 'export-to-csv';
 
-export default function cards({ clientsList, eventsList, totalList, completedList }) {
+export default function cards({ clientsList, eventsList, totalList, completedList, csvEvents }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
     let [isOpen, setIsOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false);
@@ -197,6 +198,24 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
         setIsEditOpen(true)
         editIndex.current = event_index
     }
+    const options = {
+        useKeysAsHeaders: true,
+        filename : 'Event Reports'
+    }
+    const csvExporter = new ExportToCsv(options);
+    const exportData = () => {
+        csvEvents.forEach((event) => {
+            event.date_schedule = moment(event.date_schedule).format('ll')
+            delete event.id
+            delete event.venue_lat
+            delete event.venue_long
+            delete event.payment_status
+            delete event.created_at
+            delete event.updated_at
+            delete event.client
+        })
+        csvExporter.generateCsv(csvEvents);
+    }
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="events" />
@@ -216,22 +235,40 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                                 </svg>
                             </PageHeader>
-                            <button
-                                type="button" 
-                                onClick={ openModal }
-                                className={ adminStyles.addBtn }
-                            >
-                                <svg 
-                                    xmlns="http://www.w3.org/2000/svg" 
-                                    className="h-5 w-5 text-current" 
-                                    fill="none" 
-                                    viewBox="0 0 24 24" 
-                                    stroke="currentColor"
+                            <div className='flex gap-x-5'>
+                                <button
+                                    type="button"
+                                    className="px-5 py-2 bg-transparent hover:bg-pink-600 border border-pink-600 rounded-lg text-pink-600 hover:text-white font-bold text-base tracking-wide flex justify-center items-center gap-x-1 focus:outline-none color-transition"
+                                    onClick={ () => exportData() }
                                 >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                </svg>
-                                <p className="text-sm font-bold">New Event</p>
-                            </button>
+                                    <svg 
+                                        xmlns="http://www.w3.org/2000/svg" 
+                                        className="h-5 w-5 text-current" 
+                                        fill="none" 
+                                        viewBox="0 0 24 24" 
+                                        stroke="currentColor"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    <p className="text-sm font-bold">Export Data</p>
+                                </button>
+                                <button
+                                    type="button" 
+                                    onClick={ openModal }
+                                    className={`${adminStyles.addBtn} color-transition`}
+                                >
+                                    <svg 
+                                        xmlns="http://www.w3.org/2000/svg" 
+                                        className="h-5 w-5 text-current" 
+                                        fill="none" 
+                                        viewBox="0 0 24 24" 
+                                        stroke="currentColor"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+                                    <p className="text-sm font-bold">New Event</p>
+                                </button>
+                            </div>
                             {/* Start of Create Modal */}
                             <Transition appear show={isOpen} as={Fragment}>
                                 <Dialog
@@ -658,7 +695,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                         <div className="inputContainer">
                                                             <svg 
                                                                 xmlns="http://www.w3.org/2000/svg" 
-                                                                className="h-6 w-6" 
+                                                                className="inputIcon" 
                                                                 fill="none" 
                                                                 viewBox="0 0 24 24" 
                                                                 stroke="currentColor"
@@ -962,6 +999,32 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                     </Menu.Item>
                                                     <Menu.Item>
                                                         {({ active }) => (
+                                                        <Link 
+                                                            // as={`/admin/events?event_id=${event.id}`}
+                                                            href={{
+                                                                pathname : "/admin/events/contract",
+                                                                // query : { event_id : event.id }
+                                                            }}
+                                                        >
+                                                            <a
+                                                                className={`${adminStyles.cardPopOverItem} color-transition`}
+                                                            >
+                                                                <svg 
+                                                                    xmlns="http://www.w3.org/2000/svg" 
+                                                                    className={ adminStyles.actionBtnIcon } 
+                                                                    fill="none" 
+                                                                    viewBox="0 0 24 24" 
+                                                                    stroke="currentColor"
+                                                                >
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                                                </svg>
+                                                                <p className="text-xs font-medium">Print Event</p>
+                                                            </a>
+                                                        </Link>
+                                                        )}
+                                                    </Menu.Item>
+                                                    <Menu.Item>
+                                                        {({ active }) => (
                                                         <button
                                                             className={`${adminStyles.cardPopOverItem} color-transition`}
                                                             onClick={ () => openEditModal(event_index) }
@@ -1060,12 +1123,19 @@ export const getServerSideProps = async ({ req }) => {
         }
         completed_arr.push(completed_counter++)
     }
+    let events_copy = data2.results
+    for (let i = 0; i < data1.results.length; i++) {
+        for (let j = 0; j < data2.results.length; j++) {
+            data2.results[j].client === data1.results[i].id ? events_copy[j].client_name = data1.results[i].first_name+" "+data1.results[i].last_name : ""
+        }
+    }
     return {
         props : {
             clientsList : data1,
             eventsList : data2,
             totalList : total_arr,
-            completedList : completed_arr
+            completedList : completed_arr,
+            csvEvents : events_copy
         }
     }
 }

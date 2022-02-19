@@ -15,8 +15,8 @@ export default function partner({ clientProfile }) {
             router.push('/login')
         }
     }
-    useEffect( async () => {
-        await readRole()
+    useEffect(() => {
+        readRole()
     }, [])
     const displayAge = (birthYear) => {
         const currYear = new Date().getFullYear()
@@ -32,17 +32,24 @@ export default function partner({ clientProfile }) {
                     <div className="p-8 flex flex-col items-center gap-y-5 min-h-screen">
                         <div className="w-2/5 bg-white dark:bg-gray-900 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl flex flex-col items-center gap-y-5 py-10 px-5">
                             {
-                                clientProfile.profile_image ? <div className='w-40 h-40 bg-gray-200 rounded-full'></div>
+                                clientProfile.profile_image ? 
+                                <div className="flex w-32 h-32 rounded-full overflow-hidden">
+                                    <img 
+                                        src={clientProfile.profile_image} 
+                                        alt="Profile Image"
+                                        className="max-w-full h-auto self-start"
+                                    />
+                                </div>
                                 : 
-                                <Image 
-                                    src="/images/default.png"
-                                    height={200}
-                                    width={200}
-                                    alt="Default Image"
-                                    className='w-32 h-32 rounded-full'
-                                />
+                                <div className="flex w-32 h-32 rounded-full overflow-hidden">
+                                    <img src="/images/default.png"
+                                        alt="Default Image"
+                                        className='max-w-full h-auto self-start'
+                                    />
+                                </div>
                             }
                             <div className='flex flex-col gap-y-5'>
+                            <h4 className='text-xl font-bold -mb-3 text-center'>{ clientProfile.first_name+" "+clientProfile.last_name }</h4>
                                 <div className='flex items-center gap-x-2'>
                                     <svg 
                                         xmlns="http://www.w3.org/2000/svg" 

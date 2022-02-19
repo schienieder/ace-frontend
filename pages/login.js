@@ -9,7 +9,7 @@ import jwt_decode from 'jwt-decode'
 import Cookies from 'js-cookie'
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import BeatLoader from "react-spinners/BeatLoader";
+import BeatLoader from "react-spinners/BeatLoader"
 
 export default function login() {
     const api = process.env.NEXT_PUBLIC_DRF_API

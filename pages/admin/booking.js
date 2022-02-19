@@ -13,6 +13,7 @@ import Swal from 'sweetalert2'
 import moment from 'moment'
 import HoursOptions from '../../components/admin/events/HoursOptions'
 import MinutesOptions from '../../components/admin/events/MinutesOptions'
+import BeatLoader from "react-spinners/BeatLoader"
 
 export default function booking({ bookingInfo, clientInfo }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
@@ -20,6 +21,7 @@ export default function booking({ bookingInfo, clientInfo }) {
     const [userName, setUsername] = useState()
     let [isOpen, setIsOpen] = useState(false)
     const { register, reset, handleSubmit, formState : { errors } } = useForm()
+    const [isLoading, setIsLoading] = useState(false)
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
         const role = localStorage.getItem('role')
@@ -31,6 +33,7 @@ export default function booking({ bookingInfo, clientInfo }) {
         readRole()
     }, [])
     const setSchedule = (data) => {
+        setIsLoading(true)
         closeModal()
         const jwt_token = Cookies.get('jwt')
         axios({
@@ -49,24 +52,30 @@ export default function booking({ bookingInfo, clientInfo }) {
             }
         }).then(() => {
             reset()
-            Swal.fire({
-                icon : 'success',
-                title: 'Interview Scheduled',
-                timer : 3000,
-                text: `Interview schedule has been set!`,
-                showCloseButton: true,
-                confirmButtonColor: '#DB2777',
-            })
+            setIsLoading(false)
+            setTimeout(() => 
+                Swal.fire({
+                    icon : 'success',
+                    title: 'Interview Scheduled',
+                    timer : 3000,
+                    text: `Interview schedule has been set!`,
+                    showCloseButton: true,
+                    confirmButtonColor: '#DB2777',
+                })
+            , 500)
             router.push('/admin/interviews')
         }).catch(error => {
-            Swal.fire({
-                icon : 'error',
-                title: 'Schedule Error',
-                timer : 3000,
-                text: error.message,
-                showCloseButton: true,
-                confirmButtonColor: '#DB2777',
-            })
+            setIsLoading(false)
+            setTimeout(() => 
+                Swal.fire({
+                    icon : 'error',
+                    title: 'Schedule Error',
+                    timer : 3000,
+                    text: error.message,
+                    showCloseButton: true,
+                    confirmButtonColor: '#DB2777',
+                })
+            , 500)
         })
     }
     const declineBooking = (booking_id) => {
@@ -119,6 +128,13 @@ export default function booking({ bookingInfo, clientInfo }) {
     }
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
+            <div className={`absolute z-10 w-full h-full ${isLoading ? 'flex' : 'hidden'} flex-col justify-center items-center bg-white backdrop-filter backdrop-blur-sm`}>
+                <BeatLoader 
+                    color="#DB2777"
+                    size={35} 
+                />
+                <h4 className="text-base">Processing, please wait</h4>
+            </div>
             <SideNav isActive="bookings" />
             <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
                 <TopNav username={ userName } />

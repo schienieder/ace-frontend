@@ -1,9 +1,14 @@
-const UpcomingEvents = () => {
+import Link from "next/link"
+import moment from "moment"
+
+const UpcomingEvents = ({ data }) => {
     return (
         <div className="w-1/2 card flex flex-col gap-y-5">
             <div className="w-full flex justify-between">
                 <h4 className="text-base font-bold dark:text-gray-300">Upcoming Events</h4>
-                <a className="text-xs text-gray-500 hover:text-blue-600 cursor-pointer">View All</a>
+                <Link href="admin/events/">
+                    <a className="text-xs text-gray-500 hover:text-blue-600 cursor-pointer">View All</a>
+                </Link>
             </div>
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead className="bg-gray-100 dark:bg-gray-800">
@@ -17,46 +22,28 @@ const UpcomingEvents = () => {
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
-                    <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
-                        <td className="px-4 py-4 whitespace-nowrap">
-                            <p className="text-sm text-gray-800 dark:text-gray-300">A Decade & Eight - Ailene Padaplin</p>
-                        </td>
-                        <td className="px-4 py-4 whitespace-nowrap">
-                            <p className="text-sm text-gray-800 dark:text-gray-300">July 13, 2021</p>
-                        </td>
-                    </tr>
-                    <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
-                        <td className="px-4 py-4 whitespace-nowrap">
-                            <p className="text-sm text-gray-800 dark:text-gray-300">Pepito & Pepita Wedding</p>
-                        </td>
-                        <td className="px-4 py-4 whitespace-nowrap">
-                            <p className="text-sm text-gray-800 dark:text-gray-300">July 14, 2021</p>
-                        </td>
-                    </tr>
-                    <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
-                        <td className="px-4 py-4 whitespace-nowrap">
-                            <p className="text-sm text-gray-800 dark:text-gray-300">Kadayawan sa Dabaw Sponsorship</p>
-                        </td>
-                        <td className="px-4 py-4 whitespace-nowrap">
-                            <p className="text-sm text-gray-800 dark:text-gray-300">July 15, 2021</p>
-                        </td>
-                    </tr>
-                    <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
-                        <td className="px-4 py-4 whitespace-nowrap">
-                            <p className="text-sm text-gray-800 dark:text-gray-300">Harley & Joker Wedding</p>
-                        </td>
-                        <td className="px-4 py-4 whitespace-nowrap">
-                            <p className="text-sm text-gray-800 dark:text-gray-300">July 16, 2021</p>
-                        </td>
-                    </tr>
-                    <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
-                        <td className="px-4 py-4 whitespace-nowrap">
-                            <p className="text-sm text-gray-800 dark:text-gray-300">Inato Corporate Event</p>
-                        </td>
-                        <td className="px-4 py-4 whitespace-nowrap">
-                            <p className="text-sm text-gray-800 dark:text-gray-300">July 17, 2021</p>
-                        </td>
-                    </tr>
+                    {
+                        data.results.length ? 
+                            data.results.map((event) => (
+                                <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
+                                    <td className="px-4 py-4 whitespace-nowrap">
+                                        <p className="text-sm text-gray-800 dark:text-gray-300">{ event.event_name }</p>
+                                    </td>
+                                    <td className="px-4 py-4 whitespace-nowrap">
+                                        <p className="text-sm text-gray-800 dark:text-gray-300">{ moment(event.date_schedule).format('LL') }</p>
+                                    </td>
+                                </tr>
+                            ))
+                        :
+                        <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <td 
+                                className="px-6 py-3 whitespace-nowrap text-center"
+                                colSpan={2}
+                            >
+                                <p className="text-sm">Nothing to show.</p>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
