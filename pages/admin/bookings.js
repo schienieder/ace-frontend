@@ -11,9 +11,11 @@ import axios from 'axios'
 import moment from 'moment'
 import Link from 'next/link'
 import CommonTable2 from '../../components/CommonTable2'
+import currency from 'currency.js'
 
 export default function bookings({ bookingsList }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
+    const peso = value => currency(value, { symbol : '₱', precision : 0 })
     const data = useMemo(() => bookingsList, [bookingsList.length])
     const bookingColumns = useMemo(() => [
         {
@@ -33,7 +35,10 @@ export default function bookings({ bookingsList }) {
         },
         {
             Header : 'Event Budget',
-            accessor : 'event_budget'
+            accessor : 'event_budget',
+            Cell : ({row}) => (
+                <p className="text-sm text-gray-800">{ peso(row.original.event_budget).format() }</p>
+            )
         },
         {
             Header : 'Actions',

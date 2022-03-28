@@ -12,7 +12,7 @@ import Cookies from 'js-cookie'
 import Swal from 'sweetalert2'
 import { w3cwebsocket as W3CWebSocket } from 'websocket'
 
-export default function messages({ clientsList, partnersList, clientRooms, partnerRooms, groupRooms }) {
+export default function messages({ chatRooms }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const router = useRouter()
     const [userName, setUsername] = useState()
@@ -302,46 +302,14 @@ export default function messages({ clientsList, partnersList, clientRooms, partn
                                 </div>
                                 <div className="w-full h-screen py-3 divide-y divide-gray-200 overflow-y-auto">
                                     {
-                                        clientsList.results.map(client => (
-                                            clientRooms.results.map((client_room) => (
-                                                client_room.client === client.id ?
-                                                    <div 
-                                                        className="flex items-center gap-x-2 pl-3 py-3 cursor-pointer hover:bg-gray-50 color-transition"
-                                                        key={ client.id }
-                                                        onClick={ () => setChat(client_room.room_name) }
-                                                    >
-                                                        <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-                                                        <p className="text-sm font-medium">{ client.first_name+' '+client.last_name }</p>
-                                                    </div>
-                                                    : ''
-                                            ))
-                                        ))
-                                    }
-                                    {
-                                        partnersList.results.map(partner => (
-                                            partnerRooms.results.map((partner_room) => (
-                                                partner_room.partner === partner.id ?
-                                                    <div 
-                                                        className="flex items-center gap-x-2 pl-3 py-3 cursor-pointer hover:bg-gray-50 color-transition"
-                                                        key={ partner.id }
-                                                        onClick={ () => setChat(partner_room.room_name) }
-                                                    >
-                                                        <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-                                                        <p className="text-sm font-medium">{ partner.first_name+' '+partner.last_name }</p>
-                                                    </div>
-                                                    : ''
-                                            ))
-                                        ))
-                                    }
-                                    {
-                                        groupRooms.results.map(group => (
+                                        chatRooms.results.map(room => (
                                             <div 
                                                 className="flex items-center gap-x-2 pl-3 py-3 cursor-pointer hover:bg-gray-50 color-transition"
-                                                key={ group.id }
-                                                onClick={ () => setChat(group.room_key) }
+                                                key={ room.id }
+                                                onClick={ () => setChat(room.room_key) }
                                             >
                                                 <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-                                                <p className="text-sm font-medium">{ group.room_name }</p>
+                                                <p className="text-xs font-medium">{ room.room_name }</p>
                                             </div>
                                         ))
                                     }
@@ -349,28 +317,16 @@ export default function messages({ clientsList, partnersList, clientRooms, partn
                             </div>
 
                             {/* Messages part */}
-                            <div className="col-start-2 border border-gray-300 rounded-xl flex flex-col p-5 gap-y-5">
-                                <div className="w-full h-full bg-gray-100 rounded-xl p-5 flex flex-col gap-y-5">
+                            <div className="col-start-2 max-h-full border border-gray-300 rounded-xl flex flex-col p-5 gap-y-5 overflow-y-hidden">
+                                <div className="w-full h-full bg-gray-100 rounded-xl p-5 flex flex-col justify-end gap-y-5 overflow-y-scroll">
                                     {
                                         chatMessages.map((message, index) => (
-                                            message.username === userName ? 
                                             <div 
-                                                className='self-end flex gap-x-3 items-center'
+                                                className={`${message.username === userName ? 'chatPositionEnd' : 'chatPositionStart'}`}
                                                 key={index}
                                             >
                                                 <div className='w-14 h-14 bg-white rounded-full shadow-sm'></div>
-                                                <div className='flex flex-col bg-pink-600 text-white rounded-xl py-3 px-5 shadow-sm'>
-                                                    <h4 className='text-sm font-bold'>{ message.username }</h4>
-                                                    <p className='text-xs'>{ message.message }</p>
-                                                </div>
-                                            </div>
-                                            :
-                                            <div 
-                                                className='flex gap-x-3 items-center'
-                                                key={index}
-                                            >
-                                                <div className='w-14 h-14 bg-white rounded-full shadow-sm'></div>
-                                                <div className='flex flex-col bg-white py-3 px-5 rounded-xl shadow-sm'>
+                                                <div className={`${message.username === userName ? 'selfMessage' : 'chatMessage'}`}>
                                                     <h4 className='text-sm font-bold'>{ message.username }</h4>
                                                     <p className='text-xs'>{ message.message }</p>
                                                 </div>
@@ -441,38 +397,14 @@ export default function messages({ clientsList, partnersList, clientRooms, partn
 export const getServerSideProps = async ({ req }) => {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const token = req.cookies.jwt
-    const res1 = await fetch(`${api}clients_list/`,{
+    const res1 = await fetch(`${api}chatroom_list/`,{
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })
     const data1 = await res1.json()
-    const res2 = await fetch(`${api}partners_list/`, {
-        method : 'GET',
-        headers : {'Authorization' : 'Bearer'+' '+token}
-    })
-    const data2 = await res2.json()
-    const res3 = await fetch(`${api}client_rooms/`, {
-        method : 'GET',
-        headers : {'Authorization' : 'Bearer'+' '+token}
-    })
-    const data3 = await res3.json()
-    const res4 = await fetch(`${api}partner_rooms/`, {
-        method : 'GET',
-        headers : {'Authorization' : 'Bearer'+' '+token}
-    })
-    const data4 = await res4.json()
-    const res5 = await fetch(`${api}all_group_rooms/`, {
-        method : 'GET',
-        headers : {'Authorization' : 'Bearer'+' '+token}
-    })
-    const data5 = await res5.json()
     return {
         props : {
-            clientsList : data1,
-            partnersList : data2,
-            clientRooms : data3,
-            partnerRooms : data4,
-            groupRooms : data5
+            chatRooms : data1
         }
     }
 }

@@ -186,8 +186,8 @@ export default function register() {
                                     icon="lock"
                                     validations={[
                                         {
-                                            rule : isMinLength(8),
-                                            message : 'Must be at least 8 characters!'
+                                            rule : isMinLength(12),
+                                            message : 'Must be at least 12 characters!'
                                         },
                                     ]}
                                 />

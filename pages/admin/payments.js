@@ -7,18 +7,16 @@ import adminStyles from '../../styles/Admin.module.css'
 import { useRouter } from 'next/router'
 import CommonTable2 from '../../components/CommonTable2'
 import moment from 'moment'
+import currency from 'currency.js'
 
 export default function clients({ eventsList }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
+    const peso = value => currency(value, { symbol : '₱', precision : 0 })
     const data = useMemo(() => eventsList.results, [eventsList.count])
     const clientColumns = useMemo(() => [
         {
             Header : 'Event Name',
             accessor : 'event_name',
-        },
-        {
-            Header : 'Venue Name',
-            accessor : 'venue_name',
         },
         {
             Header : 'Schedule',
@@ -30,10 +28,16 @@ export default function clients({ eventsList }) {
         {
             Header : 'Cost',
             accessor : 'package_cost',
+            Cell : ({row}) => (
+                <p className="text-sm text-gray-800">{ peso(row.original.package_cost).format() }</p>
+            )
         },
         {
             Header : 'Payment',
             accessor : 'client_payment',
+            Cell : ({row}) => (
+                <p className="text-sm text-gray-800">{ peso(row.original.client_payment).format() }</p>
+            )
         },
         {
             Header : 'Status',
@@ -94,7 +98,7 @@ export default function clients({ eventsList }) {
 export const getServerSideProps = async ({ req }) => {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const token = req.cookies.jwt
-    const res = await fetch(`${api}events_list/`,{
+    const res = await fetch(`${api}client_payments/`,{
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })

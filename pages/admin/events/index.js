@@ -16,10 +16,12 @@ import moment from 'moment'
 import HoursOptions from '../../../components/admin/events/HoursOptions'
 import MinutesOptions from '../../../components/admin/events/MinutesOptions'
 import AutocompletePlace from '../../../components/admin/events/AutocompletePlace'
-import { ExportToCsv } from 'export-to-csv';
+import { ExportToCsv } from 'export-to-csv'
+import currency from 'currency.js'
 
 export default function cards({ clientsList, eventsList, totalList, completedList, csvEvents }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
+    const peso = value => currency(value, { symbol : '₱', precision : 0 })
     let [isOpen, setIsOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false);
     const router = useRouter()
@@ -940,7 +942,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                 >
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                                                 </svg>
-                                                <p className="text-sm font-medium">{`₱${event.package_cost}`}</p>
+                                                <p className="text-sm font-medium">{peso(event.package_cost).format()}</p>
                                             </div>
                                         </div>
                                         <div className="flex flex-col gap-y-1">
@@ -994,32 +996,6 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                             </svg>
                                                             <p className="text-xs font-medium">View Event</p>
                                                         </button>
-                                                        </Link>
-                                                        )}
-                                                    </Menu.Item>
-                                                    <Menu.Item>
-                                                        {({ active }) => (
-                                                        <Link 
-                                                            // as={`/admin/events?event_id=${event.id}`}
-                                                            href={{
-                                                                pathname : "/admin/events/contract",
-                                                                // query : { event_id : event.id }
-                                                            }}
-                                                        >
-                                                            <a
-                                                                className={`${adminStyles.cardPopOverItem} color-transition`}
-                                                            >
-                                                                <svg 
-                                                                    xmlns="http://www.w3.org/2000/svg" 
-                                                                    className={ adminStyles.actionBtnIcon } 
-                                                                    fill="none" 
-                                                                    viewBox="0 0 24 24" 
-                                                                    stroke="currentColor"
-                                                                >
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                                                                </svg>
-                                                                <p className="text-xs font-medium">Print Event</p>
-                                                            </a>
                                                         </Link>
                                                         )}
                                                     </Menu.Item>

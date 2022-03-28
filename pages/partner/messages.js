@@ -294,9 +294,9 @@ export default function messages({ partnerProfile, partnerRooms, groupRoomsList 
                                         onClick={ () => setChat(userName) }
                                     >
                                         <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-                                        <p className="text-sm font-medium">Justine Rhei Torres</p>
+                                        <p className="text-xs font-medium">Justine Rhei Torres</p>
                                     </div>
-                                    {
+                                        {
                                             partnerRooms.map((partner_room, index) => (
                                                 groupRoomsList.results.map((group_room) => (
                                                     group_room.id === partner_room.group_room ?
@@ -306,7 +306,7 @@ export default function messages({ partnerProfile, partnerRooms, groupRoomsList 
                                                         onClick={ () => setChat(group_room.room_key) }
                                                     >
                                                         <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-                                                        <p className="text-sm font-medium">{ group_room.room_name }</p>
+                                                        <p className="text-xs font-medium">{ group_room.room_name }</p>
                                                     </div>
                                                     : ''
                                                 ))
@@ -317,27 +317,15 @@ export default function messages({ partnerProfile, partnerRooms, groupRoomsList 
 
                             {/* Messages part */}
                             <div className="col-start-2 border border-gray-300 rounded-xl flex flex-col p-5 gap-y-5">
-                                <div className="w-full h-full bg-gray-100 rounded-xl">
+                                <div className="w-full h-full bg-gray-100 rounded-xl p-5 flex flex-col gap-y-5">
                                     {
                                         chatMessages.map((message, index) => (
-                                            message.username === userName ? 
                                             <div 
-                                                className='self-end flex gap-x-3 items-center'
+                                                className={`${message.username === userName ? 'chatPositionEnd' : 'chatPositionStart'}`}
                                                 key={index}
                                             >
                                                 <div className='w-14 h-14 bg-white rounded-full shadow-sm'></div>
-                                                <div className='flex flex-col bg-pink-600 text-white rounded-lg shadow-sm'>
-                                                    <h4 className='text-sm font-bold'>{ message.username }</h4>
-                                                    <p className='text-xs'>{ message.message }</p>
-                                                </div>
-                                            </div>
-                                            :
-                                            <div 
-                                                className='flex gap-x-3 items-center'
-                                                key={index}
-                                            >
-                                                <div className='w-14 h-14 bg-white rounded-full shadow-sm'></div>
-                                                <div className='flex flex-col bg-white p-3 rounded-lg shadow-sm'>
+                                                <div className={`${message.username === userName ? 'selfMessage' : 'chatMessage'}`}>
                                                     <h4 className='text-sm font-bold'>{ message.username }</h4>
                                                     <p className='text-xs'>{ message.message }</p>
                                                 </div>

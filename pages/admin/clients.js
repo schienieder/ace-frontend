@@ -90,8 +90,8 @@ export default function clients({ clientsList }) {
             router.push('/login')
         }
     }
-    useEffect( async () => {
-        await readRole()
+    useEffect(() => {
+        readRole()
     }, [])
     const { register, reset, handleSubmit, formState : { errors } } = useForm()
     const addClient = (data) => {

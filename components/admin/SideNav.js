@@ -50,50 +50,6 @@ const SideNav = ({ isActive }) => {
                     <p className="font-mont font-bold text-sm">Events</p>
                 </a>
             </Link>
-            {/* <Transition
-                    as={Fragment}
-                    enter="transition ease-in-out duration-200"
-                    enterFrom="opacity-0 transform scale-95"
-                    enterTo="opacity-100 transform scale-100"
-                    leave="transition ease-in-out duration-200"
-                    leaveFrom="opacity-100 transform scale-100"
-                    leaveTo="opacity-0 transform scale-95"
-                >
-                    <Disclosure.Panel>
-                        <Link href="/admin/events/calendar" passHref>
-                            <a 
-                                className={`${adminStyles.sideDropDownItem} color-transition`}
-                            >
-                                <svg 
-                                    xmlns="http://www.w3.org/2000/svg" 
-                                    className={ adminStyles.sideDropDownIcon }
-                                    fill="none" 
-                                    viewBox="0 0 24 24" 
-                                    stroke="currentColor"
-                                >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                <p className={ adminStyles.sideDropDownText }>Event Calendar</p>
-                            </a>
-                        </Link>
-                        <Link href="/admin/events/cards" passHref>
-                            <a 
-                                className={`${adminStyles.sideDropDownItem} color-transition`}
-                            >
-                                <svg 
-                                    xmlns="http://www.w3.org/2000/svg" 
-                                    className={ adminStyles.sideDropDownIcon }
-                                    fill="none" 
-                                    viewBox="0 0 24 24" 
-                                    stroke="currentColor"
-                                >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                </svg>
-                                <p className={ adminStyles.sideDropDownText }>Event Cards</p>
-                            </a>
-                        </Link>
-                    </Disclosure.Panel>
-                </Transition> */}
             <Disclosure>
                 {({ open }) => (
                     <>
@@ -321,7 +277,23 @@ const SideNav = ({ isActive }) => {
                                     <p className={ adminStyles.sideDropDownText }>Payment Logs</p>
                                 </a>
                             </Link>
-                            <Link href="/admin/reports" passHref>
+                            <Link href="/admin/sales" passHref>
+                                <a 
+                                    className={`${adminStyles.sideDropDownItem} color-transition`}
+                                >
+                                    <svg 
+                                        xmlns="http://www.w3.org/2000/svg" 
+                                        className={ adminStyles.sideDropDownIcon }
+                                        fill="none" 
+                                        viewBox="0 0 24 24" 
+                                        stroke="currentColor"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                    </svg>
+                                    <p className={ adminStyles.sideDropDownText }>Sales Report</p>
+                                </a>
+                            </Link>
+                            <Link href="/admin/forecasts" passHref>
                                 <a 
                                     className={`${adminStyles.sideDropDownItem} color-transition`}
                                 >

@@ -133,3 +133,19 @@ html {
 .commonBtn2 {
   @apply px-5 py-2 bg-transparent hover:bg-pink-600 border border-pink-600 rounded-lg text-pink-600 hover:text-white font-bold text-base tracking-wide;
 }
+
+.chatMessage {
+  @apply flex flex-col bg-white py-3 px-5 rounded-xl shadow-sm;
+}
+
+.selfMessage {
+  @apply flex flex-col bg-pink-600 text-white rounded-xl py-3 px-5 shadow-sm;
+}
+
+.chatPositionEnd {
+  @apply self-end flex gap-x-3 items-center;
+}
+
+.chatPositionStart {
+  @apply flex gap-x-3 items-center;
+}
