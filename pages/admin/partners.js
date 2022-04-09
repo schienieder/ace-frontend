@@ -92,8 +92,8 @@ export default function partners({ partnersList }) {
             router.push('/login')
         }
     }
-    useEffect( async () => {
-        await readRole()
+    useEffect(() => {
+        readRole()
     }, [])
     const { register, reset, handleSubmit, formState : { errors } } = useForm()
     const addPartner = (data) => {

@@ -12,12 +12,17 @@ import Cookies from 'js-cookie'
 import Swal from 'sweetalert2'
 import jwt_decode from 'jwt-decode'
 import { w3cwebsocket as W3CWebSocket } from 'websocket'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchMessages } from '../../redux/messages/messages.slice'
 
-export default function messages({ clientProfile, clientRooms, groupRoomsList }) {
+export default function messages({ clientProfile, memberRooms, allRooms }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const router = useRouter()
     const [userName, setUsername] = useState()
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false)
+
+    const dispatch = useDispatch()
+    const messages = useSelector(state => state.messagesState.messages)
 
     const [userChat, setUserChat] = useState('')
     const [chatMessages, setChatMessages] = useState([]);
@@ -130,9 +135,10 @@ export default function messages({ clientProfile, clientRooms, groupRoomsList })
         setUserChat('')
         e.preventDefault()
     }
-    const setChat = (data) => {
-        setRoomName(data)
+    const setChat = (room_key, room_id) => {
         setChatMessages([])
+        setRoomName(room_key)
+        dispatch(fetchMessages(room_id))
     }
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
@@ -290,35 +296,42 @@ export default function messages({ clientProfile, clientRooms, groupRoomsList })
                                     </button>
                                 </div>
                                 <div className="w-full h-screen py-3 divide-y divide-gray-200 overflow-y-auto">
-                                        <div 
-                                            className="flex items-center gap-x-2 pl-3 py-3 cursor-pointer hover:bg-gray-50 color-transition"
-                                            onClick={ () => setChat(userName) }
-                                        >
-                                            <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-                                            <p className="text-xs font-medium">Justine Rhei Torres</p>
-                                        </div>
-                                        {/* {
-                                            clientRooms.map((client_room, index) => (
-                                                groupRoomsList.results.map((group_room) => (
-                                                    group_room.id === client_room.group_room ?
+                                        {
+                                            memberRooms.results.map(member => (
+                                                allRooms.results.map(room => (
+                                                    member.room === room.id ?
                                                     <div 
+                                                        key={ room.id }
                                                         className="flex items-center gap-x-2 pl-3 py-3 cursor-pointer hover:bg-gray-50 color-transition"
-                                                        key={ index }
-                                                        onClick={ () => setChat(group_room.room_key) }
+                                                        onClick={ () => setChat(room.room_key, room.id) }
                                                     >
                                                         <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-                                                        <p className="text-xs font-medium">{ group_room.room_name }</p>
+                                                        <p className="text-xs font-medium">{ room.room_key === userName ? 'Ace Cadayona' : room.room_name }</p>
                                                     </div>
-                                                    : ''
+                                                    : null
                                                 ))
                                             ))
-                                        } */}
+                                        }
                                 </div>
                             </div>
 
                             {/* Messages part */}
                             <div className="col-start-2 max-h-full border border-gray-300 rounded-xl flex flex-col p-5 gap-y-5 overflow-y-hidden">
                                 <div className="w-full h-full bg-gray-100 rounded-xl p-5 flex flex-col justify-end gap-y-5 overflow-y-scroll">
+                                    {
+                                        messages.length ? messages.map((message, index) => (
+                                            <div 
+                                                className={`${message.username === userName ? 'chatPositionEnd' : 'chatPositionStart'}`}
+                                                key={index}
+                                            >
+                                                <div className='w-14 h-14 bg-white rounded-full shadow-sm'></div>
+                                                <div className={`${message.username === userName ? 'selfMessage' : 'chatMessage'}`}>
+                                                    <h4 className='text-sm font-bold'>{ message.sender_name }</h4>
+                                                    <p className='text-xs'>{ message.content }</p>
+                                                </div>
+                                            </div>
+                                        )) : null
+                                    }
                                     {
                                         chatMessages.map((message, index) => (
                                             <div 
@@ -327,7 +340,7 @@ export default function messages({ clientProfile, clientRooms, groupRoomsList })
                                             >
                                                 <div className='w-14 h-14 bg-white rounded-full shadow-sm'></div>
                                                 <div className={`${message.username === userName ? 'selfMessage' : 'chatMessage'}`}>
-                                                    <h4 className='text-sm font-bold'>{ message.username }</h4>
+                                                    <h4 className='text-sm font-bold'>{ message.sender }</h4>
                                                     <p className='text-xs'>{ message.message }</p>
                                                 </div>
                                             </div>
@@ -403,9 +416,21 @@ export const getServerSideProps = async ({ req }) => {
         headers : {'Authorization' : 'Bearer'+' '+token}
     })
     const data1 = await res1.json()
+    const res2 = await fetch(`${api}member_rooms/`, {
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data2 = await res2.json()
+    const res3 = await fetch(`${api}chatroom_list/`, {
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data3 = await res3.json()
     return {
         props : {
             clientProfile : data1,
+            memberRooms : data2,
+            allRooms : data3
         }
     }
 }
