@@ -7,6 +7,7 @@ import { isEmail, isLength, isMinLength, isNumber, } from '@formiz/validations'
 import MyInputField from '../components/MyInputField'
 import { useRouter } from 'next/router'
 import Swal from 'sweetalert2'
+import axios from 'axios'
 
 export default function register() {
     const api = process.env.NEXT_PUBLIC_DRF_API
@@ -53,6 +54,7 @@ export default function register() {
     return (
         <div className="relative w-full h-screen bg-gray-200 flex justify-center items-center font-mont text-gray-800 overflow-hidden">
             <nav className="absolute w-full top-0 py-5 px-5 md:px-10 flex justify-between items-center">
+                {/* <button onClick={ async () => await isMobileExist('09493112880') }>Click Me</button> */}
                 <Link href="/">
                     <div className="flex items-center gap-x-3 cursor-pointer">
                         <div className="hidden md:block">
@@ -137,6 +139,26 @@ export default function register() {
                                     label="Mobile Number"
                                     type="text"
                                     required="This field is required!"
+                                    asyncValidations={[
+                                        {
+                                            rule: async (value) => {
+                                                let isNotUsed;
+                                                try {
+                                                    await axios.get(`${api}client_mobile/${value}`)
+                                                    .then(res => {
+                                                        console.log(res)
+                                                        isNotUsed = false
+                                                    })
+                                                }
+                                                catch(e) {
+                                                    console.log(e)
+                                                    isNotUsed = true
+                                                }
+                                                return isNotUsed
+                                            },
+                                            message: 'Mobile number already used!',
+                                        }
+                                    ]}
                                     validations={[
                                         {
                                             rule : isNumber(),
@@ -147,6 +169,7 @@ export default function register() {
                                             message : 'Must have 11 digit numbers!'
                                         }
                                     ]}
+                                    debounce={500}
                                     icon="mobile"
                                     autoFocus
                                 />
@@ -155,13 +178,33 @@ export default function register() {
                                     label="Email Address"
                                     type="email"
                                     required="This field is required!"
+                                    asyncValidations={[
+                                        {
+                                            rule: async (value) => {
+                                                let isNotUsed;
+                                                try {
+                                                    await axios.get(`${api}client_email/${value}`)
+                                                    .then(res => {
+                                                        console.log(res)
+                                                        isNotUsed = false
+                                                    })
+                                                }
+                                                catch(e) {
+                                                    console.log(e)
+                                                    isNotUsed = true
+                                                }
+                                                return isNotUsed
+                                            },
+                                            message: 'Email already used!',
+                                        }
+                                    ]}
                                     validations={[
                                         {
                                             rule : isEmail(),
                                             message : 'This is not a valid email!'
                                         }
                                     ]}
-                                    
+                                    debounce={500}
                                     icon="email"
                                 />
                             </FormizStep>
@@ -174,6 +217,27 @@ export default function register() {
                                     name="register_uname"
                                     label="Username"
                                     type="text"
+                                    asyncValidations={[
+                                        {
+                                            rule: async (value) => {
+                                                let isNotUsed;
+                                                try {
+                                                    await axios.get(`${api}check_username/${value}`)
+                                                    .then(res => {
+                                                        console.log(res)
+                                                        isNotUsed = false
+                                                    })
+                                                }
+                                                catch(e) {
+                                                    console.log(e)
+                                                    isNotUsed = true
+                                                }
+                                                return isNotUsed
+                                            },
+                                            message: 'Username already exist!',
+                                        }
+                                    ]}
+                                    debounce={300}
                                     required="This field is required!"
                                     icon="user"
                                     autoFocus
@@ -186,8 +250,8 @@ export default function register() {
                                     icon="lock"
                                     validations={[
                                         {
-                                            rule : isMinLength(12),
-                                            message : 'Must be at least 12 characters!'
+                                            rule : isMinLength(8),
+                                            message : 'Must be at least 8 characters!'
                                         },
                                     ]}
                                 />

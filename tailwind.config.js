@@ -37,6 +37,7 @@ module.exports = {
         'client-profile-form-container' : '38rem',
         'rating-form' : '42rem',
         'custom-textarea': '32rem',
+        '49' : '11.5rem',
         '57' : '14.5rem',
         '63': '15.625rem'
       },
