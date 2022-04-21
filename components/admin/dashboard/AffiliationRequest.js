@@ -5,7 +5,7 @@ const RecentActivities = ({ data }) => {
         <div className="w-1/2 card flex flex-col gap-y-5">
             <div className="w-full flex justify-between">
                 <h4 className="text-base font-bold dark:text-gray-300">Affiliation Requests</h4>
-                <Link href="admin/requests/">
+                <Link href="/admin/requests">
                     <a className="text-xs text-gray-500 hover:text-blue-600 cursor-pointer">View All</a>
                 </Link>
             </div>
@@ -26,7 +26,10 @@ const RecentActivities = ({ data }) => {
                     {
                         data.results.length ? 
                             data.results.map((request) => (
-                                <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
+                                <tr 
+                                    className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800"
+                                    key={ request.id }
+                                >
                                     <td 
                                         className="px-4 py-2 whitespace-nowrap flex flex-col"
                                     >

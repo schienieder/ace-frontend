@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import AuthErrorIcon from '../../AuthErrorIcon'
 
 // const AutocompletePlace = ({ onSelect }) => {
     
@@ -129,6 +130,8 @@ export default class AutocompletePlace extends Component {
                     value={ this.state.search }
                     placeholder="Type an address"
                     autoComplete='off'
+                    ref={ this.props.placeRef }
+                    { ...this.props.register }
                 />
                 <ul className="absolute bg-white p-0 m-0 border border-gray-300">
                 {this.state.results.map(place => (

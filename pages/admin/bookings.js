@@ -156,7 +156,7 @@ export default function bookings({ bookingsList }) {
                             </svg>
                         </PageHeader>
                         <div className="card w-full flex flex-col gap-y-5">
-                            <CommonTable2 columns={ bookingColumns } data={ data } />
+                            <CommonTable2 columns={ bookingColumns } data={ data } cols={5} />
                         </div>
                     </div>
                     <Footer />

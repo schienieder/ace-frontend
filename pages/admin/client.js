@@ -4,6 +4,7 @@ import SideNav from '../../components/admin/SideNav'
 import Footer from '../../components/Footer'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function partner({ clientProfile }) {
     const router = useRouter()
@@ -30,10 +31,28 @@ export default function partner({ clientProfile }) {
                 <TopNav username={ userName } />
                 <div className="row-start-2 w-full h-full bg-true-100">
                     <div className="p-8 flex flex-col items-center gap-y-5 min-h-screen">
-                        <div className="w-2/5 bg-white dark:bg-gray-900 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl flex flex-col items-center gap-y-5 py-10 px-5">
+                        <div className="self-start flex items-center gap-x-2">
+                            <svg 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                className="h-7 w-7 text-current" 
+                                fill="none" 
+                                viewBox="0 0 24 24" 
+                                stroke="currentColor"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                            </svg>
+                            <div className="flex gap-x-2">
+                                <Link href="/admin/clients">
+                                    <h4 className="text-xl font-bold dark:text-gray-300 cursor-pointer hover:underline">Client List</h4>
+                                </Link>
+                                <h4 className="text-xl font-bold dark:text-gray-300 cursor-pointer hover:underline">\</h4>
+                                <h4 className="text-xl font-bold dark-text-gray-300">{ clientProfile.first_name+' '+clientProfile.last_name }</h4>
+                            </div>
+                        </div>
+                        <div className="w-2/5 h-persona bg-white dark:bg-gray-900 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl flex flex-col items-center gap-y-5 py-10 px-5">
                             {
                                 clientProfile.profile_image ? 
-                                <div className="flex w-32 h-32 rounded-full overflow-hidden">
+                                <div className="flex w-32 h-32 rounded-full overflow-hidden mt-5">
                                     <img 
                                         src={clientProfile.profile_image} 
                                         alt="Profile Image"
@@ -41,14 +60,14 @@ export default function partner({ clientProfile }) {
                                     />
                                 </div>
                                 : 
-                                <div className="flex w-32 h-32 rounded-full overflow-hidden">
+                                <div className="flex w-32 h-32 rounded-full overflow-hidden mt-5">
                                     <img src="/images/default.png"
                                         alt="Default Image"
                                         className='max-w-full h-auto self-start'
                                     />
                                 </div>
                             }
-                            <div className='flex flex-col gap-y-5'>
+                            <div className='flex flex-col gap-y-6'>
                             <h4 className='text-xl font-bold -mb-3 text-center'>{ clientProfile.first_name+" "+clientProfile.last_name }</h4>
                                 <div className='flex items-center gap-x-2'>
                                     <svg 

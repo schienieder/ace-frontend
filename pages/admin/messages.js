@@ -13,8 +13,11 @@ import Swal from 'sweetalert2'
 import { w3cwebsocket as W3CWebSocket } from 'websocket'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchMessages } from '../../redux/messages/messages.slice'
+import { fetchChatRooms } from '../../redux/chatrooms/chatRooms.slice'
+import BeatLoader from 'react-spinners/BeatLoader'
+import ChatHeader from '../../components/ChatHeader'
 
-export default function messages({ chatRooms }) {
+export default function messages() {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const router = useRouter()
     const [userName, setUsername] = useState()
@@ -23,9 +26,12 @@ export default function messages({ chatRooms }) {
     const [userChat, setUserChat] = useState('')
     const [chatMessages, setChatMessages] = useState([]);
     const [roomName, setRoomName] = useState('');
-
+    const [roomSearch, setRoomSearch] = useState('')
+    
     const dispatch = useDispatch()
     const messages = useSelector(state => state.messagesState.messages)
+    const { rooms, loading } = useSelector(state => state.chatRoomsState)
+    const [roomsList, setRoomsList] = useState([])
     
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
@@ -38,6 +44,7 @@ export default function messages({ chatRooms }) {
         return new W3CWebSocket(`ws://localhost:8000/ws/chat/${roomName ? roomName : userName}/`)
     }, [roomName])
     useEffect(() => {
+        dispatch(fetchChatRooms()).then(res => setRoomsList(res.payload))
         readRole()
         client.onopen = () => {
             console.log('WebSocket Connection Successful!')
@@ -46,9 +53,7 @@ export default function messages({ chatRooms }) {
     useEffect(() => {
         client.onmessage = (message) => {
             const serverData = JSON.parse(message.data)
-            console.log(serverData)
             if (serverData) {
-                console.log(serverData)
                 setChatMessages([
                     ...chatMessages,
                     serverData
@@ -56,6 +61,26 @@ export default function messages({ chatRooms }) {
             }
         }
     }, [chatMessages])
+    useEffect(() => {
+        let searchTimeOut;
+        if (rooms.length) {
+            searchTimeOut = setTimeout(() => {
+                const filteredRooms = rooms.filter(room => {
+                    if (roomSearch === '') {
+                        return room
+                    }
+                    else if (room.room_name.toLowerCase().includes(roomSearch.toLowerCase())) {
+                        return room
+                    }
+                })
+                setRoomsList(filteredRooms)
+            }, 800)
+        }
+        return () => {
+            clearTimeout(searchTimeOut)
+        }
+    }, [roomSearch])
+    
     const { register, reset, handleSubmit, formState : { errors } } = useForm()
     const closeModal = () => {
         setIsOpen(false)
@@ -64,12 +89,10 @@ export default function messages({ chatRooms }) {
         setIsOpen(true)
     }
     const addRoomGroup = (data) => {
-        console.log(data)
         const jwt_token = Cookies.get('jwt')
-        console.log(jwt_token)
         axios({
             method : 'POST',
-            url : `${api}add_group_room/`,
+            url : `${api}new_chatroom/`,
             headers : {
                 'Authorization' : 'Bearer'+' '+jwt_token,
                 'Content-Type' : 'application/json'
@@ -79,6 +102,7 @@ export default function messages({ chatRooms }) {
                 room_key : data.room_key
             }
         }).then(() => {
+            setIsOpen(false)
             reset()
             Swal.fire({
                 icon : 'success',
@@ -88,8 +112,7 @@ export default function messages({ chatRooms }) {
                 showCloseButton: true,
                 confirmButtonColor: '#DB2777',
             })
-            setIsOpen(false)
-            router.push('/admin/messages')
+            dispatch(fetchChatRooms()).then(res => setRoomsList(res.payload))
         }).catch((error) => {
             Swal.fire({
                 icon : 'error',
@@ -101,15 +124,29 @@ export default function messages({ chatRooms }) {
             })
         })
     }
+    const onSearchRoom = (room) => {
+        setRoomSearch(room)
+    }
     const sendChat = (e) => {
-        console.log(userChat)
-        client.send(JSON.stringify({
-            type : 'message',
-            message : userChat,
-            username : userName
-        }))
-        setUserChat('')
         e.preventDefault()
+        if (!roomName.length) {
+            Swal.fire({
+                icon : 'error',
+                title: 'Invalid Action',
+                timer : 3000,
+                text: 'Select a chat room first!',
+                showCloseButton: true,
+                confirmButtonColor: '#DB2777',
+            })
+        }
+        else {
+            client.send(JSON.stringify({
+                type : 'message',
+                message : userChat,
+                username : userName
+            }))
+            setUserChat('')
+        }
     }
     const setChat = (room_key, room_id) => {
         setChatMessages([])
@@ -281,7 +318,8 @@ export default function messages({ chatRooms }) {
                                         <input 
                                             type="text"
                                             className="searchBarInput"
-                                            placeholder="Search Name . . ."
+                                            placeholder="Search Room Name . . ."
+                                            onChange={ e => onSearchRoom(e.target.value) }
                                         />
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 
@@ -311,7 +349,8 @@ export default function messages({ chatRooms }) {
                                 </div>
                                 <div className="w-full h-screen py-3 divide-y divide-gray-200 overflow-y-auto">
                                     {
-                                        chatRooms.results.map(room => (
+                                        loading ? <div className="flex justify-center"><BeatLoader color="#9ca3af" loading={ loading } size={15} /></div>
+                                        : roomsList.map(room => (
                                             <div 
                                                 className="flex items-center gap-x-2 pl-3 py-3 cursor-pointer hover:bg-gray-50 color-transition"
                                                 key={ room.id }
@@ -327,7 +366,8 @@ export default function messages({ chatRooms }) {
 
                             {/* Messages part */}
                             <div className="col-start-2 border border-gray-300 rounded-xl flex flex-col p-5 gap-y-5">
-                                <div className="w-full h-full bg-gray-100 rounded-xl p-5 flex flex-col justify-end gap-y-5 overflow-y-auto">
+                                { roomName ? <ChatHeader roomKey={ roomName } /> : null }
+                                <div className="w-full h-screen bg-gray-100 rounded-xl p-5 flex flex-col justify-end gap-y-5 overflow-y-auto">
                                     {
                                         messages.length ? messages.map((message, index) => (
                                             <div 
@@ -417,17 +457,17 @@ export default function messages({ chatRooms }) {
     )
 }
 
-export const getServerSideProps = async ({ req }) => {
-    const api = process.env.NEXT_PUBLIC_DRF_API
-    const token = req.cookies.jwt
-    const res1 = await fetch(`${api}chatroom_list/`,{
-        method : 'GET',
-        headers : {'Authorization' : 'Bearer'+' '+token}
-    })
-    const data1 = await res1.json()
-    return {
-        props : {
-            chatRooms : data1
-        }
-    }
-}
+// export const getServerSideProps = async ({ req }) => {
+//     const api = process.env.NEXT_PUBLIC_DRF_API
+//     const token = req.cookies.jwt
+//     const res1 = await fetch(`${api}chatroom_list/`,{
+//         method : 'GET',
+//         headers : {'Authorization' : 'Bearer'+' '+token}
+//     })
+//     const data1 = await res1.json()
+//     return {
+//         props : {
+//             chatRooms : data1
+//         }
+//     }
+// }

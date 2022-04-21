@@ -30,6 +30,11 @@ module.exports = {
         'register-img' : "url('/images/register.jpg')",
         'rate-img' : "url('/images/rate.jpg')",
       }),
+      height : {
+        'persona' : '640px',
+        'messages-form-container' : '880.600px',
+        'messages-container' : '734.600px'
+      },
       width: {
         'custom1' : '45rem',
         'about-img' : '485px',

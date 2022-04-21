@@ -96,7 +96,11 @@ export default function clients({ clientsList }) {
     }, [])
     const { register, reset, handleSubmit, formState : { errors }, setError } = useForm()
     const [showPassword, setShowPassword] = useState(false)
-    // const [hasErrors, setHasErrors] = useState(false)
+    const [hasErrors, setHasErrors] = useState({
+        mobile : '',
+        email : '',
+        username : ''
+    })
     const addClient = (data) => {
         axios({
             method : "POST",
@@ -111,29 +115,54 @@ export default function clients({ clientsList }) {
                 password : data.client_pass,
                 role : "client"
             }
-        }).then(() => {
-            console.log(data)
-            Swal.fire({
-                icon : 'success',
-                title: 'Regristration Successsful',
-                timer : 3000,
-                text: `New client successfully added!`,
-                showCloseButton: true,
-                confirmButtonColor: '#DB2777',
-            })
-            router.push('/admin/clients')
-        }).catch((error) => {
-            Swal.fire({
-                icon : 'error',
-                title: 'Regristration Error',
-                timer : 3000,
-                text: error.message,
-                showCloseButton: true,
-                confirmButtonColor: '#DB2777',
-            })
         })
-        reset()
-        setAddClientOpen(false)
+        .then((response) => {
+            if (response.status === 200) {
+                reset()
+                setAddClientOpen(false)
+                Swal.fire({
+                    icon : 'success',
+                    title: 'Regristration Successsful',
+                    timer : 3000,
+                    text: `New client successfully added!`,
+                    showCloseButton: true,
+                    confirmButtonColor: '#DB2777',
+                })
+                router.push('/admin/clients')
+            }
+        })
+        .catch((error) => {
+            if (hasErrors.mobile.length) {
+                setError("client_mobile", {
+                    type: "manual",
+                    message : hasErrors.mobile
+                })
+            }
+            if (hasErrors.email.length) {
+                setError("client_email", {
+                    type: "manual",
+                    message : hasErrors.email
+                })
+            }
+            if (hasErrors.username.length) {
+                setError("client_uname", {
+                    type: "manual",
+                    message : hasErrors.username
+                })
+            }
+            if (error.response.status > 404) {
+                setAddClientOpen(false)
+                Swal.fire({
+                    icon : 'error',
+                    title: 'Regristration Error',
+                    timer : 3000,
+                    text: error.message,
+                    showCloseButton: true,
+                    confirmButtonColor: '#DB2777',
+                })
+            }
+            console.log('Request failed with error: ', error)
+        })
     }
     const destroyClient = (client_id, client_fname, client_lname) => {
         Swal.fire({
@@ -353,17 +382,13 @@ export default function clients({ clientsList }) {
                                                                             validate : debounce(async (value) => {
                                                                                 try {
                                                                                     const mobileExist = await axios.get(`${api}client_mobile/${value}`)
-                                                                                    console.log(mobileExist)
                                                                                     if (mobileExist.status === 200) {
-                                                                                        // setError("client_mobile", {
-                                                                                        //     type: "manual",
-                                                                                        //     message : "Mobile number already used!"
-                                                                                        // })
-                                                                                        return 'Mobile number already used!'
+                                                                                        setHasErrors({...hasErrors, mobile : 'Mobile number already used!'})
+                                                                                        return false
                                                                                     }
                                                                                 }
                                                                                 catch(e) {
-                                                                                    console.log('Mobile number error: ', e)
+                                                                                    setHasErrors({...hasErrors, mobile : ''})
                                                                                     return true
                                                                                 }
                                                                             }, 500)
@@ -401,13 +426,13 @@ export default function clients({ clientsList }) {
                                                                             validate : debounce(async (value) => {
                                                                                 try {
                                                                                     const emailExist = await axios.get(`${api}client_email/${value}`)
-                                                                                    console.log(emailExist)
                                                                                     if (emailExist.status === 200) {
-                                                                                        return 'Email already used!'
+                                                                                        setHasErrors({...hasErrors, email : 'Email already used!'})
+                                                                                        return false
                                                                                     }
                                                                                 }
                                                                                 catch(e) {
-                                                                                    console.log('Email error: ', e)
+                                                                                    setHasErrors({...hasErrors, email : ''})
                                                                                     return true
                                                                                 }
                                                                             }, 500) 
@@ -453,18 +478,18 @@ export default function clients({ clientsList }) {
                                                                         validate : debounce(async (value) => {
                                                                             try {
                                                                                 const usernameExist = await axios.get(`${api}check_username/${value}`)
-                                                                                console.log(usernameExist)
                                                                                 if (usernameExist.status === 200) {
-                                                                                    return 'Username already exist!'
+                                                                                    setHasErrors({...hasErrors, username : 'Username already exist!'})
+                                                                                    return false
                                                                                 }
                                                                             }
                                                                             catch(e) {
-                                                                                console.log('Username error: ', e)
+                                                                                setHasErrors({...hasErrors, username : ''})
                                                                                 return true
                                                                             }
                                                                         }, 500)
                                                                     }) 
-                                                                } 
+                                                                }
                                                                 className="inputField"
                                                             />
                                                         </div>
@@ -561,7 +586,7 @@ export default function clients({ clientsList }) {
                                 </div>
                                 </Dialog>
                             </Transition>
-                            <CommonTable columns={ clientColumns } data={ data } onClick={ openAddModal } btnText="New Client" />
+                            <CommonTable columns={ clientColumns } data={ data } onClick={ openAddModal } btnText="New Client" cols={4} />
                         </div>
                     </div>
                     <Footer />

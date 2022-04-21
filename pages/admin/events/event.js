@@ -28,7 +28,7 @@ export default function event({ eventInfo, clientInfo, taskList, partnerList }) 
                 <TopNav username={ userName } />
                 <div className="row-start-2 w-full h-full bg-true-100">
                     <div className="p-8 flex flex-col gap-y-10 min-h-screen">
-                        <PageHeader text={ eventInfo.event_name }>
+                        <div className="flex items-center gap-x-2">
                             <svg 
                                 xmlns="http://www.w3.org/2000/svg" 
                                 className="h-7 w-7 text-current" 
@@ -38,7 +38,14 @@ export default function event({ eventInfo, clientInfo, taskList, partnerList }) 
                             >
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                             </svg>
-                        </PageHeader>
+                            <div className="flex gap-x-2">
+                                <Link href="/admin/events">
+                                    <h4 className="text-xl font-bold dark:text-gray-300 cursor-pointer hover:underline">Events</h4>
+                                </Link>
+                                <h4 className="text-xl font-bold dark:text-gray-300 cursor-pointer hover:underline">\</h4>
+                                <h4 className="text-xl font-bold dark-text-gray-300">{ eventInfo.event_name }</h4>
+                            </div>
+                        </div>
                         <div className='w-full grid grid-cols-4 gap-x-5'>
                             <div className='card flex flex-col gap-y-5'>
                                 <div className='flex gap-x-1'>
@@ -121,7 +128,7 @@ export default function event({ eventInfo, clientInfo, taskList, partnerList }) 
                                                             {
                                                                 partnerList.results.map((partner) => {
                                                                     if (partner.id === task.partner) {
-                                                                        return partner.business_name
+                                                                        return partner.first_name+' '+partner.last_name
                                                                     }
                                                                 })
                                                             }

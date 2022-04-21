@@ -14,20 +14,26 @@ import jwt_decode from 'jwt-decode'
 import { w3cwebsocket as W3CWebSocket } from 'websocket'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchMessages } from '../../redux/messages/messages.slice'
+import { fetchMemberRooms } from '../../redux/chatrooms/chatRooms.slice'
+import BeatLoader from 'react-spinners/BeatLoader'
+import ChatHeader from '../../components/ChatMemberHeader'
 
-export default function messages({ clientProfile, memberRooms, allRooms }) {
+export default function messages({ clientProfile }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const router = useRouter()
     const [userName, setUsername] = useState()
     const [isOpen, setIsOpen] = useState(false)
 
+    const [userChat, setUserChat] = useState('')
+    const [chatMessages, setChatMessages] = useState([])
+    const [roomName, setRoomName] = useState('')
+    const [roomSearch, setRoomSearch] = useState('')
+    
     const dispatch = useDispatch()
     const messages = useSelector(state => state.messagesState.messages)
+    const { memberRooms, loading } = useSelector(state => state.chatRoomsState)
+    const [roomsList, setRoomsList] = useState([])
 
-    const [userChat, setUserChat] = useState('')
-    const [chatMessages, setChatMessages] = useState([]);
-    const [roomName, setRoomName] = useState('');
-    
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
         const role = localStorage.getItem('role')
@@ -39,6 +45,7 @@ export default function messages({ clientProfile, memberRooms, allRooms }) {
         return new W3CWebSocket(`ws://localhost:8000/ws/chat/${roomName ? roomName : userName}/`)
     }, [roomName])
     useEffect(() => {
+        dispatch(fetchMemberRooms()).then(res => setRoomsList(res.payload))
         readRole()
         client.onopen = () => {
             console.log('WebSocket Connection Successful!')
@@ -55,6 +62,25 @@ export default function messages({ clientProfile, memberRooms, allRooms }) {
             }
         }
     }, [chatMessages])
+    useEffect(() => {
+        let searchTimeOut;
+        if (memberRooms.length) {
+            searchTimeOut = setTimeout(() => {
+                const filteredRooms = memberRooms.filter(room => {
+                    if (roomSearch === '') {
+                        return room
+                    }
+                    else if (room.room_name.toLowerCase().includes(roomSearch.toLowerCase())) {
+                        return room
+                    }
+                })
+                setRoomsList(filteredRooms)
+            }, 800)
+        }
+        return () => {
+            clearTimeout(searchTimeOut)
+        }
+    }, [roomSearch])
     const { register, reset, handleSubmit, formState : { errors } } = useForm()
     const closeModal = () => {
         setIsOpen(false)
@@ -63,32 +89,29 @@ export default function messages({ clientProfile, memberRooms, allRooms }) {
         setIsOpen(true)
     }
     const addRoomGroup = (data) => {
-        console.log(data)
         const jwt_token = Cookies.get('jwt')
-        console.log(jwt_token)
         axios({
             method : 'GET',
-            url : `${api}group_room/${data.room_key}`,
+            url : `${api}chatroom/${data.room_key}`,
             headers : {
                 'Authorization' : 'Bearer'+' '+jwt_token,
                 'Content-Type' : 'application/json'
             }
         }).then((res) => {
             if (res.status === 200) {
-                console.log(res.data)
-                console.log(clientProfile.id)
                 axios({
                     method : 'POST',
-                    url : `${api}add_client_group/`,
+                    url : `${api}join_chatroom/`,
                     headers : {
                         'Authorization' : 'Bearer'+' '+jwt_token,
                         'Content-Type' : 'application/json'
                     },
                     data : {
-                        client : clientProfile.id,
-                        group_room : res.data.id
+                        room : res.data.id,
+                        member : userName
                     }
                 }).then(() => {
+                    setIsOpen(false)
                     reset()
                     Swal.fire({
                         icon : 'success',
@@ -98,8 +121,7 @@ export default function messages({ clientProfile, memberRooms, allRooms }) {
                         showCloseButton: true,
                         confirmButtonColor: '#DB2777',
                     })
-                    setIsOpen(false)
-                    router.push('/client/messages')
+                    dispatch(fetchMemberRooms()).then(res => setRoomsList(res.payload))
                 }).catch((err) => {
                     reset()
                     Swal.fire({
@@ -113,7 +135,8 @@ export default function messages({ clientProfile, memberRooms, allRooms }) {
                     setIsOpen(false)
                 })
             }
-        }).catch((error) => {
+        }).catch(() => {
+            setIsOpen(false)
             reset()
             Swal.fire({
                 icon : 'error',
@@ -123,17 +146,38 @@ export default function messages({ clientProfile, memberRooms, allRooms }) {
                 showCloseButton: true,
                 confirmButtonColor: '#DB2777',
             })
-            setIsOpen(false)
         })
     }
+    const onSearchRoom = (room) => {
+        setRoomSearch(room)
+    }
     const sendChat = (e) => {
-        client.send(JSON.stringify({
-            type : 'message',
-            message : userChat,
-            username : userName
-        }))
-        setUserChat('')
         e.preventDefault()
+        if (!roomName.length) {
+            Swal.fire({
+                icon : 'error',
+                title: 'Invalid Action',
+                timer : 3000,
+                text: 'Select a chat room first!',
+                showCloseButton: true,
+                confirmButtonColor: '#DB2777',
+            })
+        }
+        else {
+            client.send(JSON.stringify({
+                type : 'message',
+                message : userChat,
+                username : userName
+            }))
+            setUserChat('')
+        }
+        // client.send(JSON.stringify({
+        //     type : 'message',
+        //     message : userChat,
+        //     username : userName
+        // }))
+        // setUserChat('')
+        // e.preventDefault()
     }
     const setChat = (room_key, room_id) => {
         setChatMessages([])
@@ -267,7 +311,8 @@ export default function messages({ clientProfile, memberRooms, allRooms }) {
                                         <input 
                                             type="text"
                                             className="searchBarInput"
-                                            placeholder="Search Name . . ."
+                                            placeholder="Search Room Name . . ."
+                                            onChange={ e => onSearchRoom(e.target.value) }
                                         />
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 
@@ -296,7 +341,20 @@ export default function messages({ clientProfile, memberRooms, allRooms }) {
                                     </button>
                                 </div>
                                 <div className="w-full h-screen py-3 divide-y divide-gray-200 overflow-y-auto">
-                                        {
+                                    {
+                                        loading ? <div className="flex justify-center"><BeatLoader color="#9ca3af" loading={ loading } size={15} /></div>
+                                        : roomsList.map(room => (
+                                            <div 
+                                                className="flex items-center gap-x-2 pl-3 py-3 cursor-pointer hover:bg-gray-50 color-transition"
+                                                key={ room.id }
+                                                onClick={ () => setChat(room.room_key, room.id) }
+                                            >
+                                                <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                                                <p className="text-xs font-medium">{ room.room_key === userName ? 'Ace Cadayona' : room.room_name }</p>
+                                            </div>
+                                        ))
+                                    }
+                                        {/* {
                                             memberRooms.results.map(member => (
                                                 allRooms.results.map(room => (
                                                     member.room === room.id ?
@@ -311,12 +369,13 @@ export default function messages({ clientProfile, memberRooms, allRooms }) {
                                                     : null
                                                 ))
                                             ))
-                                        }
+                                        } */}
                                 </div>
                             </div>
 
                             {/* Messages part */}
                             <div className="col-start-2 max-h-full border border-gray-300 rounded-xl flex flex-col p-5 gap-y-5 overflow-y-hidden">
+                                { roomName ? <ChatHeader roomKey={ roomName } /> : null }
                                 <div className="w-full h-full bg-gray-100 rounded-xl p-5 flex flex-col justify-end gap-y-5 overflow-y-scroll">
                                     {
                                         messages.length ? messages.map((message, index) => (
@@ -416,21 +475,21 @@ export const getServerSideProps = async ({ req }) => {
         headers : {'Authorization' : 'Bearer'+' '+token}
     })
     const data1 = await res1.json()
-    const res2 = await fetch(`${api}member_rooms/`, {
-        method : 'GET',
-        headers : {'Authorization' : 'Bearer'+' '+token}
-    })
-    const data2 = await res2.json()
-    const res3 = await fetch(`${api}chatroom_list/`, {
-        method : 'GET',
-        headers : {'Authorization' : 'Bearer'+' '+token}
-    })
-    const data3 = await res3.json()
+    // const res2 = await fetch(`${api}member_rooms/`, {
+    //     method : 'GET',
+    //     headers : {'Authorization' : 'Bearer'+' '+token}
+    // })
+    // const data2 = await res2.json()
+    // const res3 = await fetch(`${api}chatroom_list/`, {
+    //     method : 'GET',
+    //     headers : {'Authorization' : 'Bearer'+' '+token}
+    // })
+    // const data3 = await res3.json()
     return {
         props : {
             clientProfile : data1,
-            memberRooms : data2,
-            allRooms : data3
+            // memberRooms : data2,
+            // allRooms : data3
         }
     }
 }

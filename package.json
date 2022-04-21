@@ -24,6 +24,7 @@
     "next": "^12.1.0",
     "next-images": "^1.8.4",
     "postcss-import": "^14.0.2",
+    "qrcode.react": "^3.0.1",
     "react": "17.0.2",
     "react-copy-to-clipboard": "^5.0.4",
     "react-dnd": "^14.0.4",

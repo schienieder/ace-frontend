@@ -85,7 +85,7 @@ export default function clients({ eventsList }) {
                             </svg>
                         </PageHeader>
                         <div className="card w-full flex flex-col gap-y-5">
-                            <CommonTable2 columns={ clientColumns } data={ data } />
+                            <CommonTable2 columns={ clientColumns } data={ data } cols={6} />
                         </div>
                     </div>
                     <Footer />

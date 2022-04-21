@@ -7,8 +7,9 @@ import CalendarHook from '../../components/admin/events/CalendarHook'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
+import moment from 'moment'
 
-export default function index({ partnerProfile }) {
+export default function index({ partnerProfile, upComingEvents, recentRequests }) {
     const router = useRouter()
     const [userName, setUsername] = useState()
     const readRole = () => {
@@ -18,8 +19,8 @@ export default function index({ partnerProfile }) {
             router.push('/login')
         }
     }
-    useEffect( async () => {
-        await readRole()
+    useEffect(() => {
+        readRole()
     }, [])
     const { calendarRows, selectedDate, todayFormatted, daysShort, monthNames, getNextMonth, getPrevMonth } = CalendarHook()
     const dateClickHandler = date => {
@@ -58,131 +59,114 @@ export default function index({ partnerProfile }) {
                                 </svg>
                                 <p className="font-normal">Profile information incomplete! Proceed <Link href="/partner/profile"><a className="text-pink-600 font-bold hover:underline">here</a></Link> to remove this warning.</p>
                             </div>
-                        : ''
+                        : null
                     }
-                        <div className="flex flex-col gap-y-5">
-                            
-
-                            <div className="flex gap-x-5">
-                                
-                                <div className="w-2/5 flex flex-col gap-y-5">
-                                    <h4 className="font-bold -mb-3 mt-3">Profile Information</h4>
-                                    <div className="bg-white dark:bg-gray-900 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl w-full flex flex-col gap-y-10 px-10 py-8">
-                                        <div className="flex flex-col gap-y-1">
-                                            <div className="flex items-center gap-x-1">
-                                                <svg 
-                                                    xmlns="http://www.w3.org/2000/svg" 
-                                                    className="h-5 w-5 text-pink-600" 
-                                                    fill="none" 
-                                                    viewBox="0 0 24 24" 
-                                                    stroke="currentColor"
-                                                >
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                </svg>
-                                                <h4 className="text-sm font-bold">Name</h4>
-                                            </div>
-                                            <p className="text-xs">{ partnerProfile.first_name + ' ' + partnerProfile.last_name }</p>
-                                        </div>
-                                        <div className="w-full flex justify-between">
-                                            <div className="flex flex-col gap-y-1">
-                                                <div className="flex items-center gap-x-1">
-                                                    <svg 
-                                                        xmlns="http://www.w3.org/2000/svg" 
-                                                        className="h-5 w-5 text-pink-600" 
-                                                        fill="none" 
-                                                        viewBox="0 0 24 24" 
-                                                        stroke="currentColor"
-                                                    >
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                                    </svg>
-                                                    <h4 className="text-sm font-bold">Mobile Number</h4>
-                                                </div>
-                                                <p className="text-xs">{ partnerProfile.mobile_number }</p>
-                                            </div>
-                                            <div className="flex flex-col gap-y-1">
-                                                <div className="flex items-center gap-x-1">
-                                                    <svg 
-                                                        xmlns="http://www.w3.org/2000/svg" 
-                                                        className="h-5 w-5 text-pink-600" 
-                                                        fill="none" 
-                                                        viewBox="0 0 24 24" 
-                                                        stroke="currentColor"
-                                                    >
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                                    </svg>
-                                                    <h4 className="text-sm font-bold">Email Address</h4>
-                                                </div>
-                                                <p className="text-xs">{ partnerProfile.email }</p>
-                                            </div>
-                                        </div>
-                                        <div className="flex flex-col gap-y-1">
-                                            <div className="flex items-center gap-x-1">
-                                                <svg 
-                                                    xmlns="http://www.w3.org/2000/svg" 
-                                                    className="h-5 w-5 text-pink-600" 
-                                                    fill="none" 
-                                                    viewBox="0 0 24 24" 
-                                                    stroke="currentColor"
-                                                >
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                </svg>
-                                                <h4 className="text-sm font-bold">Address</h4>
-                                            </div>
-                                            <p className="text-xs">{ partnerProfile.street_address && partnerProfile.city && partnerProfile.state_province ? `${partnerProfile.street_address}, ${partnerProfile.city}, ${partnerProfile.state_province}` : 'N/A' }</p>
-                                        </div>
-                                        <Link href="/partner/profile">
-                                            <button 
-                                                className="w-full bg-pink-600 hover:bg-pink-500 focus:outline-none color-transition text-gray-50 font-bold py-2 rounded-lg tracking-wide text-sm"
-                                            >View Profile</button>
-                                        </Link>
-                                    </div>
+                        <div className="flex gap-x-5">
+                            {/* Affiliation Request */}
+                            <div className="w-1/2 card flex flex-col gap-y-5">
+                                <div className="w-full flex justify-between">
+                                    <h4 className="text-base font-bold dark:text-gray-300">Affiliation Requests</h4>
+                                    <Link href="partner/requests/">
+                                        <a className="text-xs text-gray-500 hover:text-blue-600 cursor-pointer">View All</a>
+                                    </Link>
                                 </div>
-
-                                <div className="w-3/5 flex flex-col gap-y-5">
-                                    <h4 className="font-bold -mb-3 mt-3">Upcoming Events</h4>
-                                    <div className="flex-grow bg-white dark:bg-gray-900 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl w-full flex flex-col gap-y-10 p-5">
-                                        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                            <thead className="bg-gray-100 dark:bg-gray-800">
-                                                <tr className="text-left text-xs font-medium text-gray-700 dark:text-gray-400 uppercase tracking-wider">
-                                                    <th scope="col" className="px-4 py-3">
-                                                        Event Name
-                                                    </th>
-                                                    <th scope="col" className="px-4 py-3">
-                                                        Date
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
+                                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                    <thead className="bg-gray-100 dark:bg-gray-800">
+                                        <tr className="text-left text-xs uppercase tracking-wider text-gray-700 dark:text-gray-400">
+                                            <th 
+                                                scope="col" 
+                                                className="px-4 py-3"
+                                            >Description</th>
+                                            <th 
+                                                scope="col" 
+                                                className="px-6 py-3"
+                                            >Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                                        {
+                                            recentRequests.length ? 
+                                                recentRequests.map((request) => (
+                                                    <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
+                                                        <td 
+                                                            className="px-4 py-2 whitespace-nowrap flex flex-col"
+                                                        >
+                                                            <p className="text-sm text-gray-800 dark:text-gray-300 font-medium">Rose Garden</p>
+                                                            <p className="text-xs text-gray-600 dark:text-gray-500">{ request.task }</p>
+                                                        </td>
+                                                        <td className="px-6 py-3 whitespace-nowrap">
+                                                            {
+                                                                request.status === 'Accepted' &&
+                                                                <p className="capitalize text-sm text-teal-600">{ request.status }</p>
+                                                            }
+                                                            {
+                                                                request.status === 'Pending' &&
+                                                                <p className="capitalize text-sm text-yellow-500">{ request.status }</p>
+                                                            }
+                                                            {
+                                                                request.status === 'Declined' &&
+                                                                <p className="capitalize text-sm text-red-500">{ request.status }</p>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                                :
                                                 <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
-                                                    <td className="px-4 py-4 whitespace-nowrap">
-                                                        <p className="text-sm text-gray-800 dark:text-gray-300">A Decade & Eight - Ailene Padaplin</p>
-                                                    </td>
-                                                    <td className="px-4 py-4 whitespace-nowrap">
-                                                        <p className="text-sm text-gray-800 dark:text-gray-300">July 13, 2021</p>
-                                                    </td>
-                                                </tr>
-                                                <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
-                                                    <td className="px-4 py-4 whitespace-nowrap">
-                                                        <p className="text-sm text-gray-800 dark:text-gray-300">Pepito & Pepita Wedding</p>
-                                                    </td>
-                                                    <td className="px-4 py-4 whitespace-nowrap">
-                                                        <p className="text-sm text-gray-800 dark:text-gray-300">July 14, 2021</p>
+                                                    <td 
+                                                        className="px-6 py-3 whitespace-nowrap text-center"
+                                                        colSpan={2}
+                                                    >
+                                                        <p className="text-sm">Nothing to show.</p>
                                                     </td>
                                                 </tr>
-                                                <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
-                                                    <td className="px-4 py-4 whitespace-nowrap">
-                                                        <p className="text-sm text-gray-800 dark:text-gray-300">Kadayawan sa Dabaw Sponsorship</p>
-                                                    </td>
-                                                    <td className="px-4 py-4 whitespace-nowrap">
-                                                        <p className="text-sm text-gray-800 dark:text-gray-300">July 15, 2021</p>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <a className="text-xs text-gray-500 hover:text-blue-600 cursor-pointer self-end">View All</a>
-                                    </div>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            {/* <AffiliationRequest data={ dummy } /> */}
+                            <div className="w-1/2 card flex flex-col gap-y-5">
+                                <div className="w-full flex justify-between">
+                                    <h4 className="text-base font-bold dark:text-gray-300">Upcoming Events</h4>
+                                    <Link href="partner/tasks/">
+                                        <a className="text-xs text-gray-500 hover:text-blue-600 cursor-pointer">View All</a>
+                                    </Link>
                                 </div>
+                                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                    <thead className="bg-gray-100 dark:bg-gray-800">
+                                        <tr className="text-left text-xs font-medium text-gray-700 dark:text-gray-400 uppercase tracking-wider">
+                                            <th scope="col" className="px-4 py-3">
+                                                Event Name
+                                            </th>
+                                            <th scope="col" className="px-4 py-3">
+                                                Date
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
+                                        {
+                                            upComingEvents.length ? 
+                                                upComingEvents.map((event) => (
+                                                    <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
+                                                        <td className="px-4 py-4 whitespace-nowrap">
+                                                            <p className="text-sm text-gray-800 dark:text-gray-300">{ event.event_name }</p>
+                                                        </td>
+                                                        <td className="px-4 py-4 whitespace-nowrap">
+                                                            <p className="text-sm text-gray-800 dark:text-gray-300">{ moment(event.date_schedule).format('LL') }</p>
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            :
+                                            <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
+                                                <td 
+                                                    className="px-6 py-3 whitespace-nowrap text-center"
+                                                    colSpan={2}
+                                                >
+                                                    <p className="text-sm">Nothing to show.</p>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                         
@@ -195,16 +179,29 @@ export default function index({ partnerProfile }) {
 }
 
 export const getServerSideProps = async ({ req }) => {
+    const api = process.env.NEXT_PUBLIC_DRF_API
     const token = req.cookies.jwt
     const decoded_token = jwt_decode(token)
-    const res = await fetch(`http://localhost:8000/partner_profile/${decoded_token.user_id}`, {
+    const res1 = await fetch(`${api}partner_profile/${decoded_token.user_id}`, {
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })
-    const data = await res.json()
+    const data1 = await res1.json()
+    const res2 = await fetch(`${api}partner_devents/`, {
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data2 = await res2.json()
+    const res3 = await fetch(`${api}partner_daffiliations/`, {
+        method : 'GET',
+        headers : {'Authorization' : 'Bearer'+' '+token}
+    })
+    const data3 = await res3.json()
     return {
         props : {
-            partnerProfile : data
+            partnerProfile : data1,
+            upComingEvents : data2,
+            recentRequests : data3
         }
     }
 }

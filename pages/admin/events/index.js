@@ -28,6 +28,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
     const [userName, setUsername] = useState()
     const [place, setPlace] = useState()
     const editIndex = useRef(0)
+    const addPlaceRef = useRef()
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
         const role = localStorage.getItem('role')
@@ -38,60 +39,77 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
     useEffect(() => {
         readRole()
     }, [])
-    const { register, reset, handleSubmit, formState : { errors } } = useForm()
+    const { register, reset, handleSubmit, formState : { errors }, setError, clearErrors } = useForm()
     const { register : register2, reset : reset2, handleSubmit : handleSubmit2, formState : { errors : errors2 } } = useForm()
     const handleLocationVal = (place) => {
         setPlace(place)
-        console.log(place)
-        console.log(place.place_name)
+        clearErrors("venue_location")
+        // console.log(place)
+        // console.log(place.place_name)
+    }
+    const onAddEvent = () => {
+        if (!addPlaceRef.current.value) {
+            setError("venue_location", {
+                type: "focus",
+                message : "This field cannot be empty"
+            })
+        }
     }
     const addEvent = (data) => {
         let payment_status = data.package_cost === data.client_payment ? "Fully Paid" : "Partially Paid"
-        console.log(data)
         const jwt_token = Cookies.get('jwt')
-        console.log(jwt_token)
-        axios({
-            method : 'POST',
-            url : `${api}add_event/`,
-            headers : {
-                'Authorization' : 'Bearer'+' '+jwt_token,
-                'Content-Type' : 'application/json'
-            },
-            data : {
-                event_name : data.event_name,
-                venue_location : place.place_name,
-                venue_name : data.venue_name,
-                venue_lat : place.geometry.coordinates[1],
-                venue_long : place.geometry.coordinates[0],
-                package_cost : data.package_cost,
-                client_payment : data.client_payment,
-                payment_status : payment_status,
-                date_schedule : data.date_schedule,
-                time_schedule : data.event_hour+':'+data.event_minute+' '+data.event_schedule,
-                client : data.event_client
-            }
-        }).then(() => {
-            reset()
-            Swal.fire({
-                icon : 'success',
-                title: 'Event Creation Successsful',
-                timer : 3000,
-                text: `Event has been successfully created!`,
-                showCloseButton: true,
-                confirmButtonColor: '#DB2777',
+        if (!addPlaceRef.current.value) {
+            setError("venue_location", {
+                type: "focus",
+                message : "This field cannot be empty"
             })
-            setIsOpen(false)
-            router.push('/admin/events')
-        }).catch((error) => {
-            Swal.fire({
-                icon : 'error',
-                title: 'Event Creation Error',
-                timer : 3000,
-                text: error.message,
-                showCloseButton: true,
-                confirmButtonColor: '#DB2777',
+        }
+        else {
+            setPlace(undefined)
+            clearErrors("venue_location")
+            axios({
+                method : 'POST',
+                url : `${api}add_event/`,
+                headers : {
+                    'Authorization' : 'Bearer'+' '+jwt_token,
+                    'Content-Type' : 'application/json'
+                },
+                data : {
+                    event_name : data.event_name,
+                    venue_location : place.place_name,
+                    venue_name : data.venue_name,
+                    venue_lat : place.geometry.coordinates[1],
+                    venue_long : place.geometry.coordinates[0],
+                    package_cost : data.package_cost,
+                    client_payment : data.client_payment,
+                    payment_status : payment_status,
+                    date_schedule : data.date_schedule,
+                    time_schedule : data.event_hour+':'+data.event_minute+' '+data.event_schedule,
+                    client : data.event_client
+                }
+            }).then(() => {
+                reset()
+                Swal.fire({
+                    icon : 'success',
+                    title: 'Event Creation Successsful',
+                    timer : 3000,
+                    text: `Event has been successfully created!`,
+                    showCloseButton: true,
+                    confirmButtonColor: '#DB2777',
+                })
+                setIsOpen(false)
+                router.push('/admin/events')
+            }).catch((error) => {
+                Swal.fire({
+                    icon : 'error',
+                    title: 'Event Creation Error',
+                    timer : 3000,
+                    text: error.message,
+                    showCloseButton: true,
+                    confirmButtonColor: '#DB2777',
+                })
             })
-        })
+        }
     }
     const updateEvent = (data) => {
         let payment_status = data.update_package_cost === data.update_client_payment ? "Fully Paid" : "Partially Paid"
@@ -112,7 +130,6 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
             formData["venue_long"] = place.geometry.coordinates[0]
         }
         const jwt_token = Cookies.get('jwt')
-        console.log(jwt_token)
         axios({
             method : 'PATCH',
             url : `${api}update_event/${data.update_event_id}`,
@@ -218,6 +235,16 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
         })
         csvExporter.generateCsv(csvEvents);
     }
+    const getDefaultHours = (hours) => {
+        const defaultHours = hours.slice(0, -6)
+        console.log(defaultHours)
+        return defaultHours
+    }
+    const getDefaultMinutes = (minutes) => {
+        const defaultMinutes = minutes.slice(-5, -3)
+        console.log(defaultMinutes)
+        return defaultMinutes
+    }
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="events" />
@@ -238,22 +265,26 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                 </svg>
                             </PageHeader>
                             <div className='flex gap-x-5'>
-                                <button
-                                    type="button"
-                                    className="px-5 py-2 bg-transparent hover:bg-pink-600 border border-pink-600 rounded-lg text-pink-600 hover:text-white font-bold text-base tracking-wide flex justify-center items-center gap-x-1 focus:outline-none color-transition"
-                                    onClick={ () => exportData() }
-                                >
-                                    <svg 
-                                        xmlns="http://www.w3.org/2000/svg" 
-                                        className="h-5 w-5 text-current" 
-                                        fill="none" 
-                                        viewBox="0 0 24 24" 
-                                        stroke="currentColor"
+                                {
+                                    csvEvents.length ? 
+                                    <button
+                                        type="button"
+                                        className="px-5 py-2 bg-transparent hover:bg-pink-600 border border-pink-600 rounded-lg text-pink-600 hover:text-white font-bold text-base tracking-wide flex justify-center items-center gap-x-1 focus:outline-none color-transition"
+                                        onClick={ () => exportData() }
                                     >
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                    </svg>
-                                    <p className="text-sm font-bold">Export Data</p>
-                                </button>
+                                        <svg 
+                                            xmlns="http://www.w3.org/2000/svg" 
+                                            className="h-5 w-5 text-current" 
+                                            fill="none" 
+                                            viewBox="0 0 24 24" 
+                                            stroke="currentColor"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                        <p className="text-sm font-bold">Export Data</p>
+                                    </button>
+                                    : null
+                                }
                                 <button
                                     type="button" 
                                     onClick={ openModal }
@@ -380,8 +411,25 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                             </svg>
                                                             <AutocompletePlace 
                                                                 onSelect={place => handleLocationVal(place)}
+                                                                { ...register("venue_location") }
+                                                                placeRef={ addPlaceRef }
                                                             />
                                                         </div>
+                                                        { 
+                                                            errors.venue_location && 
+                                                            <div className="flex items-center gap-x-1 text-red-500">
+                                                                <AuthErrorIcon />
+                                                                <p className="text-xs">{ errors.venue_location.message }</p>
+                                                            </div> 
+                                                        }
+                                                        {/* {
+                                                            noPlace ?
+                                                            <div className="flex items-center gap-x-1 text-red-500">
+                                                                <AuthErrorIcon />
+                                                                <p className="text-xs">This field cannot be empty</p>
+                                                            </div>
+                                                            : null
+                                                        }  */}
                                                     </div>
 
                                                 </div>
@@ -409,10 +457,10 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                             />
                                                         </div>
                                                         { 
-                                                            errors.event_name && 
+                                                            errors.venue_name && 
                                                             <div className="flex items-center gap-x-1 text-red-500">
                                                                 <AuthErrorIcon />
-                                                                <p className="text-xs">{ errors.event_name.message }</p>
+                                                                <p className="text-xs">{ errors.venue_name.message }</p>
                                                             </div> 
                                                         }
                                                     </div>
@@ -547,6 +595,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                 <div className="w-full pr-2 mt-5 flex justify-end gap-x-3">
                                                     <button
                                                         className="modalAddBtn color-transition"
+                                                        onClick={ onAddEvent }
                                                     >
                                                         <p className="btnText">Save</p>
                                                     </button>
@@ -780,6 +829,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                             <select 
                                                                 className='customTime'
                                                                 {...register2("update_event_hour")}
+                                                                defaultValue={ eventsList.results.length ? eventsList.results[editIndex.current].time_schedule.slice(0, -6) : '' }
                                                             >
                                                                 <HoursOptions />
                                                             </select>
@@ -787,6 +837,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                             <select 
                                                                 className='customTime'
                                                                 {...register2("update_event_minute")}
+                                                                defaultValue={ eventsList.results.length ? eventsList.results[editIndex.current].time_schedule.slice(-5, -3) : '' }
                                                             >
                                                                 <MinutesOptions />
                                                             </select>

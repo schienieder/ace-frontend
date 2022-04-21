@@ -9,8 +9,8 @@ import { useRouter } from 'next/router'
 import { ExportToCsv } from 'export-to-csv'
 import currency from 'currency.js'
 import {
-    LineChart,
-    Line,
+    AreaChart,
+    Area,
     XAxis,
     YAxis,
     CartesianGrid,
@@ -18,19 +18,61 @@ import {
     Legend,
     ResponsiveContainer
 } from "recharts";
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchSalesSummary } from '../../redux/sales/sales.slice'
+import BeatLoader from 'react-spinners/BeatLoader'
 
-const data = [
-    {
-        month: "January",
-        sales: 800000,
-    },
-    {
-        month: "February",
-        sales: 850000,
-    },
-];
+// const salesSummary = [
+//     {
+//         month : "January",
+//         total : 2525000
+//     },
+//     {
+//         month : "February",
+//         total : 4120000
+//     },
+//     {
+//         month : "March",
+//         total : 3250000
+//     },
+//     {
+//         month : "May",
+//         total : 2725000
+//     },
+//     {
+//         month : "June",
+//         total : 3225000
+//     },
+//     {
+//         month : "July",
+//         total : 4115000
+//     },
+//     {
+//         month : "August",
+//         total : 2500000
+//     },
+//     {
+//         month : "September",
+//         total : 3100000
+//     },
+//     {
+//         month : "October",
+//         total : 2915000
+//     },
+//     {
+//         month : "November",
+//         total : 1975000
+//     },
+//     {
+//         month : "December",
+//         total : 3915000
+//     }
+// ]
 
 export default function sales({ incuredEvents, totalSales }) {
+    const { isLoading } = useSelector(state => state.salesState)
+    const [salesSummary, setSalesSummary] = useState([])
+    const dispatch = useDispatch()
     const peso = value => currency(value, { symbol : '₱', precision : 0 })
     const table_data = useMemo(() => incuredEvents, [incuredEvents.length])
     const eventsColumns = useMemo(() => [
@@ -67,6 +109,12 @@ export default function sales({ incuredEvents, totalSales }) {
         }
     }
     useEffect(() => {
+        dispatch(fetchSalesSummary()).then(res => {
+            const formattedData = res.payload.map(sale => {
+                return {...sale, month : moment(sale.month).format('MMMM')}
+            })
+            setSalesSummary(formattedData)
+        })
         readRole()
     }, [])
     const options = {
@@ -104,47 +152,60 @@ export default function sales({ incuredEvents, totalSales }) {
                         </svg>
                         </PageHeader>
                         <div className='w-full card'>
-                            <ResponsiveContainer width="100%" height={400}>
-                                <LineChart
-                                    data={data}
-                                    margin={{
-                                        top: 10,
-                                        bottom: 5,
-                                        left: -35
-                                    }}
-                                    style={{
-                                        fontSize : '12px'
-                                    }}
-                                    >
-                                    <CartesianGrid opacity={ 0.3 } vertical={ false } />
-                                    <XAxis 
-                                        dataKey="month"
-                                        strokeWidth={0.5}
-                                        axisLine={ true }
-                                        tickLine={ false } 
+                            {
+                                isLoading ? 
+                                <div className="flex justify-center">
+                                    <BeatLoader color="#9ca3af" loading={ isLoading } size={15} />
+                                </div>
+                                :
+                                <ResponsiveContainer width="100%" height={400}>
+                                    <AreaChart 
+                                        data={ salesSummary }
                                         style={{
-                                            fontSize : '12px',
-                                        }} 
-                                    />
-                                    <YAxis
-                                        strokeWidth={0.5} 
-                                        axisLine={ true }
-                                        tickLine={ false }
-                                        tickFormatter={ number => `${number}` }
-                                        style={{
-                                            fontSize : '12px',
+                                            fontSize : '12px'
                                         }}
-                                    />
-                                    <Tooltip />
-                                    <Legend />
-                                    <Line
-                                        type="monotone"
-                                        dataKey="sales"
-                                        stroke="#db2777"
-                                        activeDot={{ r: 8 }}
-                                    />
-                                </LineChart>
-                            </ResponsiveContainer>
+                                        margin={{
+                                            top: 10,
+                                            bottom: 5,
+                                            left : -20
+                                        }}
+                                    >
+                                        <defs>
+                                            <linearGradient id="color" x1="0" y1="0" x2="0" y2="1" >
+                                                <stop offset="10%" stopColor="#DB2777" stopOpacity={ 1 } />
+                                                <stop offset="90%" stopColor="#DB2777" stopOpacity={ 0.3 } />
+                                            </linearGradient>
+                                        </defs>
+                                        <CartesianGrid opacity={ 0.3 } vertical={ false } />
+                                        <YAxis
+                                            strokeWidth={0.5} 
+                                            axisLine={ true }
+                                            tickLine={ false }
+                                            tickFormatter={ number => `₱${number}` }
+                                            style={{
+                                                fontSize : '10px',
+                                            }}
+                                        />
+                                        <XAxis 
+                                            dataKey="month"
+                                            strokeWidth={0.5}
+                                            axisLine={ true }
+                                            tickLine={ false } 
+                                            style={{
+                                                fontSize : '12px',
+                                            }} 
+                                        />
+                                        <Tooltip content={<CustomToolTip />} />
+                                        <Legend />
+                                        <Area 
+                                            dataKey="total" 
+                                            stroke="#f472b6" 
+                                            activeDot={{ r: 5 }} 
+                                            fill="url(#color)"
+                                        />
+                                    </AreaChart>
+                                </ResponsiveContainer>
+                            }
                         </div>
                         <div className="card w-full flex flex-col gap-y-5">
                             <SalesTable 
@@ -161,6 +222,19 @@ export default function sales({ incuredEvents, totalSales }) {
             </div>
         </div>
     )
+}
+
+function CustomToolTip({ active, payload, label }) {
+    const peso = value => currency(value, { symbol : '₱', precision : 0 })
+    if (active) {
+        return (
+            <div className="bg-white p-2 flex flex-col shadow border-b border-gray-300">
+                <h4 className="font-bold">{ label }</h4>
+                <p className="text-pink-600">{ peso(payload[0].value).format() }</p>
+            </div>
+        )
+    }
+    return null
 }
 
 export const getServerSideProps = async ({ req }) => {

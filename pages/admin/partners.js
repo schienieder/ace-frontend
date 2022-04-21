@@ -98,7 +98,11 @@ export default function partners({ partnersList }) {
     }, [])
     const { register, reset, handleSubmit, formState : { errors }, setError } = useForm()
     const [showPassword, setShowPassword] = useState(false)
-    // const [hasErrors, setHasErrors] = useState(false)
+    const [hasErrors, setHasErrors] = useState({
+        mobile : '',
+        email : '',
+        username : ''
+    })
     const addPartner = (data) => {
         axios({
             method : "POST",
@@ -113,29 +117,52 @@ export default function partners({ partnersList }) {
                 password : data.partner_pass,
                 role : "partner"
             }
-        }).then(() => {
-            console.log(data)
-            Swal.fire({
-                icon : 'success',
-                title: 'Regristration Successsful',
-                timer : 3000,
-                text: `New business partner successfully added!`,
-                showCloseButton: true,
-                confirmButtonColor: '#DB2777',
-            })
-            router.push('/admin/partners')
+        }).then((response) => {
+            if (response.status === 200) {
+                reset()
+                setIsOpen(false)
+                Swal.fire({
+                    icon : 'success',
+                    title: 'Regristration Successsful',
+                    timer : 3000,
+                    text: `New business partner successfully added!`,
+                    showCloseButton: true,
+                    confirmButtonColor: '#DB2777',
+                })
+                router.push('/admin/partners')
+            }
         }).catch((error) => {
-            Swal.fire({
-                icon : 'error',
-                title: 'Regristration Error',
-                timer : 3000,
-                text: error.message,
-                showCloseButton: true,
-                confirmButtonColor: '#DB2777',
-            })
+            if (hasErrors.mobile.length) {
+                setError("partner_mobile", {
+                    type : "manual",
+                    message : hasErrors.mobile
+                })
+            }
+            if (hasErrors.email.length) {
+                setError("partner_email", {
+                    type : "manual",
+                    message : hasErrors.email
+                })
+            }
+            if (hasErrors.username.length) {
+                setError("partner_uname", {
+                    type : "manual",
+                    message : hasErrors.username
+                })
+            }
+            if (error.response.status > 404) {
+                setIsOpen(false)
+                Swal.fire({
+                    icon : 'error',
+                    title: 'Regristration Error',
+                    timer : 3000,
+                    text: error.message,
+                    showCloseButton: true,
+                    confirmButtonColor: '#DB2777',
+                })
+            }
+            console.log('Request failed with error: ', error)
         })
-        reset()
-        setIsOpen(false)
     }
     const destroyPartner = (partner_id, partner_name) => {
         Swal.fire({
@@ -191,7 +218,7 @@ export default function partners({ partnersList }) {
                 <TopNav username={ userName } />
                 <div className="row-start-2 w-full h-full bg-true-100">
                     <div className="p-8 flex flex-col gap-y-5 min-h-screen">
-                        <PageHeader text="Partners List">
+                        <PageHeader text="Partner List">
                             <svg 
                                 xmlns="http://www.w3.org/2000/svg" 
                                 className="w-7 h-7 text-current"
@@ -346,7 +373,27 @@ export default function partners({ partnersList }) {
                                                             </svg>
                                                             <input
                                                                 type="number"
-                                                                { ...register("partner_mobile", { required : "This field cannot be empty" }) } 
+                                                                { 
+                                                                    ...register("partner_mobile", 
+                                                                    { 
+                                                                        required : "This field cannot be empty",
+                                                                        minLength : { value : 11, message : "Must have 11 digit numbers!" },
+                                                                        maxLength : { value : 11, message : "Must have 11 digit numbers!" },
+                                                                        validate : debounce(async (value) => {
+                                                                            try {
+                                                                                const mobileExist = await axios.get(`${api}partner_mobile/${value}`)
+                                                                                if (mobileExist.status === 200) {
+                                                                                    setHasErrors({...hasErrors, mobile : 'Mobile number already used!'})
+                                                                                    return false
+                                                                                }
+                                                                            }
+                                                                            catch(e) {
+                                                                                setHasErrors({...hasErrors, mobile : ''})
+                                                                                return true
+                                                                            }
+                                                                        }, 500) 
+                                                                    }) 
+                                                                } 
                                                                 className="inputField"
                                                             />
                                                         </div>
@@ -373,7 +420,25 @@ export default function partners({ partnersList }) {
                                                             </svg>
                                                             <input
                                                                 type="email"
-                                                                { ...register("partner_email", { required : "This field cannot be empty" }) } 
+                                                                { 
+                                                                    ...register("partner_email", 
+                                                                    { 
+                                                                        required : "This field cannot be empty",
+                                                                        validate : debounce(async (value) => {
+                                                                            try {
+                                                                                const emailExist = await axios.get(`${api}partner_email/${value}`)
+                                                                                if (emailExist.status === 200) {
+                                                                                    setHasErrors({...hasErrors, email : 'Email already used!'})
+                                                                                    return false
+                                                                                }
+                                                                            }
+                                                                            catch(e) {
+                                                                                setHasErrors({...hasErrors, email : ''})
+                                                                                return true
+                                                                            }
+                                                                        }, 500)  
+                                                                    }) 
+                                                                } 
                                                                 className="inputField"
                                                                 autoComplete="off"
                                                             />
@@ -414,13 +479,13 @@ export default function partners({ partnersList }) {
                                                                     validate : debounce(async (value) => {
                                                                         try {
                                                                             const usernameExist = await axios.get(`${api}check_username/${value}`)
-                                                                            console.log(usernameExist)
                                                                             if (usernameExist.status === 200) {
-                                                                                return 'Username already exist!'
+                                                                                setHasErrors({...hasErrors, username : 'Username already exist!'})
+                                                                                return false
                                                                             }
                                                                         }
                                                                         catch(e) {
-                                                                            console.log('Username error: ', e)
+                                                                            setHasErrors({...hasErrors, username : ''})
                                                                             return true
                                                                         }
                                                                     }, 500)
@@ -523,7 +588,7 @@ export default function partners({ partnersList }) {
                             </Dialog>
                         </Transition>
                         <div className="card w-full flex flex-col gap-y-5">
-                            <CommonTable columns={ partnerColumns } data={ data } onClick={ openModal } btnText="New Partner" />
+                            <CommonTable columns={ partnerColumns } data={ data } onClick={ openModal } btnText="New Partner" cols={4} />
                         </div>
                     </div>
                     <Footer />

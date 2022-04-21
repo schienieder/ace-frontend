@@ -52,7 +52,7 @@ export default function tasks({ requestList, eventsList }) {
                         showCloseButton : true,
                         timer : 2000
                     })
-                    router.push('/partner/requests')
+                    router.push('/partner/tasks')
                 })
                 .catch((error) => {
                     Swal.fire({
@@ -99,6 +99,9 @@ export default function tasks({ requestList, eventsList }) {
                                             Task
                                         </th>
                                         <th scope="col" className={ partnerStyles.tableHeadingClass }>
+                                            Status
+                                        </th>
+                                        <th scope="col" className={ partnerStyles.tableHeadingClass }>
                                             Venue
                                         </th>
                                         <th scope="col" className={ partnerStyles.tableHeadingClass }>
@@ -108,62 +111,75 @@ export default function tasks({ requestList, eventsList }) {
                                 </thead>
                                 <tbody className={ partnerStyles.tbodyClass }>
                                     {
-                                        requestList.results.map((request) => (
-                                            <tr 
-                                                className={`${partnerStyles.tableRowClass} color-transition`}
-                                                key={request.id}
+                                        requestList.results.length ?
+                                            requestList.results.map((request) => (
+                                                <tr 
+                                                    className={`${partnerStyles.tableRowClass} color-transition`}
+                                                    key={request.id}
+                                                >
+                                                    <td className={ partnerStyles.tableDataClass }>
+                                                        <p className={ partnerStyles.tableDataTextClass }>
+                                                            {
+                                                                eventsList.results.map((event) => {
+                                                                    if (event.id === request.event) {
+                                                                        return event.event_name
+                                                                    }
+                                                                })
+                                                            }
+                                                        </p>
+                                                    </td>
+                                                    <td className={ partnerStyles.tableDataClass }>
+                                                        <p className="text-sm text-gray-800">
+                                                            {
+                                                                eventsList.results.map((event) => {
+                                                                    if (event.id === request.event) {
+                                                                        return moment(event.event_date).format('ll') + ', ' + event.time_schedule
+                                                                    }
+                                                                })
+                                                            }
+                                                        </p>
+                                                    </td>
+                                                    <td className={ partnerStyles.tableDataClass }>
+                                                        <p className={ partnerStyles.tableDataTextClass }>{ request.task }</p>
+                                                    </td>
+                                                    <td className={ partnerStyles.tableDataClass }>
+                                                        <p className={`${request.task_status === 'Completed' ? 'text-teal-600' : 'text-yellow-500'} text-sm`}>{ request.task_status }</p>
+                                                    </td>
+                                                    <td className={`${partnerStyles.tableDataClass} max-w-xs`}>
+                                                        <p className="text-sm text-gray-800 overflow-ellipsis overflow-hidden">
+                                                            {
+                                                                eventsList.results.map((event) => {
+                                                                    if (event.id === request.event) {
+                                                                        return event.venue_name
+                                                                    }
+                                                                })
+                                                            }
+                                                        </p>
+                                                    </td>
+                                                    <td className={ partnerStyles.tableDataClass }>
+                                                        <div className="flex gap-x-2">
+                                                            <button
+                                                                type="button"
+                                                                className={`${partnerStyles.actionBtn} color-transition`}
+                                                                onClick={ () => confirmCompletion(request.id) }
+                                                            >
+                                                                <svg xmlns="http://www.w3.org/2000/svg" className={ partnerStyles.actionBtnIcon } fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                                </svg> 
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        : 
+                                        <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
+                                            <td 
+                                                className="px-6 py-3 whitespace-nowrap text-center"
+                                                colSpan={6}
                                             >
-                                                <td className={ partnerStyles.tableDataClass }>
-                                                    <p className={ partnerStyles.tableDataTextClass }>
-                                                        {
-                                                            eventsList.results.map((event) => {
-                                                                if (event.id === request.event) {
-                                                                    return event.event_name
-                                                                }
-                                                            })
-                                                        }
-                                                    </p>
-                                                </td>
-                                                <td className={ partnerStyles.tableDataClass }>
-                                                    <p className="text-sm text-gray-800">
-                                                        {
-                                                            eventsList.results.map((event) => {
-                                                                if (event.id === request.event) {
-                                                                    return moment(event.event_date).format('ll') + ', ' + event.time_schedule
-                                                                }
-                                                            })
-                                                        }
-                                                    </p>
-                                                </td>
-                                                <td className={ partnerStyles.tableDataClass }>
-                                                    <p className={ partnerStyles.tableDataTextClass }>{ request.task }</p>
-                                                </td>
-                                                <td className={`${partnerStyles.tableDataClass} max-w-xs`}>
-                                                    <p className="text-sm text-gray-800 overflow-ellipsis overflow-hidden">
-                                                        {
-                                                            eventsList.results.map((event) => {
-                                                                if (event.id === request.event) {
-                                                                    return event.venue_name
-                                                                }
-                                                            })
-                                                        }
-                                                    </p>
-                                                </td>
-                                                <td className={ partnerStyles.tableDataClass }>
-                                                    <div className="flex gap-x-2">
-                                                        <button
-                                                            type="button"
-                                                            className={`${partnerStyles.actionBtn} color-transition`}
-                                                            onClick={ () => confirmCompletion(request.id) }
-                                                        >
-                                                            <svg xmlns="http://www.w3.org/2000/svg" className={ partnerStyles.actionBtnIcon } fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                            </svg> 
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))
+                                                <p className="text-sm">Nothing to show.</p>
+                                            </td>
+                                        </tr>
                                     }
                                 </tbody>
                             </table>
@@ -183,13 +199,7 @@ export default function tasks({ requestList, eventsList }) {
 export const getServerSideProps = async ({ req }) => {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const token = req.cookies.jwt
-    const decoded_token = jwt_decode(token)
-    const res1 = await fetch(`${api}partner_profile/${decoded_token.user_id}`,{
-        method : 'GET',
-        headers : {'Authorization' : 'Bearer'+' '+token}
-    })
-    const data1 = await res1.json()
-    const res2 = await fetch(`${api}accepted_list/${data1.id}`,{
+    const res2 = await fetch(`${api}partner_tasks/`,{
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })

@@ -327,7 +327,7 @@ export default function reports({ affiliationsList, eventsList, partnersList, sa
                             </div>
                             </Dialog>
                         </Transition>
-                            <CommonTable columns={ requestColumns } data={ data } onClick={ openAddModal } btnText="New Request" />
+                            <CommonTable columns={ requestColumns } data={ data } onClick={ openAddModal } btnText="New Request" cols={4} />
                         </div>
                     </div>
                     <Footer />
@@ -362,7 +362,7 @@ export const getServerSideProps = async ({ req }) => {
         // FOR ADDING PARTNER NAMES
         for (let i = 0; i < data2.results.length; i++) {
             for (let j = 0; j < data1.results.length; j++) {
-                data1.results[j].partner === data2.results[i].id ? sample1[j].partner_name = data2.results[i].business_name : ''
+                data1.results[j].partner === data2.results[i].id ? sample1[j].partner_name = data2.results[i].first_name+' '+data2.results[i].last_name : ''
             }
         }
         // IF AFFILIATIONS ARE MORE THAN THE TOTAL OF EVENTS

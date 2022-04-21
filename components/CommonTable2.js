@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import adminStyles from '../styles/Admin.module.css'
 import { useTable, useGlobalFilter, usePagination } from 'react-table'
 
-function CommonTable2({ columns, data }) {
+function CommonTable2({ columns, data, cols }) {
     const {
         getTableProps,
         getTableBodyProps,
@@ -73,6 +73,7 @@ function CommonTable2({ columns, data }) {
                 { ...getTableBodyProps() }
             >
                 {
+                    data.length ?
                     page.map(row => {
                         prepareRow(row)
                         return (
@@ -93,6 +94,15 @@ function CommonTable2({ columns, data }) {
                             </tr>
                         )
                     })
+                    : 
+                    <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
+                        <td 
+                            className="px-6 py-3 whitespace-nowrap text-center"
+                            colSpan={cols}
+                        >
+                            <p className="text-sm">Nothing to show.</p>
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>

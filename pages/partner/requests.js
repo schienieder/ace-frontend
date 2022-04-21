@@ -20,8 +20,8 @@ export default function requests({ requestList, eventsList }) {
             router.push('/login')
         }
     }
-    useEffect( async () => {
-        await readRole()
+    useEffect(() => {
+        readRole()
     }, [])
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
@@ -64,70 +64,80 @@ export default function requests({ requestList, eventsList }) {
                                 </thead>
                                 <tbody className={ partnerStyles.tbodyClass }>
                                     {
-                                        requestList.results.map((request) => (
-                                            <tr 
-                                                className={`${partnerStyles.tableRowClass} color-transition`}
-                                                key={request.id}
-                                            >
-                                                <td className={ partnerStyles.tableDataClass }>
-                                                    <p className={ partnerStyles.tableDataTextClass }>
-                                                        {
-                                                            eventsList.results.map((event) => {
-                                                                if (event.id === request.event) {
-                                                                    return event.event_name
-                                                                }
-                                                            })
-                                                        }
-                                                    </p>
-                                                </td>
-                                                <td className={ partnerStyles.tableDataClass }>
-                                                    <p className="text-sm text-gray-800">
-                                                        {
-                                                            eventsList.results.map((event) => {
-                                                                if (event.id === request.event) {
-                                                                    return moment(event.event_date).format('ll')
-                                                                }
-                                                            })
-                                                        }
-                                                    </p>
-                                                </td>
-                                                <td className={ partnerStyles.tableDataClass }>
-                                                    <p className={ partnerStyles.tableDataTextClass }>{ request.task }</p>
-                                                </td>
-                                                <td className={`${partnerStyles.tableDataClass} max-w-xs`}>
-                                                    <p className="text-sm text-gray-800 overflow-ellipsis overflow-hidden">
-                                                        {
-                                                            eventsList.results.map((event) => {
-                                                                if (event.id === request.event) {
-                                                                    return event.venue_name
-                                                                }
-                                                            })
-                                                        }
-                                                    </p>
-                                                </td>
-                                                <td className={ partnerStyles.tableDataClass }>
-                                                    <div className="flex gap-x-2">
-                                                        <Link href={`/partner/request?request_id=${request.id}`}>
-                                                            <button
-                                                                type="button"
-                                                                className={`${partnerStyles.actionBtn} color-transition`}
-                                                            >
-                                                                <svg 
-                                                                    xmlns="http://www.w3.org/2000/svg" 
-                                                                    className={ partnerStyles.actionBtnIcon } 
-                                                                    fill="none" 
-                                                                    viewBox="0 0 24 24" 
-                                                                    stroke="currentColor"
+                                        requestList.results.length ?
+                                            requestList.results.map((request) => (
+                                                <tr 
+                                                    className={`${partnerStyles.tableRowClass} color-transition`}
+                                                    key={request.id}
+                                                >
+                                                    <td className={ partnerStyles.tableDataClass }>
+                                                        <p className={ partnerStyles.tableDataTextClass }>
+                                                            {
+                                                                eventsList.results.map((event) => {
+                                                                    if (event.id === request.event) {
+                                                                        return event.event_name
+                                                                    }
+                                                                })
+                                                            }
+                                                        </p>
+                                                    </td>
+                                                    <td className={ partnerStyles.tableDataClass }>
+                                                        <p className="text-sm text-gray-800">
+                                                            {
+                                                                eventsList.results.map((event) => {
+                                                                    if (event.id === request.event) {
+                                                                        return moment(event.event_date).format('ll')
+                                                                    }
+                                                                })
+                                                            }
+                                                        </p>
+                                                    </td>
+                                                    <td className={ partnerStyles.tableDataClass }>
+                                                        <p className={ partnerStyles.tableDataTextClass }>{ request.task }</p>
+                                                    </td>
+                                                    <td className={`${partnerStyles.tableDataClass} max-w-xs`}>
+                                                        <p className="text-sm text-gray-800 overflow-ellipsis overflow-hidden">
+                                                            {
+                                                                eventsList.results.map((event) => {
+                                                                    if (event.id === request.event) {
+                                                                        return event.venue_name
+                                                                    }
+                                                                })
+                                                            }
+                                                        </p>
+                                                    </td>
+                                                    <td className={ partnerStyles.tableDataClass }>
+                                                        <div className="flex gap-x-2">
+                                                            <Link href={`/partner/request?request_id=${request.id}`}>
+                                                                <button
+                                                                    type="button"
+                                                                    className={`${partnerStyles.actionBtn} color-transition`}
                                                                 >
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                                                </svg>
-                                                            </button>
-                                                        </Link>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))
+                                                                    <svg 
+                                                                        xmlns="http://www.w3.org/2000/svg" 
+                                                                        className={ partnerStyles.actionBtnIcon } 
+                                                                        fill="none" 
+                                                                        viewBox="0 0 24 24" 
+                                                                        stroke="currentColor"
+                                                                    >
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                                    </svg>
+                                                                </button>
+                                                            </Link>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        : 
+                                        <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
+                                            <td 
+                                                className="px-6 py-3 whitespace-nowrap text-center"
+                                                colSpan={5}
+                                            >
+                                                <p className="text-sm">Nothing to show.</p>
+                                            </td>
+                                        </tr>
                                     }
                                 </tbody>
                             </table>
@@ -147,13 +157,7 @@ export default function requests({ requestList, eventsList }) {
 export const getServerSideProps = async ({ req }) => {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const token = req.cookies.jwt
-    const decoded_token = jwt_decode(token)
-    const res1 = await fetch(`${api}partner_profile/${decoded_token.user_id}`,{
-        method : 'GET',
-        headers : {'Authorization' : 'Bearer'+' '+token}
-    })
-    const data1 = await res1.json()
-    const res2 = await fetch(`${api}requests_list/${data1.id}`,{
+    const res2 = await fetch(`${api}partner_requests/`,{
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })

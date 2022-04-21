@@ -6,7 +6,7 @@ const UpcomingEvents = ({ data }) => {
         <div className="w-1/2 card flex flex-col gap-y-5">
             <div className="w-full flex justify-between">
                 <h4 className="text-base font-bold dark:text-gray-300">Upcoming Events</h4>
-                <Link href="admin/events/">
+                <Link href="/admin/events">
                     <a className="text-xs text-gray-500 hover:text-blue-600 cursor-pointer">View All</a>
                 </Link>
             </div>
@@ -25,7 +25,10 @@ const UpcomingEvents = ({ data }) => {
                     {
                         data.results.length ? 
                             data.results.map((event) => (
-                                <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
+                                <tr 
+                                    className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800"
+                                    key={ event.id }
+                                >
                                     <td className="px-4 py-4 whitespace-nowrap">
                                         <p className="text-sm text-gray-800 dark:text-gray-300">{ event.event_name }</p>
                                     </td>
