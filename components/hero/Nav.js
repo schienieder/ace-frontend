@@ -21,10 +21,10 @@ const Nav = ({ onClick }) => {
                     </>
                 </Link>
             </div>
-            <div className="hidden md:flex items-center gap-x-8 text-gray-300 z-10">
-                <NavItem text="About" />
-                <NavItem text="Services" />
-                <NavItem text="Testimonials" />
+            <div className="hidden md:flex items-center gap-x-5 lg:gap-x-8 text-gray-300 z-10">
+                <NavItem text="About" destination="#destination1" />
+                <NavItem text="Services" destination="#destination2" />
+                <NavItem text="Testimonials" destination="#destination3" />
                 <Link href="/login">
                     <a 
                         className="bg-transparent hover:bg-gray-200 border border-gray-200 text-gray-200 hover:text-gray-800 color-transition px-5 py-2 rounded-lg font-bold tracking-wide"

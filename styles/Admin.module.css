@@ -3,11 +3,23 @@
 }
 
 .navItem {
-  @apply w-full bg-white dark:bg-gray-900 hover:bg-gray-50 py-5 pl-8 gap-x-3 flex items-center text-gray-600 hover:text-gray-700 border-l-3 border-white transition-colors duration-75 ease-linear cursor-pointer focus:outline-none;
+  @apply w-full py-5 pl-8 gap-x-3 flex items-center transition-colors duration-75 ease-linear cursor-pointer focus:outline-none;
 }
 
-.navItemActive {
-  @apply w-full bg-gray-50 dark:hover:bg-gray-800 py-5 pl-8 gap-x-3 flex items-center text-pink-600 cursor-pointer border-l-3 border-pink-600 focus:outline-none;
+.navItemBg {
+  @apply bg-white border-l-3 border-white hover:bg-gray-100 text-gray-600 hover:text-gray-700;
+}
+
+.navItemDarkBg {
+  @apply bg-gray-900 border-l-3 border-gray-800 hover:bg-gray-800 text-gray-200 hover:text-gray-300;
+}
+
+.navItemActiveBg {
+  @apply text-pink-600 border-l-3 border-pink-600;
+}
+
+.navItemActiveDarkBg {
+  @apply text-pink-600 border-l-3 border-pink-600;
 }
 
 .searchBarContainer {
@@ -63,7 +75,15 @@
 }
 
 .sideDropDownItem {
-  @apply flex items-center gap-x-4 pl-8 py-4 text-gray-600 hover:text-gray-700 bg-gray-50 hover:bg-gray-100 border-l-3 border-white;
+  @apply flex items-center gap-x-4 pl-8 py-4;
+}
+
+.sideDropDownItemBg {
+  @apply bg-white hover:bg-gray-100 text-gray-600 hover:text-gray-700 border-l-3 border-white;
+}
+
+.sideDropDownItemDarkBg {
+  @apply bg-gray-900 hover:bg-gray-800 text-gray-200 hover:text-gray-300 border-l-3 border-gray-800;
 }
 
 .sideDropDownIcon {
@@ -75,11 +95,19 @@
 }
 
 .popOverContainer {
-  @apply absolute w-60 py-1 shadow-sm border-b border-gray-200 top-14 right-10 bg-white flex flex-col rounded-md focus:outline-none;
+  @apply absolute w-60 py-1 shadow-sm top-14 right-10 flex flex-col rounded-md focus:outline-none;
+}
+
+.popOverContainerBg {
+  @apply bg-white border-b border-gray-200;
+}
+
+.popOverContainerDarkBg {
+  @apply bg-gray-800 border-b border-gray-700;
 }
 
 .popOverItem {
-  @apply flex items-center gap-x-1 px-5 py-3 text-gray-500 hover:text-pink-600 hover:bg-gray-50 focus:outline-none cursor-pointer;
+  @apply flex items-center gap-x-1 px-5 py-3 text-gray-500 hover:text-pink-600 focus:outline-none cursor-pointer;
 }
 
 .popOverItemActive {

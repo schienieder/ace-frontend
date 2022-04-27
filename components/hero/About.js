@@ -3,8 +3,8 @@ const About = () => {
         <div className="w-full h-auto flex justify-center bg-white text-gray-800 font-mont md:py-20">
             <div className="w-full hidden md:grid grid-cols-2">
                 <div className="col-start-1 w-full h-full flex items-center justify-center">
-                    <div className="relative bg-gray-800 w-about-img h-80">
-                        <div className="absolute bg-about-img bg-cover w-about-img h-80 bottom-5 right-4">
+                    <div className="relative bg-gray-800 md:w-96 lg:w-about-img md:h-64 lg:h-80">
+                        <div className="absolute bg-about-img bg-cover md:w-96 lg:w-about-img md:h-64 lg:h-80 bottom-5 right-4">
                         </div>
                     </div>
                 </div>

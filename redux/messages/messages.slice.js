@@ -4,7 +4,8 @@ import Cookies from 'js-cookie'
 
 const initialState = {
     messages : [],
-    username : ''
+    username : '',
+    isLoading : false
 }
 
 export const fetchMessages = createAsyncThunk(
@@ -27,13 +28,23 @@ export const fetchMessages = createAsyncThunk(
 const messagesSlice = createSlice({
     name : 'messages',
     initialState,
-    reducers : {},
-    extraReducers: builder => {
-        builder.addCase(fetchMessages.fulfilled, (state, action) => {
+    reducers : {
+        newMessage : (state, action) => {
             return {...state, messages : action.payload}
+        }
+    },
+    extraReducers: builder => {
+        builder.addCase(fetchMessages.pending, (state) => {
+            return {...state, isLoading : true}
+        })
+        builder.addCase(fetchMessages.fulfilled, (state, action) => {
+            return {...state, isLoading : false, messages : action.payload}
+        })
+        builder.addCase(fetchMessages.rejected, (state) => {
+            return {...state, isLoading : false}
         })
     }
 })
 
-// export const { fetchMessages } = messagesSlice.actions
+export const { newMessage } = messagesSlice.actions
 export default messagesSlice.reducer

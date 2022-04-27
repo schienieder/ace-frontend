@@ -1,23 +1,47 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Formiz, FormizStep, useForm } from '@formiz/core'
-import MyInputField from '../components/MyInputField'
 import MySelectField from '../components/MySelectField'
+import MyFileInput from '../components/MyFileInput'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from "next/router"
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import { Html5Qrcode } from 'html5-qrcode'
 
 export default function ratings() {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const myForm = useForm() // call useForm
+    const router = useRouter()
+    const [showQR, setShowQR] = useState(false)
+    const [eventId, setEventId] = useState(0)
+    const handleQRScan = (e) => {
+        // console.log('Raw value: ', e[0])
+        const html5QrCode = new Html5Qrcode("reader");
+        if (!e.length) {
+            setShowQR(false)
+            return
+        }
+        const imageFile = e[0]
+        html5QrCode.scanFile(imageFile, true)
+        .then(qrCodeMessage => {
+            // success, use qrCodeMessage
+            setShowQR(true)
+            setEventId(Number(qrCodeMessage))
+            console.log(qrCodeMessage)
+        })
+        .catch(err => {
+            // failure, handle it.
+            console.log(`Error scanning file. Reason: ${err}`)
+        });
+    }
     const handleSubmit = (data) => {
         axios({
             method : "POST",
-            url : `${api}add_rating/`,
+            url : `${api}add_rating/${eventId}`,
             data : {
-                event_name : data.rating_event,
-                event_date : data.rating_date,
+                // event_name : data.rating_event,
+                // event_date : data.rating_date,
                 venue_rate : data.rating_venue,
                 catering_rate : data.rating_catering,
                 styling_rate : data.rating_styling,
@@ -31,7 +55,7 @@ export default function ratings() {
                 icon : 'success',
                 title: 'Thank You',
                 timer : 3000,
-                text: `You rating for ${data.rating_event} has been successful!`,
+                text: `Event rating successful!`,
                 showCloseButton: true,
                 confirmButtonColor: '#DB2777',
             })
@@ -48,7 +72,6 @@ export default function ratings() {
             })
         })
     }
-    const router = useRouter()
     return (
             <div className="w-full min-h-screen grid grid-rows-ratings-layout font-mont text-gray-800 bg-true-100">
             <nav 
@@ -121,7 +144,19 @@ export default function ratings() {
                                     (your answers will be much appreciated).
                                 </div>
                             </div>
-                            <div className='w-full card'>
+                            <div className={`${showQR ? "flex justify-center items-center" : "hidden"} max-w-full card`} id="reader"></div>
+                            {/* <div className="w-full card flex flex-col gap-y-2">
+                                <label className="text-sm font-bold">Event QR Code</label>
+                                <div className="flex gap-x-1 px-2 py-1 items-center border border-gray-300 focus-within:border-gray-600 rounded-lg">
+                                    <input
+                                        type="file"
+                                        id="sampleField"
+                                        className="inputField"
+                                        onChange={ handleQRScan }
+                                    />
+                                </div>
+                            </div> */}
+                            {/* <div className='w-full card'>
                                 <MyInputField
                                     name="rating_event"
                                     label="What was the name of the event?"
@@ -136,6 +171,15 @@ export default function ratings() {
                                     label="What was the date of the event?"
                                     type="date"
                                     required="This field is required!"
+                                />
+                            </div> */}
+                            <div className="max-w-full card">
+                                <MyFileInput
+                                    name="rating_qr"
+                                    id="rating_qr"
+                                    required="This field is required!"
+                                    onFileChange={ handleQRScan }
+                                    autoFocus
                                 />
                             </div>
                         </FormizStep>

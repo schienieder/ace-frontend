@@ -1,11 +1,11 @@
-import React, { Fragment, useState, useEffect, useMemo } from 'react'
+import React, { Fragment, useState, useEffect, useMemo, useRef } from 'react'
 import TopNav from '../../components/admin/TopNav'
 import SideNav from '../../components/admin/SideNav'
 import Footer from '../../components/Footer'
 import PageHeader from '../../components/PageHeader'
 import adminStyles from '../../styles/Admin.module.css'
 import { useRouter } from 'next/router'
-import { Dialog, Transition } from '@headlessui/react'
+import { Dialog, Transition, Menu } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import Cookies from 'js-cookie'
@@ -16,6 +16,9 @@ import { fetchMessages } from '../../redux/messages/messages.slice'
 import { fetchChatRooms } from '../../redux/chatrooms/chatRooms.slice'
 import BeatLoader from 'react-spinners/BeatLoader'
 import ChatHeader from '../../components/ChatHeader'
+import ScrollableFeed from 'react-scrollable-feed'
+import randomstring from 'randomstring'
+import useDarkMode from '../../hooks/useDarkMode'
 
 export default function messages() {
     const api = process.env.NEXT_PUBLIC_DRF_API
@@ -29,9 +32,12 @@ export default function messages() {
     const [roomSearch, setRoomSearch] = useState('')
     
     const dispatch = useDispatch()
-    const messages = useSelector(state => state.messagesState.messages)
+    const { isLoading } = useSelector(state => state.messagesState)
     const { rooms, loading } = useSelector(state => state.chatRoomsState)
     const [roomsList, setRoomsList] = useState([])
+    const messagesContainerRef = useRef()
+
+    const { isDarkMode } = useDarkMode()
     
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
@@ -142,7 +148,7 @@ export default function messages() {
         else {
             client.send(JSON.stringify({
                 type : 'message',
-                message : userChat,
+                content : userChat,
                 username : userName
             }))
             setUserChat('')
@@ -151,19 +157,21 @@ export default function messages() {
     const setChat = (room_key, room_id) => {
         setChatMessages([])
         setRoomName(room_key)
-        dispatch(fetchMessages(room_id))
+        dispatch(fetchMessages(room_id)).then(res => setChatMessages(res.payload))
+        console.log(messagesContainerRef)
+        // messagesContainerRef.current.style.overflowY = "auto"
     }
     return (
-        <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
+        <div className={`${isDarkMode ? 'dark' : ''} w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800`}>
             <SideNav isActive="" />
             <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
                 <TopNav username={ userName } />
-                <div className="row-start-2 w-full h-full bg-true-100">
+                <div className="row-start-2 w-full h-full bg-true-100 dark:bg-gray-800">
                     <div className="p-8 flex flex-col gap-y-5 min-h-screen">
                         <PageHeader text="Messages">
                             <svg 
                                 xmlns="http://www.w3.org/2000/svg" 
-                                className="h-7 w-7 text-current" 
+                                className="h-7 w-7 text-gray-800 dark:text-gray-300" 
                                 fill="none" 
                                 viewBox="0 0 24 24" 
                                 stroke="currentColor"
@@ -275,6 +283,8 @@ export default function messages() {
                                                         { ...register("room_key", { required : "This field cannot be empty" }) } 
                                                         className="w-64 py-0 px-0 border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800"
                                                         autoComplete='off'
+                                                        readOnly
+                                                        defaultValue={ randomstring.generate(25) }
                                                     />
                                                 </div>
                                                 { 
@@ -312,18 +322,18 @@ export default function messages() {
                         <div className="card w-full grid grid-cols-custom-layout gap-x-5">
 
                             {/* Chat names part */}
-                            <div className="col-start-1 rounded-xl flex flex-col border border-gray-300 p-5 gap-y-3">
+                            <div className="col-start-1 rounded-xl flex flex-col border border-gray-300 dark:border-gray-700 p-5 gap-y-3">
                                 <div className="flex flex-col gap-y-2">
-                                    <div className="searchBarContainer">
+                                    <div className="searchBarContainer dark:border-gray-700">
                                         <input 
                                             type="text"
-                                            className="searchBarInput"
+                                            className="searchBarInput dark:bg-gray-900 dark:text-gray-300"
                                             placeholder="Search Room Name . . ."
                                             onChange={ e => onSearchRoom(e.target.value) }
                                         />
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 
-                                            className="inputIcon" 
+                                            className="inputIcon dark:text-gray-500" 
                                             fill="none" 
                                             viewBox="0 0 24 24" 
                                             stroke="currentColor"
@@ -347,17 +357,17 @@ export default function messages() {
                                         <p className="text-sm font-bold">New Group</p>
                                     </button>
                                 </div>
-                                <div className="w-full h-screen py-3 divide-y divide-gray-200 overflow-y-auto">
+                                <div className="w-full h-screen py-3 divide-y divide-gray-200 dark:divide-gray-700 overflow-y-auto">
                                     {
                                         loading ? <div className="flex justify-center"><BeatLoader color="#9ca3af" loading={ loading } size={15} /></div>
                                         : roomsList.map(room => (
                                             <div 
-                                                className="flex items-center gap-x-2 pl-3 py-3 cursor-pointer hover:bg-gray-50 color-transition"
+                                                className="flex items-center gap-x-2 pl-3 py-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800  color-transition"
                                                 key={ room.id }
                                                 onClick={ () => setChat(room.room_key, room.id) }
                                             >
-                                                <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-                                                <p className="text-xs font-medium">{ room.room_name }</p>
+                                                <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+                                                <p className="text-xs font-medium dark:text-gray-300">{ room.room_name }</p>
                                             </div>
                                         ))
                                     }
@@ -365,11 +375,20 @@ export default function messages() {
                             </div>
 
                             {/* Messages part */}
-                            <div className="col-start-2 border border-gray-300 rounded-xl flex flex-col p-5 gap-y-5">
+                            <div className="col-start-2 w-full h-full border border-gray-300 dark:border-gray-700 rounded-xl flex flex-col p-5 gap-y-5">
                                 { roomName ? <ChatHeader roomKey={ roomName } /> : null }
-                                <div className="w-full h-screen bg-gray-100 rounded-xl p-5 flex flex-col justify-end gap-y-5 overflow-y-auto">
-                                    {
-                                        messages.length ? messages.map((message, index) => (
+                                <div
+                                    id="messagesContainer"
+                                    ref={ messagesContainerRef } 
+                                    className="w-full h-messages-container bg-gray-100 dark:bg-gray-800 rounded-xl p-5 flex flex-col justify-end gap-y-5 overflow-y-auto"
+                                >
+                                    {/* {
+                                        isLoading ?
+                                        <div className="flex flex-col h-full justify-center items-center">
+                                            <h4 className="text-md">Loading</h4>
+                                            <BeatLoader color="#9ca3af" loading={ isLoading } size={15} />
+                                        </div>
+                                        : messages.map((message, index) => (
                                             <div 
                                                 className={`${message.username === userName ? 'chatPositionEnd' : 'chatPositionStart'}`}
                                                 key={index}
@@ -380,21 +399,26 @@ export default function messages() {
                                                     <p className='text-xs'>{ message.content }</p>
                                                 </div>
                                             </div>
-                                        )) : null
-                                    }
+                                        ))
+                                    } */}
                                     {
-                                        chatMessages.length ? chatMessages.map((message, index) => (
+                                        isLoading ? 
+                                        <div className="flex flex-col h-full justify-center items-center">
+                                            <h4 className="text-md">Loading</h4>
+                                            <BeatLoader color="#9ca3af" loading={ isLoading } size={15} />
+                                        </div>
+                                        : chatMessages.map((message, index) => (
                                             <div 
                                                 className={`${message.username === userName ? 'chatPositionEnd' : 'chatPositionStart'}`}
                                                 key={index}
                                             >
                                                 <div className='w-14 h-14 bg-white rounded-full shadow-sm'></div>
                                                 <div className={`${message.username === userName ? 'selfMessage' : 'chatMessage'}`}>
-                                                    <h4 className='text-sm font-bold'>{ message.sender }</h4>
-                                                    <p className='text-xs'>{ message.message }</p>
+                                                    <h4 className='text-sm font-bold'>{ message.sender_name }</h4>
+                                                    <p className='text-xs max-w-xs'>{ message.content }</p>
                                                 </div>
                                             </div>
-                                        )) : null
+                                        ))
                                     }
                                 </div>
                                 <form 
@@ -424,11 +448,11 @@ export default function messages() {
                                         </svg>
                                     </button> */}
                                     <div 
-                                        className="w-full flex gap-x-1 px-2 py-1 items-center border border-gray-300 focus-within:border-gray-600 rounded-lg"
+                                        className="w-full flex gap-x-1 px-2 py-1 items-center border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg"
                                     >
                                         <input 
                                             type="text"
-                                            className="flex-1 px-0 py-0 border-transparent focus:outline-none focus:ring-transparent focus:border-transparent text-sm"
+                                            className="flex-1 px-0 py-0 border-transparent focus:outline-none focus:ring-transparent focus:border-transparent text-sm dark:bg-gray-900 dark:text-gray-300"
                                             placeholder="Type your message . . ."
                                             onChange={ e => setUserChat(e.target.value) }
                                             value={ userChat }

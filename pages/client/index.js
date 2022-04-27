@@ -11,21 +11,7 @@ import Cookies from 'js-cookie'
 import axios from 'axios'
 import clientStyles from '../../styles/Client.module.css'
 import moment from 'moment'
-import {QRCodeSVG} from 'qrcode.react'
-
-const downloadQRCode = () => {
-    const qrCodeURL = document.getElementById('qrCodeEl')
-    console.log(qrCodeURL)
-    //     .toDataURL("image/png")
-    //     .replace("image/png", "image/octet-stream");
-    // console.log(qrCodeURL)
-    // let aEl = document.createElement("a");
-    // aEl.href = qrCodeURL;
-    // aEl.download = "QR_Code.png";
-    // document.body.appendChild(aEl);
-    // aEl.click();
-    // document.body.removeChild(aEl);
-}
+import {QRCodeCanvas} from "qrcode.react";
 
 export default function dashboard({ clientProfile, bookingInfo, interviewInfo, eventInfo, totalTasks, completedTasks }) {
     const router = useRouter()
@@ -40,6 +26,19 @@ export default function dashboard({ clientProfile, bookingInfo, interviewInfo, e
     useEffect(() => {
         readRole()
     }, [])
+    const downloadQRCode = () => {
+        // Generate download with use canvas and stream
+        const canvas = document.getElementById("qr-gen");
+        const pngUrl = canvas
+        .toDataURL("image/png")
+        .replace("image/png", "image/octet-stream");
+        let downloadLink = document.createElement("a");
+        downloadLink.href = pngUrl;
+        downloadLink.download = `${eventInfo.event_name} Rating QR Code.png`;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="dashboard" />
@@ -78,7 +77,25 @@ export default function dashboard({ clientProfile, bookingInfo, interviewInfo, e
                         }
                         { eventInfo && 
                             <>
-                            <h4 className='text-md font-bold -mb-3 mt-3'>Event Summary</h4>
+                            <div className="flex justify-between items-center">
+                                <h4 className='text-md font-bold -mb-3 mt-3'>Event Summary</h4>
+                                <button
+                                    className="commonBtn flex items-center gap-x-1"
+                                    onClick={ downloadQRCode }
+                                >
+                                    <svg 
+                                        xmlns="http://www.w3.org/2000/svg" 
+                                        className="h-5 w-5 text-current"
+                                        fill="none" 
+                                        viewBox="0 0 24 24" 
+                                        stroke="currentColor" 
+                                        strokeWidth={2}
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                    <p>Download QR</p>
+                                </button>
+                            </div>
                             <div className='w-full grid grid-cols-4 gap-x-5'>
                                 <div className='card flex flex-col gap-y-5'>
                                     <div className='flex gap-x-1 items-center'>
@@ -125,41 +142,21 @@ export default function dashboard({ clientProfile, bookingInfo, interviewInfo, e
                                     }
                                 </div>
                             </div>
-                            <div className="card flex flex-col gap-y-5">
-                                <div className="flex justify-between items-center">
-                                    <h4 className="font-bold">Event QR Code</h4>
-                                    <button
-                                        className="commonBtn flex items-center gap-x-1"
-                                        onClick={ downloadQRCode }
-                                    >
-                                        <svg 
-                                            xmlns="http://www.w3.org/2000/svg" 
-                                            className="h-5 w-5 text-current"
-                                            fill="none" 
-                                            viewBox="0 0 24 24" 
-                                            stroke="currentColor" 
-                                            strokeWidth={2}
-                                        >
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                        </svg>
-                                        <p>Download</p>
-                                    </button>
-                                </div>
-                                <QRCodeSVG
-                                    id="qrCodeEl"
-                                    value={"Yeaaaaah!"}
-                                    size={200}
-                                    imageSettings={{
-                                        src: "/images/marker.svg",
-                                        x: null,
-                                        y: null,
-                                        height: 30,
-                                        width: 30,
-                                        excavate: true,
-                                    }}
-                                    className="self-center py-5"
-                                />
-                            </div>
+                            <QRCodeCanvas
+                                id="qr-gen"
+                                value={JSON.stringify(eventInfo.id)}
+                                size={300}
+                                imageSettings={{
+                                    src: "/images/marker.svg",
+                                    x: null,
+                                    y: null,
+                                    height: 50,
+                                    width: 50,
+                                    excavate: true,
+                                }}
+                                level={"H"}
+                                className="hidden self-center py-5"
+                            />
                             </>
                         }
                         {

@@ -39,7 +39,7 @@ export default function login() {
                 headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
             })
             .then((response) => {
-                localStorage.setItem('id', response.data.id.toString())
+                // localStorage.setItem('id', response.data.id.toString())
                 localStorage.setItem('username', response.data.username)
                 localStorage.setItem('role', response.data.role)
                 router.push(`/${response.data.role}`)

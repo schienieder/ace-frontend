@@ -43,7 +43,7 @@ const UpcomingEvents = ({ data }) => {
                                 className="px-6 py-3 whitespace-nowrap text-center"
                                 colSpan={2}
                             >
-                                <p className="text-sm">Nothing to show.</p>
+                                <p className="text-sm dark:text-gray-400">Nothing to show.</p>
                             </td>
                         </tr>
                     }

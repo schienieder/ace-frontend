@@ -29,7 +29,7 @@ const MobileNav = ({ onClick }) => {
             <h4 className="text-sm font-medium hover:text-gray-200 uppercase cursor-pointer">about</h4>
             <h4 className="text-sm font-medium hover:text-gray-200 uppercase cursor-pointer">services</h4>
             <h4 className="text-sm font-medium hover:text-gray-200 uppercase cursor-pointer">testimonials</h4>
-            <h4 className="text-sm font-medium hover:text-gray-200 uppercase cursor-pointer">login</h4>
+            <Link href="/login"><h4 className="text-sm font-medium hover:text-gray-200 uppercase cursor-pointer">login</h4></Link>
         </div>
     )
 }

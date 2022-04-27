@@ -8,6 +8,7 @@ import Testimonials from '../components/hero/Testimonials'
 import Rate from '../components/hero/Rate'
 import Footer from '../components/hero/Footer'
 import MobileNav from '../components/hero/MobileNav'
+import ScrollTopBtn from '../components/hero/ScrollTopBtn'
 
 export default function hero() {
 
@@ -22,6 +23,7 @@ export default function hero() {
       {
         isShowing && <MobileNav onClick={ showMobileNav } />
       }
+      <ScrollTopBtn />
       <Nav onClick={ showMobileNav } />
       <Hero />
       <Awards />

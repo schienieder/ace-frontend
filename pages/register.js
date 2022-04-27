@@ -87,8 +87,8 @@ export default function register() {
                 </div>
             </nav>
             <div className={`w-custom1 ${ authStyles.authCardHeight } bg-white rounded-xl shadow-sm border-b border-gray-200 grid grid-cols-1 md:grid-cols-2`}>
-                <div className="col-start-2 md:col-start-1 bg-register-img bg-cover bg-center rounded-tl-xl rounded-bl-xl"></div>
-                <div className="col-start-1 md:col-start-2 flex flex-col justify-center items-center">
+                <div className="hidden md:block bg-register-img bg-cover bg-center rounded-tl-xl rounded-bl-xl"></div>
+                <div className="flex flex-col justify-center items-center">
                     <Formiz
                         connect={ myForm }
                         onSubmit={ handleSubmit }

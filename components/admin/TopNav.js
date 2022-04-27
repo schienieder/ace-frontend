@@ -1,25 +1,22 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import adminStyles from '../../styles/Admin.module.css'
 import { Menu, Transition, Switch } from '@headlessui/react'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
+import useDarkMode from '../../hooks/useDarkMode'
 
 const TopNav = ({ username }) => {
-    const [toggleDark, setToggleDark] = useState(false)
     const router = useRouter()
-    const cookies = new Cookies()
+    const { isDarkMode, handleModeChange } = useDarkMode()
+    const darkMode = Boolean(isDarkMode)
     const handleLogOut = () => {
         localStorage.clear()
         Cookies.remove('jwt')
         router.push('/login')
     }
-    const darkEnabled = () => {
-        const mode = localStorage.setItem('dark', 'true')
-        setToggleDark(mode)
-    }
     return (
-        <nav className="row-start-1 w-full top-0 py-3 px-10 flex justify-between items-center bg-true-100 text-gray-600 border-b border-gray-200">
+        <nav className={`row-start-1 w-full top-0 py-3 px-10 flex justify-between items-center border-b ${darkMode ? 'dark bg-gray-900 text-gray-200 border-gray-700' : 'bg-true-100 text-gray-600 border-gray-200'}`}>
             <button className={`${adminStyles.topNavBtn} color-transition rounded-lg bg-transparent focus:outline-none`}>
                 <svg 
                     xmlns="http://www.w3.org/2000/svg" 
@@ -77,11 +74,11 @@ const TopNav = ({ username }) => {
                         leaveFrom="opacity-100 translate-y-0"
                         leaveTo="opacity-0 translate-y-1"
                     >
-                        <Menu.Items className={ adminStyles.popOverContainer }>
+                        <Menu.Items className={`${adminStyles.popOverContainer} ${isDarkMode ? adminStyles.popOverContainerDarkBg : adminStyles.popOverContainerBg}`}>
                             <Menu.Item>
                                 {({ active }) => (
                                     <div
-                                    className={`${active ? adminStyles.popOverItemActive : adminStyles.popOverItem} color-transition border-b border-gray-200`}
+                                    className={`${active ? adminStyles.popOverItemActive : adminStyles.popOverItem} color-transition border-b border-gray-200 dark:border-gray-700 dark:hover:bg-gray-800`}
                                     >
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 
@@ -94,11 +91,11 @@ const TopNav = ({ username }) => {
                                         </svg>
                                         <p className={ adminStyles.popOverText }>Dark Mode</p>
                                         <Switch 
-                                            checked={ toggleDark }
-                                            onChange={ darkEnabled }
-                                            className={`${toggleDark ? 'bg-pink-600' : 'bg-gray-300'} ml-6 rounded-full w-14 p-1 focus:outline-none transition-colors ease-in-out duration-200`}
+                                            checked={ isDarkMode }
+                                            onChange={ handleModeChange }
+                                            className={`${isDarkMode ? 'bg-pink-600' : 'bg-gray-300'} ml-6 rounded-full w-14 p-1 focus:outline-none transition-colors ease-in-out duration-200`}
                                         >
-                                            <div className={`w-5 h-5 bg-white rounded-full transition ease-in-out duration-200 ${toggleDark ? adminStyles.toggleDarkOn : adminStyles.toggleDarkOff}`}></div>
+                                            <div className={`w-5 h-5 bg-white rounded-full transition ease-in-out duration-200 ${isDarkMode ? adminStyles.toggleDarkOn : adminStyles.toggleDarkOff}`}></div>
                                         </Switch>
                                     </div>
                                 )}
@@ -107,7 +104,7 @@ const TopNav = ({ username }) => {
                                 {({ active }) => (
                                     <button
                                         onClick={ handleLogOut }
-                                        className={`${active ? adminStyles.popOverItemActive : adminStyles.popOverItem} color-transition`}
+                                        className={`${active ? adminStyles.popOverItemActive : adminStyles.popOverItem} color-transition dark:hover:bg-gray-800`}
                                     >
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 

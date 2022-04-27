@@ -33,7 +33,7 @@ module.exports = {
       height : {
         'persona' : '640px',
         'messages-form-container' : '880.600px',
-        'messages-container' : '734.600px'
+        'messages-container' : '764.600px'
       },
       width: {
         'custom1' : '45rem',

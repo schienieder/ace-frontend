@@ -6,6 +6,7 @@ import PageHeader from '../../../components/PageHeader'
 import { useRouter } from 'next/router'
 import moment from 'moment'
 import adminStyles from '../../../styles/Admin.module.css'
+import Link from 'next/link'
 
 export default function event({ eventInfo, clientInfo, taskList, partnerList }) {
     console.log(clientInfo)

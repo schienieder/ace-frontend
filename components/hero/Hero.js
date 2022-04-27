@@ -16,8 +16,8 @@ const Hero = () => {
                         fill="#CBD5E1"
                     />
                 </svg>
-                <h4 className="text-2xl md:text-4xl font-source font-black">a <span className="text-pink-600">dream</span> beyond forever</h4>
-                <p className="text-gray-500 text-xs md:text-base">Witness your dream events with your own eyes.</p>
+                <h4 className="text-2xl md:text-3xl lg:text-4xl font-source font-black">a <span className="text-pink-600">dream</span> beyond forever</h4>
+                <p className="text-gray-500 text-xs md:text-sm lg:text-base">Witness your dream events with your own eyes.</p>
                 <Link href="/register">
                     <a 
                         className="px-5 py-2 mt-5 bg-pink-600 hover:bg-pink-500 color-transition rounded-lg text-white font-bold text-sm md:text-base tracking-wide"

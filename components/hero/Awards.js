@@ -3,7 +3,10 @@ import heroStyles from '../../styles/Hero.module.css'
 
 const Awards = () => {
     return (
-        <div className={`w-full ${heroStyles.h_award} flex flex-col justify-center md:justify-end items-center gap-y-5 bg-white text-gray-800`}>
+        <div
+            id="destination1" 
+            className={`w-full ${heroStyles.h_award} flex flex-col justify-center md:justify-end items-center gap-y-5 bg-white text-gray-800`}
+        >
             <div className="flex flex-col items-center gap-y-2">
                 <h4 className="text-xl md:text-3xl font-source font-black">Company Recognitions</h4>
                 <p className="text-xs md:text-sm">One of the reasons why you should be in our hands.</p>

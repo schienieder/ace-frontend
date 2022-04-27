@@ -7,8 +7,10 @@ import EventsSummary from '../../components/admin/dashboard/EventsSummary'
 import AffiliationRequest from '../../components/admin/dashboard/AffiliationRequest'
 import UpcomingEvents from '../../components/admin/dashboard/UpcomingEvents'
 import { useRouter } from 'next/router'
+import useDarkMode from '../../hooks/useDarkMode'
 
 export default function dashboard({ affiliations, events }) {
+    const { isDarkMode } = useDarkMode()
     const router = useRouter()
     const [userName, setUsername] = useState()
     const readRole = () => {
@@ -22,7 +24,7 @@ export default function dashboard({ affiliations, events }) {
         readRole()
     }, [])
     return (
-        <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
+        <div className={`${isDarkMode ? 'dark' : ''} w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800`}>
             <SideNav isActive="dashboard" />
             <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto overflow-x-hidden">
                 <TopNav username={ userName } />
@@ -31,7 +33,7 @@ export default function dashboard({ affiliations, events }) {
                         <PageHeader text="Dashboard">
                             <svg 
                                 xmlns="http://www.w3.org/2000/svg" 
-                                className="h-7 w-7 text-current" 
+                                className="h-7 w-7 text-gray-800 dark:text-gray-300" 
                                 fill="none" 
                                 viewBox="0 0 24 24" 
                                 stroke="currentColor"
@@ -67,7 +69,7 @@ export const getServerSideProps = async ({ req }) => {
     const data2 = await res2.json()
     return {
         props : {
-            affiliations : data1,
+            affiliations : JSON.parse(data1),
             events : data2,
         }
     }

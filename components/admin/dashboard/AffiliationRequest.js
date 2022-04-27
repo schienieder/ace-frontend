@@ -1,10 +1,11 @@
 import Link from "next/link"
 
-const RecentActivities = ({ data }) => {
+const RecentRequests = ({ data }) => {
+    console.log(data)
     return (
         <div className="w-1/2 card flex flex-col gap-y-5">
             <div className="w-full flex justify-between">
-                <h4 className="text-base font-bold dark:text-gray-300">Affiliation Requests</h4>
+                <h4 className="text-base font-bold dark:text-gray-300">Recent Requests</h4>
                 <Link href="/admin/requests">
                     <a className="text-xs text-gray-500 hover:text-blue-600 cursor-pointer">View All</a>
                 </Link>
@@ -24,8 +25,8 @@ const RecentActivities = ({ data }) => {
                 </thead>
                 <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
                     {
-                        data.results.length ? 
-                            data.results.map((request) => (
+                        data.length ? 
+                            data.map((request) => (
                                 <tr 
                                     className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800"
                                     key={ request.id }
@@ -58,7 +59,7 @@ const RecentActivities = ({ data }) => {
                                     className="px-6 py-3 whitespace-nowrap text-center"
                                     colSpan={2}
                                 >
-                                    <p className="text-sm">Nothing to show.</p>
+                                    <p className="text-sm dark:text-gray-400">Nothing to show.</p>
                                 </td>
                             </tr>
                     }
@@ -68,4 +69,4 @@ const RecentActivities = ({ data }) => {
     )
 }
 
-export default RecentActivities
+export default RecentRequests

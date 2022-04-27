@@ -1,6 +1,9 @@
 const Services = () => {
     return (
-        <div className="w-full h-auto md:h-screen bg-white grid grid-cols-1 md:grid-cols-2 gap-y-5 text-gray-800 font-mont">
+        <div 
+            id="destination3"
+            className="w-full h-auto md:h-screen bg-white grid grid-cols-1 md:grid-cols-2 gap-y-5 text-gray-800 font-mont"
+        >
             <div className="col-start-1 w-full h-full flex flex-col justify-center gap-y-5 p-20">
                 <div className="flex flex-col">
                     <div className="block md:hidden bg-testimonial-img1  bg-cover bg-center w-52 h-52 mb-3 rounded-full"></div>

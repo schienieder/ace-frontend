@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useMemo } from 'react'
+import React, { Fragment, useState, useEffect, useMemo, useRef } from 'react'
 import TopNav from '../../components/partner/TopNav'
 import SideNav from '../../components/partner/SideNav'
 import Footer from '../../components/partner/Footer'
@@ -29,9 +29,10 @@ export default function messages({ partnerProfile }) {
     const [roomSearch, setRoomSearch] = useState('')
     
     const dispatch = useDispatch()
-    const messages = useSelector(state => state.messagesState.messages)
+    const { isLoading } = useSelector(state => state.messagesState)
     const { memberRooms, loading } = useSelector(state => state.chatRoomsState)
     const [roomsList, setRoomsList] = useState([])
+    const messagesContainerRef = useRef()
 
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
@@ -169,7 +170,7 @@ export default function messages({ partnerProfile }) {
         else {
             client.send(JSON.stringify({
                 type : 'message',
-                message : userChat,
+                content : userChat,
                 username : userName
             }))
             setUserChat('')
@@ -185,7 +186,7 @@ export default function messages({ partnerProfile }) {
     const setChat = (room_key, room_id) => {
         setChatMessages([])
         setRoomName(room_key)
-        dispatch(fetchMessages(room_id))
+        dispatch(fetchMessages(room_id)).then(res => setChatMessages(res.payload))
     }
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
@@ -377,10 +378,13 @@ export default function messages({ partnerProfile }) {
                             </div>
 
                             {/* Messages part */}
-                            <div className="col-start-2 max-h-full border border-gray-300 rounded-xl flex flex-col p-5 gap-y-5 overflow-y-hidden">
+                            <div className="col-start-2 h-full border border-gray-300 rounded-xl flex flex-col p-5 gap-y-5">
                                 { roomName ? <ChatHeader roomKey={ roomName } /> : null }
-                                <div className="w-full h-full bg-gray-100 rounded-xl p-5 flex flex-col justify-end gap-y-5 overflow-y-scroll">
-                                    {
+                                <div
+                                    ref={ messagesContainerRef } 
+                                    className="w-full h-messages-container bg-gray-100 rounded-xl p-5 flex flex-col justify-end gap-y-5 overflow-y-auto"
+                                >
+                                    {/* {
                                         messages.length ? messages.map((message, index) => (
                                             <div 
                                                 className={`${message.username === userName ? 'chatPositionEnd' : 'chatPositionStart'}`}
@@ -393,17 +397,22 @@ export default function messages({ partnerProfile }) {
                                                 </div>
                                             </div>
                                         )) : null
-                                    }
+                                    } */}
                                     {
-                                        chatMessages.map((message, index) => (
+                                        isLoading ? 
+                                        <div className="flex flex-col h-full justify-center items-center">
+                                            <h4 className="text-md">Loading</h4>
+                                            <BeatLoader color="#9ca3af" loading={ isLoading } size={15} />
+                                        </div>
+                                        : chatMessages.map((message, index) => (
                                             <div 
                                                 className={`${message.username === userName ? 'chatPositionEnd' : 'chatPositionStart'}`}
                                                 key={index}
                                             >
                                                 <div className='w-14 h-14 bg-white rounded-full shadow-sm'></div>
                                                 <div className={`${message.username === userName ? 'selfMessage' : 'chatMessage'}`}>
-                                                    <h4 className='text-sm font-bold'>{ message.sender }</h4>
-                                                    <p className='text-xs'>{ message.message }</p>
+                                                    <h4 className='text-sm font-bold'>{ message.sender_name }</h4>
+                                                    <p className='text-xs max-w-xs'>{ message.content }</p>
                                                 </div>
                                             </div>
                                         ))

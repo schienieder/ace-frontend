@@ -89,13 +89,26 @@ const SalesOverview = () => {
                                 fontSize : '10px',
                             }}
                         />
-                        <Tooltip />
+                        <Tooltip cursor={{fill: 'rgba(171, 183, 183, 0.15)'}} content={<CustomToolTip />} />
                         <Bar dataKey="total" fill="url(#color)" />
                     </BarChart>
                 </ResponsiveContainer>
             }
         </div>
     )
+}
+
+function CustomToolTip({ active, payload, label }) {
+    const peso = value => currency(value, { symbol : '₱', precision : 0 })
+    if (active) {
+        return (
+            <div className="bg-white p-2 flex flex-col shadow border-b border-gray-300">
+                <h4 className="font-bold">{ label }</h4>
+                <p className="capitalize"><span className="text-pink-600">Events: </span>{ payload[0].value }</p>
+            </div>
+        )
+    }
+    return null
 }
 
 export default SalesOverview

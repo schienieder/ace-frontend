@@ -29,7 +29,7 @@ const ScrollTopBtn = () => {
             leaveTo="opacity-0 scale-95"
         >
             <button 
-                className="fixed bottom-0 right-0 h-12 w-12 rounded-md bg-teal-800 hover:bg-teal-700 focus:outline-none focus:bg-teal-800 text-gray-200 flex items-center justify-center mr-10 md:mr-16 mb-24"
+                className="fixed bottom-0 right-0 h-12 w-12 rounded-md bg-pink-600 hover:bg-pink-500 focus:outline-none focus:bg-pink-500 text-gray-200 flex items-center justify-center mr-10 md:mr-16 mb-24"
                 onClick={ scrollToTop }
             >
                 <svg 

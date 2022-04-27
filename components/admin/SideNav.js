@@ -3,11 +3,17 @@ import Link from 'next/link'
 import Image from 'next/image'
 import adminStyles from '../../styles/Admin.module.css'
 import { Disclosure, Transition } from '@headlessui/react'
+import useDarkMode from '../../hooks/useDarkMode'
+import useNav from '../../hooks/useNav'
 
 const SideNav = ({ isActive }) => {
+
+    const { isDarkMode } = useDarkMode()
+    const { handleNavClass } = useNav()
+
     return (
-        <div className="col-start-1 h-screen bg-white border-r border-gray-200 shadow flex flex-col">
-            <div className="w-full py-4 flex justify-center text-gray-800">
+        <div className={`col-start-1 h-screen border-r shadow flex flex-col ${isDarkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'}`}>
+            <div className={`w-full py-4 flex justify-center ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
                 <Link href="/admin">
                     <div className="flex items-center gap-x-3 cursor-pointer">
                         <Image 
@@ -22,7 +28,7 @@ const SideNav = ({ isActive }) => {
             </div>
             <Link href="/admin" passHref>
                 <a 
-                    className={`${isActive === 'dashboard' ? adminStyles.navItemActive : adminStyles.navItem} ${isActive === 'dashboard' ? 'dark:bg-gray-800' : 'dark:bg-gray-900 hover:bg-gray-800'}`}
+                    className={`${isActive === 'dashboard' ? handleNavClass(true, isDarkMode) : handleNavClass(false, isDarkMode) }`}
                 >
                     <svg 
                         xmlns="http://www.w3.org/2000/svg" 
@@ -37,7 +43,7 @@ const SideNav = ({ isActive }) => {
                 </a>
             </Link>
             <Link href="/admin/events" passHref>
-                <a className={`${isActive === 'events' ? adminStyles.navItemActive : adminStyles.navItem} ${isActive === 'events' ? 'dark:bg-gray-800' : 'dark:bg-gray-900 hover:bg-gray-800'}`}>
+                <a className={`${isActive === 'events' ? handleNavClass(true, isDarkMode) : handleNavClass(false, isDarkMode)}`}>
                     <svg 
                         xmlns="http://www.w3.org/2000/svg" 
                         className="h-6 w-6 text-current" 
@@ -54,7 +60,7 @@ const SideNav = ({ isActive }) => {
                 {({ open }) => (
                     <>
                         <Disclosure.Button 
-                            className={`${isActive === 'partners' ? adminStyles.navItemActive : adminStyles.navItem} ${isActive === 'partners' ? 'dark:bg-gray-800' : 'dark:bg-gray-900 hover:bg-gray-800'} flex justify-between pr-6`}
+                            className={`${isActive === 'partners' ? handleNavClass(true, isDarkMode) : handleNavClass(false, isDarkMode)} flex justify-between pr-6`}
                         >
                             <div className="flex items-center gap-x-3">
                                 <svg 
@@ -92,7 +98,7 @@ const SideNav = ({ isActive }) => {
                             <Disclosure.Panel>
                                 <Link href="/admin/partners" passHref>
                                     <a 
-                                        className={`${adminStyles.sideDropDownItem} color-transition`}
+                                        className={`${adminStyles.sideDropDownItem} ${isDarkMode ? adminStyles.sideDropDownItemDarkBg : adminStyles.sideDropDownItemBg} color-transition`}
                                     >
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 
@@ -108,7 +114,7 @@ const SideNav = ({ isActive }) => {
                                 </Link>
                                 <Link href="/admin/requests" passHref>
                                     <a 
-                                        className={`${adminStyles.sideDropDownItem} color-transition`}
+                                        className={`${adminStyles.sideDropDownItem} ${isDarkMode ? adminStyles.sideDropDownItemDarkBg : adminStyles.sideDropDownItemBg} color-transition`}
                                     >
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 
@@ -129,7 +135,7 @@ const SideNav = ({ isActive }) => {
             </Disclosure>
             <Link href="/admin/clients" passHref>
                 <a 
-                    className={`${isActive === 'clients' ? adminStyles.navItemActive : adminStyles.navItem} ${isActive === 'clients' ? 'dark:bg-gray-800' : 'dark:bg-gray-900 hover:bg-gray-800'}`}
+                    className={`${isActive === 'clients' ? handleNavClass(true, isDarkMode) : handleNavClass(false, isDarkMode)}`}
                 >
                     <svg 
                         xmlns="http://www.w3.org/2000/svg" 
@@ -147,7 +153,7 @@ const SideNav = ({ isActive }) => {
                 {({ open }) => (
                     <>
                     <Disclosure.Button 
-                        className={`${isActive === 'bookings' ? adminStyles.navItemActive : adminStyles.navItem} ${isActive === 'bookings' ? 'dark:bg-gray-800' : 'dark:bg-gray-900 hover:bg-gray-800'} flex justify-between pr-6`}
+                        className={`${isActive === 'bookings' ? handleNavClass(true, isDarkMode) : handleNavClass(false, isDarkMode)} flex justify-between pr-6`}
                     >
                         <div className="flex items-center gap-x-3">
                             <svg 
@@ -185,7 +191,7 @@ const SideNav = ({ isActive }) => {
                         <Disclosure.Panel className="w-full flex flex-col">
                             <Link href="/admin/bookings" passHref>
                                 <a 
-                                    className={`${adminStyles.sideDropDownItem} color-transition`}
+                                    className={`${adminStyles.sideDropDownItem} ${isDarkMode ? adminStyles.sideDropDownItemDarkBg : adminStyles.sideDropDownItemBg} color-transition`}
                                 >
                                     <svg 
                                         xmlns="http://www.w3.org/2000/svg" 
@@ -201,7 +207,7 @@ const SideNav = ({ isActive }) => {
                             </Link>
                             <Link href="/admin/interviews" passHref>
                                 <a 
-                                    className={`${adminStyles.sideDropDownItem} color-transition`}
+                                    className={`${adminStyles.sideDropDownItem} ${isDarkMode ? adminStyles.sideDropDownItemDarkBg : adminStyles.sideDropDownItemBg} color-transition`}
                                 >
                                     <svg 
                                         xmlns="http://www.w3.org/2000/svg" 
@@ -224,7 +230,7 @@ const SideNav = ({ isActive }) => {
                 {({ open }) => (
                     <>
                     <Disclosure.Button 
-                        className={`${isActive === 'reports' ? adminStyles.navItemActive : adminStyles.navItem} ${isActive === 'reports' ? 'dark:bg-gray-800' : 'dark:bg-gray-900 hover:bg-gray-800'} flex justify-between pr-6`}
+                        className={`${isActive === 'reports' ? handleNavClass(true, isDarkMode) : handleNavClass(false, isDarkMode)} flex justify-between pr-6`}
                     >
                         <div className="flex items-center gap-x-3">
                             <svg 
@@ -263,7 +269,7 @@ const SideNav = ({ isActive }) => {
                         <Disclosure.Panel className="w-full flex flex-col">
                             <Link href="/admin/payments" passHref>
                                 <a 
-                                    className={`${adminStyles.sideDropDownItem} color-transition`}
+                                    className={`${adminStyles.sideDropDownItem} ${isDarkMode ? adminStyles.sideDropDownItemDarkBg : adminStyles.sideDropDownItemBg} color-transition`}
                                 >
                                     <svg 
                                         xmlns="http://www.w3.org/2000/svg" 
@@ -279,7 +285,7 @@ const SideNav = ({ isActive }) => {
                             </Link>
                             <Link href="/admin/sales" passHref>
                                 <a 
-                                    className={`${adminStyles.sideDropDownItem} color-transition`}
+                                    className={`${adminStyles.sideDropDownItem} ${isDarkMode ? adminStyles.sideDropDownItemDarkBg : adminStyles.sideDropDownItemBg} color-transition`}
                                 >
                                     <svg 
                                         xmlns="http://www.w3.org/2000/svg" 
@@ -295,7 +301,7 @@ const SideNav = ({ isActive }) => {
                             </Link>
                             <Link href="/admin/forecasts" passHref>
                                 <a 
-                                    className={`${adminStyles.sideDropDownItem} color-transition`}
+                                    className={`${adminStyles.sideDropDownItem} ${isDarkMode ? adminStyles.sideDropDownItemDarkBg : adminStyles.sideDropDownItemBg} color-transition`}
                                 >
                                     <svg 
                                         xmlns="http://www.w3.org/2000/svg" 

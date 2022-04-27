@@ -12,21 +12,30 @@ import Cookies from 'js-cookie'
 import Swal from 'sweetalert2'
 import AuthErrorIcon from '../../components/AuthErrorIcon'
 import CommonTable from '../../components/CommonTable'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchPartners } from '../../redux/partners/partners.slice'
+import { fetchEventsList } from '../../redux/events/events.slice'
 
-export default function reports({ affiliationsList, eventsList, partnersList, sample_text }) {
+export default function reports({ affiliationsList }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
+    const dispatch = useDispatch()
     const data = useMemo(() => affiliationsList, [affiliationsList.length])
     const requestColumns = useMemo(() => [
         {
             Header : 'Event Name',
-            accessor : 'event_name'
+            accessor : 'event__event_name'
         },
         {
             Header : 'Partner',
-            accessor : 'partner_name'
+            accessor : 'partner__first_name',
+            Cell : ({ row }) => (
+                <div>
+                    {`${row.original.partner__first_name} ${row.original.partner__last_name}`}
+                </div>
+            )
         },
         {
-            Header : 'Task',
+            Header : 'Status',
             accessor : 'task',
             Cell : ({ row }) => (
                 <div>
@@ -73,6 +82,8 @@ export default function reports({ affiliationsList, eventsList, partnersList, sa
     const [userName, setUsername] = useState()
     const [addRequestOpen, setAddRequestOpen] = useState(false)
     const { register, reset, handleSubmit, formState : { errors } } = useForm()
+    const { partners, isLoading : isLoadingPartner } = useSelector(state => state.partnersState)
+    const { events, isLoading : isLoadingEvent } = useSelector(state => state.eventsState)
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
         const role = localStorage.getItem('role')
@@ -81,6 +92,8 @@ export default function reports({ affiliationsList, eventsList, partnersList, sa
         }
     }
     useEffect(() => {
+        dispatch(fetchPartners())
+        dispatch(fetchEventsList())
         readRole()
     }, [])
     const addRequest = (data) => {
@@ -260,7 +273,8 @@ export default function reports({ affiliationsList, eventsList, partnersList, sa
                                                         {...register("request_event")}
                                                     >
                                                         {
-                                                            eventsList.results.map((event) => (
+                                                            isLoadingEvent ? null :
+                                                            events.map((event) => (
                                                                 <option 
                                                                     key={ event.id }
                                                                     value={ event.id }
@@ -277,7 +291,8 @@ export default function reports({ affiliationsList, eventsList, partnersList, sa
                                                         {...register("request_partner")}
                                                     >
                                                         {
-                                                            partnersList.results.map((partner) => (
+                                                            isLoadingPartner ? null :
+                                                            partners.map((partner) => (
                                                                 <option 
                                                                     key={ partner.id }
                                                                     value={ partner.id }
@@ -340,65 +355,14 @@ export default function reports({ affiliationsList, eventsList, partnersList, sa
 export const getServerSideProps = async ({ req }) => {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const token = req.cookies.jwt
-    const res1 = await fetch(`${api}affiliations_list/`,{
+    const res = await fetch(`${api}affiliations_list/`, {
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })
-    const data1 = await res1.json()
-    const res2 = await fetch(`${api}partners_list/`,{
-        method : 'GET',
-        headers : {'Authorization' : 'Bearer'+' '+token}
-    })
-    const data2 = await res2.json()
-    const res3 = await fetch(`${api}events_list/`,{
-        method : 'GET',
-        headers : {'Authorization' : 'Bearer'+' '+token}
-    })
-    const data3 = await res3.json()
-    let sample1 = data1.results;
-    let sample_text = ""
-    // IF THERE ARE AFFILIATIONS DO THE FOLLOWING
-    if (data1.results.length) {
-        // FOR ADDING PARTNER NAMES
-        for (let i = 0; i < data2.results.length; i++) {
-            for (let j = 0; j < data1.results.length; j++) {
-                data1.results[j].partner === data2.results[i].id ? sample1[j].partner_name = data2.results[i].first_name+' '+data2.results[i].last_name : ''
-            }
-        }
-        // IF AFFILIATIONS ARE MORE THAN THE TOTAL OF EVENTS
-        if (data1.count > data3.count) {
-            for (let i = 0; i < data1.results.length; i++) {
-                for (let j = 0; j < data3.results.length; j++) {
-                    data1.results[i].event === data3.results[j].id ? sample1[i].event_name = data3.results[j].event_name : ''
-                }
-            }
-            sample_text = "Affiliations is greater"
-        }
-        // IF EVENTS ARE MORE THAN THE TOTAL OF AFFILIATIONS
-        else if (data3.count > data1.count) {
-            for (let i = 0; i < data3.results.length; i++) {
-                for (let j = 0; j < data1.results.length; j++) {
-                    data3.results[i].id === data1.results[j].event ? sample1[j].event_name = data3.results[i].event_name : ''
-                }
-            }
-            sample_text = "Events is greater"
-        }
-        // IF BOTH ARE EQUAL
-        else {
-            for (let i = 0; i < data1.results.length; i++) {
-                for (let j = 0; j < data3.results.length; j++) {
-                    data1.results[i].event === data3.results[j].id ? sample1[i].event_name = data3.results[j].event_name : ''
-                }
-            }
-            sample_text = "Both are equal"
-        }
-    }
+    const data = await res.json()
     return {
         props : {
-            affiliationsList : sample1,
-            partnersList : data2,
-            eventsList : data3,
-            sample_text
+            affiliationsList : JSON.parse(data),
         }
     }
 }
