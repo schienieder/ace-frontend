@@ -22,6 +22,7 @@ import useDarkMode from '../../hooks/useDarkMode'
 
 export default function messages() {
     const api = process.env.NEXT_PUBLIC_DRF_API
+    const socket_api = process.env.NETXT_PUBLIC_DRF_SOCKET
     const router = useRouter()
     const [userName, setUsername] = useState()
     const [isOpen, setIsOpen] = useState(false);
@@ -47,7 +48,7 @@ export default function messages() {
         }
     }
     const client = useMemo(() => {
-        return new W3CWebSocket(`ws://localhost:8000/ws/chat/${roomName ? roomName : userName}/`)
+        return new W3CWebSocket(`ws://${socket_api}/ws/chat/${roomName ? roomName : userName}/`)
     }, [roomName])
     useEffect(() => {
         dispatch(fetchChatRooms()).then(res => setRoomsList(res.payload))
