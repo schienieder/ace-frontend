@@ -47,9 +47,12 @@ const SalesOverview = () => {
             <h4 className="text-base font-bold dark:text-gray-300">Events Summary</h4>
             {
                 isLoading ?
-                <div className="flex justify-center">
-                    <BeatLoader color="#9ca3af" loading={ isLoading } size={15} />
-                </div>
+                    <BeatLoader
+                        className="self-center" 
+                        color="#9ca3af" 
+                        loading={ isLoading } 
+                        size={15} 
+                    />
                 :
                 <ResponsiveContainer width="100%" height={400}>
                     <BarChart
@@ -99,8 +102,7 @@ const SalesOverview = () => {
 }
 
 function CustomToolTip({ active, payload, label }) {
-    const peso = value => currency(value, { symbol : '₱', precision : 0 })
-    if (active) {
+    if (active && payload.length) {
         return (
             <div className="bg-white p-2 flex flex-col shadow border-b border-gray-300">
                 <h4 className="font-bold">{ label }</h4>

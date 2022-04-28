@@ -226,7 +226,7 @@ export default function sales({ incuredEvents, totalSales }) {
 
 function CustomToolTip({ active, payload, label }) {
     const peso = value => currency(value, { symbol : '₱', precision : 0 })
-    if (active) {
+    if (active && payload.length) {
         return (
             <div className="bg-white p-2 flex flex-col shadow border-b border-gray-300">
                 <h4 className="font-bold">{ label }</h4>
