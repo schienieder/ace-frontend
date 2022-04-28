@@ -102,7 +102,7 @@ const SalesOverview = () => {
 }
 
 function CustomToolTip({ active, payload, label }) {
-    if (active && payload.length) {
+    if (active && payload) {
         return (
             <div className="bg-white p-2 flex flex-col shadow border-b border-gray-300">
                 <h4 className="font-bold">{ label }</h4>
