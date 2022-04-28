@@ -47,12 +47,9 @@ const SalesOverview = () => {
             <h4 className="text-base font-bold dark:text-gray-300">Events Summary</h4>
             {
                 isLoading ?
-                    <BeatLoader
-                        className="self-center" 
-                        color="#9ca3af" 
-                        loading={ isLoading } 
-                        size={15} 
-                    />
+                <div className="flex justify-center">
+                    <BeatLoader color="#9ca3af" loading={ isLoading } size={15} />
+                </div>
                 :
                 <ResponsiveContainer width="100%" height={400}>
                     <BarChart
