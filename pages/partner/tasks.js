@@ -96,9 +96,6 @@ export default function tasks({ requestList, eventsList }) {
                                             Date & Time
                                         </th>
                                         <th scope="col" className={ partnerStyles.tableHeadingClass }>
-                                            Task
-                                        </th>
-                                        <th scope="col" className={ partnerStyles.tableHeadingClass }>
                                             Status
                                         </th>
                                         <th scope="col" className={ partnerStyles.tableHeadingClass }>
@@ -138,9 +135,6 @@ export default function tasks({ requestList, eventsList }) {
                                                                 })
                                                             }
                                                         </p>
-                                                    </td>
-                                                    <td className={ partnerStyles.tableDataClass }>
-                                                        <p className={ partnerStyles.tableDataTextClass }>{ request.task }</p>
                                                     </td>
                                                     <td className={ partnerStyles.tableDataClass }>
                                                         <p className={`${request.task_status === 'Completed' ? 'text-teal-600' : 'text-yellow-500'} text-sm`}>{ request.task_status }</p>

@@ -215,6 +215,9 @@ export default function sales({ incuredEvents, totalSales }) {
                                 btnText="Export Data" 
                                 totalSales={ totalSales }
                             />
+                        </div>                      
+                        <div className="card w-full flex flex-col gap-y-5">
+                            <h4 className="text-base font-bold dark:text-gray-300">Transaction History</h4>
                         </div>
                     </div>
                     <Footer />

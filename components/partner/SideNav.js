@@ -3,11 +3,17 @@ import Link from 'next/link'
 import Image from 'next/image'
 import partnerStyles from '../../styles/Admin.module.css'
 import { Disclosure, Transition } from '@headlessui/react'
+import useDarkMode from '../../hooks/useDarkMode'
+import useNav from '../../hooks/useNav'
 
 const SideNav = ({ isActive }) => {
+
+    const { isDarkMode } = useDarkMode()
+    const { handleNavClass } = useNav()
+
     return (
-        <div className="col-start-1 h-screen bg-white border-r border-gray-300 flex flex-col">
-            <div className="w-full py-4 flex justify-center text-gray-800">
+        <div className={`col-start-1 h-screen border-r shadow flex flex-col ${isDarkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'}`}>
+            <div className={`w-full py-4 flex justify-center ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
                 <Link href="/partner">
                     <div className="flex items-center gap-x-3 cursor-pointer">
                         <Image 
@@ -22,7 +28,7 @@ const SideNav = ({ isActive }) => {
             </div>
             <Link href="/partner" passHref>
                 <a 
-                    className={ isActive === 'dashboard' ? partnerStyles.navItemActive : partnerStyles.navItem }
+                    className={`${isActive === 'dashboard' ? handleNavClass(true, isDarkMode) : handleNavClass(false, isDarkMode) }`}
                 >
                     <svg 
                         xmlns="http://www.w3.org/2000/svg" 
@@ -38,7 +44,7 @@ const SideNav = ({ isActive }) => {
             </Link>
             <Link href="/partner/tasks" passHref>
                 <a 
-                    className={ isActive === 'tasks' ? partnerStyles.navItemActive : partnerStyles.navItem }
+                    className={`${isActive === 'tasks' ? handleNavClass(true, isDarkMode) : handleNavClass(false, isDarkMode) }`}
                 >
                     <svg 
                         xmlns="http://www.w3.org/2000/svg" 
@@ -54,7 +60,7 @@ const SideNav = ({ isActive }) => {
             </Link>
             <Link href="/partner/messages" passHref>
                 <a 
-                    className={ isActive === 'messages' ? partnerStyles.navItemActive : partnerStyles.navItem }
+                    className={`${isActive === 'messages' ? handleNavClass(true, isDarkMode) : handleNavClass(false, isDarkMode) }`}
                 >
                     <svg 
                         xmlns="http://www.w3.org/2000/svg" 
@@ -70,7 +76,7 @@ const SideNav = ({ isActive }) => {
             </Link>
             <Link href="/partner/requests" passHref>
                 <a 
-                    className={ isActive === 'requests' ? partnerStyles.navItemActive : partnerStyles.navItem }
+                    className={`${isActive === 'requests' ? handleNavClass(true, isDarkMode) : handleNavClass(false, isDarkMode) }`}
                 >
                     <svg 
                         xmlns="http://www.w3.org/2000/svg" 

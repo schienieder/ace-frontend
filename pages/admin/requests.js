@@ -15,6 +15,20 @@ import CommonTable from '../../components/CommonTable'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchPartners } from '../../redux/partners/partners.slice'
 import { fetchEventsList } from '../../redux/events/events.slice'
+import MultiSelect from '../../components/MultiSelect'
+
+// const colourOptions = [
+//     { value: "ocean1", label: "Ocean" },
+//     { value: "blue", label: "Blue" },
+//     { value: "purple", label: "Purple" },
+//     { value: "red", label: "Red" },
+//     { value: "orange", label: "Orange" },
+//     { value: "yellow", label: "Yellow" },
+//     { value: "green", label: "Green" },
+//     { value: "forest", label: "Forest" },
+//     { value: "slate", label: "Slate" },
+//     { value: "silver", label: "Silver" }
+// ];
 
 export default function reports({ affiliationsList }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
@@ -27,7 +41,7 @@ export default function reports({ affiliationsList }) {
         },
         {
             Header : 'Partner',
-            accessor : 'partner__first_name',
+            accessor : row => `${row.partner__first_name} ${row.partner__last_name}`,
             Cell : ({ row }) => (
                 <div>
                     {`${row.original.partner__first_name} ${row.original.partner__last_name}`}
@@ -36,7 +50,7 @@ export default function reports({ affiliationsList }) {
         },
         {
             Header : 'Status',
-            accessor : 'task',
+            accessor : 'status',
             Cell : ({ row }) => (
                 <div>
                     {
@@ -81,6 +95,9 @@ export default function reports({ affiliationsList }) {
     const router = useRouter()
     const [userName, setUsername] = useState()
     const [addRequestOpen, setAddRequestOpen] = useState(false)
+    const [selectedPartners, setSelectedPartners] = useState([])
+    const [noPartners, setNoPartners] = useState(false)
+    const [noEvent, setNoEvent] = useState(false)
     const { register, reset, handleSubmit, formState : { errors } } = useForm()
     const { partners, isLoading : isLoadingPartner } = useSelector(state => state.partnersState)
     const { events, isLoading : isLoadingEvent } = useSelector(state => state.eventsState)
@@ -97,43 +114,51 @@ export default function reports({ affiliationsList }) {
         readRole()
     }, [])
     const addRequest = (data) => {
-        console.log(data)
-        const jwt_token = Cookies.get('jwt')
-        axios({
-            method : "POST",
-            url : `${api}add_affiliation/`,
-            headers : {
-                'Content-Type' : 'application/json',
-                'Authorization' : 'Bearer'+' '+jwt_token
-            },
-            data : {
-                event : data.request_event,
-                partner : data.request_partner,
-                task : data.request_task,
-            }
-        }).then(() => {
-            console.log(data)
-            Swal.fire({
-                icon : 'success',
-                title: 'Request Successsful',
-                timer : 3000,
-                text: `New request successfully added!`,
-                showCloseButton: true,
-                confirmButtonColor: '#DB2777',
+        if (!selectedPartners.length || !data.request_event.length) {
+            !selectedPartners.length ? setNoPartners(true) : setNoPartners(false)
+            !data.request_event.length ? setNoEvent(true) : setNoEvent(false)
+            return
+        }
+        else {
+            setNoPartners(false)
+            setNoEvent(false)
+            selectedPartners[0].value === '*' ? selectedPartners.shift() : null
+            const jwt_token = Cookies.get('jwt')
+            axios({
+                method : "POST",
+                url : `${api}add_affiliation/`,
+                headers : {
+                    'Content-Type' : 'application/json',
+                    'Authorization' : 'Bearer'+' '+jwt_token
+                },
+                data : {
+                    event : data.request_event,
+                    partners : selectedPartners
+                }
+            }).then(() => {
+                reset()
+                setSelectedPartners([])
+                Swal.fire({
+                    icon : 'success',
+                    title: 'Request Successsful',
+                    timer : 3000,
+                    text: `New request successfully added!`,
+                    showCloseButton: true,
+                    confirmButtonColor: '#DB2777',
+                })
+                router.push('/admin/requests')
+            }).catch((error) => {
+                Swal.fire({
+                    icon : 'error',
+                    title: 'Request Error',
+                    timer : 3000,
+                    text: error.message,
+                    showCloseButton: true,
+                    confirmButtonColor: '#DB2777',
+                })
             })
-            router.push('/admin/requests')
-        }).catch((error) => {
-            Swal.fire({
-                icon : 'error',
-                title: 'Request Error',
-                timer : 3000,
-                text: error.message,
-                showCloseButton: true,
-                confirmButtonColor: '#DB2777',
-            })
-        })
-        reset()
-        setAddRequestOpen(false)
+            setAddRequestOpen(false)
+        }
     }
     const destroyRequest = (request_id) => {
         Swal.fire({
@@ -177,10 +202,16 @@ export default function reports({ affiliationsList }) {
         })
     }
     const closeAddModal = () => {
+        setSelectedPartners([])
         setAddRequestOpen(false)
+        setNoPartners(false)
+        setNoEvent(false)
     }
     const openAddModal = () => {
         setAddRequestOpen(true)
+    }
+    const handleChange = (val) => {
+        setSelectedPartners(val)
     }
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
@@ -264,7 +295,48 @@ export default function reports({ affiliationsList }) {
 
                                             <h4 className="text-base font-bold">New Request</h4>
 
-                                            <div className="flex gap-x-5">
+                                            <div className="flex flex-col gap-y-1">
+                                                <label className="inputFieldLabel">Event Name</label>
+                                                <select
+                                                    className="requestSelect rounded-lg"
+                                                    {...register("request_event")}
+                                                >
+                                                    {
+                                                        isLoadingEvent ? null :
+                                                        events.map((event) => (
+                                                            <option 
+                                                                key={ event.id }
+                                                                value={ event.id }
+                                                            >{ event.event_name }</option>
+                                                        ))
+                                                    }
+                                                </select>
+                                                { 
+                                                    noEvent && 
+                                                    <div className="flex items-center gap-x-1 text-red-500">
+                                                        <AuthErrorIcon />
+                                                        <p className="text-xs">This field cannot be empty</p>
+                                                    </div> 
+                                                }
+                                            </div>
+
+                                            <div className="flex flex-col gap-y-1">
+                                                <label className="inputFieldLabel">Partner Name</label>
+                                                <MultiSelect 
+                                                    options={ partners } 
+                                                    changeHandler={ handleChange }
+                                                    selectedPartners={ selectedPartners }
+                                                />
+                                                { 
+                                                    noPartners && 
+                                                    <div className="flex items-center gap-x-1 text-red-500">
+                                                        <AuthErrorIcon />
+                                                        <p className="text-xs">This field cannot be empty</p>
+                                                    </div> 
+                                                }
+                                            </div>
+
+                                            {/* <div className="flex gap-x-5">
 
                                                 <div className="flex flex-col gap-y-1">
                                                     <label className="inputFieldLabel">Event Name</label>
@@ -317,7 +389,7 @@ export default function reports({ affiliationsList }) {
                                                         <p className="text-xs">{ errors.request_task.message }</p>
                                                     </div> 
                                                 }
-                                            </div>
+                                            </div> */}
 
                                             <div className="w-full pr-2 mt-5 flex justify-end gap-x-3">
                                                 <button 

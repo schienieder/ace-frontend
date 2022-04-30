@@ -16,7 +16,10 @@ export const fetchPartners = createAsyncThunk(
         const partnersList = await axios.get(`${api}partners_list/`, {
             headers : {'Authorization' : 'Bearer'+' '+jwt_token}
         })
-        return partnersList.data.results
+        const allPartners = partnersList.data.results.map(p => {
+            return {value : p.id, label : p.first_name+' '+p.last_name}
+        })
+        return allPartners
     }
 )
 

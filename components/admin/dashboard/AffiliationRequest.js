@@ -16,7 +16,7 @@ const RecentRequests = ({ data }) => {
                         <th 
                             scope="col" 
                             className="px-4 py-3"
-                        >Description</th>
+                        >Partner</th>
                         <th 
                             scope="col" 
                             className="px-6 py-3"
@@ -34,7 +34,7 @@ const RecentRequests = ({ data }) => {
                                     <td 
                                         className="px-4 py-2 whitespace-nowrap flex flex-col"
                                     >
-                                        <p className="text-sm text-gray-800 dark:text-gray-300 font-medium">Rose Garden</p>
+                                        <p className="text-sm text-gray-800 dark:text-gray-300 font-medium">{ request.partner__first_name+' '+request.partner__last_name }</p>
                                         <p className="text-xs text-gray-600 dark:text-gray-500">{ request.task }</p>
                                     </td>
                                     <td className="px-6 py-3 whitespace-nowrap">

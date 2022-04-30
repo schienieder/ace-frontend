@@ -44,7 +44,8 @@ module.exports = {
         'custom-textarea': '32rem',
         '49' : '11.5rem',
         '57' : '14.5rem',
-        '63': '15.625rem'
+        '63': '15.625rem',
+        '65' : '21rem'
       },
       gridTemplateRows: {
           // landing page

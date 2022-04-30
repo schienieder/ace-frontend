@@ -96,6 +96,71 @@ html {
   @apply w-full px-2 py-1 border-transparent text-sm text-gray-800 border border-gray-300 focus-within:border-gray-600 focus:outline-none focus:ring-transparent;
 }
 
+.requestSelect {
+  @apply w-65 px-2 py-1 border-transparent text-sm text-gray-800 border border-gray-300 focus-within:border-gray-600 focus:outline-none focus:ring-transparent;
+}
+
+/* ACTUAL REACT SELECT */
+.css-1s2u09g-control {
+  @apply border-gray-300 focus:border-gray-600;
+  border-radius: 0.5rem !important;
+  padding : 0 !important;
+  min-height: 0 !important;
+}
+
+.css-1pahdxg-control {
+  border-radius: 0.5rem !important;
+  padding : 0 !important;
+  min-height: 0 !important;
+}
+
+.css-1pahdxg-control {
+  padding : 0 !important;
+}
+
+/* REACT SELECT PLACEHOLDER */
+.css-14el2xx-placeholder {
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
+}
+
+/* REACT SELECT INPUT CONTAINER */
+.css-6j8wv5-Input {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* .css-6j8wv5-Input input {
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
+} */
+
+.css-1pndypt-Input {
+  /* font-size: 0.875rem !important;
+  line-height: 1.25rem !important; */
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.css-1pndypt-Input input {
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
+}
+
+/* REACT SELECT ARROW DOWN */
+.css-tlfecz-indicatorContainer {
+  padding: 0 3px 0 8px !important;
+}
+
+.css-1gtu0rj-indicatorContainer {
+  padding: 0 3px 0 8px !important;
+}
+
+/* REACT SELECT ACTUAL LABELS */
+.css-1xyrms2 {
+  padding: 0 !important;
+}
+
 .inputTextArea {
   @apply w-custom-textarea px-2 py-1 border border-gray-300 focus-within:border-gray-600 focus:outline-none focus:ring-transparent rounded-lg text-sm;
 }
@@ -152,4 +217,31 @@ html {
 
 .chatPositionStart {
   @apply flex gap-x-3 items-center;
+}
+
+
+::-webkit-scrollbar-track
+{
+  /* box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); */
+	background-color: #dfdfdf;
+	border-radius: 10px;
+}
+
+::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: #dfdfdf;
+}
+
+::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	background-color: #d83888;
+  /* background-image: -webkit-gradient(linear,
+                  left bottom,
+                  left top,
+                  color-stop(0.44, #ea7cb9),
+                  color-stop(0.72, #de559c),
+                  color-stop(0.86, #d83888)); */
 }

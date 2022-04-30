@@ -52,9 +52,6 @@ export default function requests({ requestList, eventsList }) {
                                             Date
                                         </th>
                                         <th scope="col" className={ partnerStyles.tableHeadingClass }>
-                                            Task
-                                        </th>
-                                        <th scope="col" className={ partnerStyles.tableHeadingClass }>
                                             Venue
                                         </th>
                                         <th scope="col" className={ partnerStyles.tableHeadingClass }>
@@ -91,9 +88,6 @@ export default function requests({ requestList, eventsList }) {
                                                                 })
                                                             }
                                                         </p>
-                                                    </td>
-                                                    <td className={ partnerStyles.tableDataClass }>
-                                                        <p className={ partnerStyles.tableDataTextClass }>{ request.task }</p>
                                                     </td>
                                                     <td className={`${partnerStyles.tableDataClass} max-w-xs`}>
                                                         <p className="text-sm text-gray-800 overflow-ellipsis overflow-hidden">

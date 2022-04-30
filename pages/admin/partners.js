@@ -21,18 +21,18 @@ export default function partners({ partnersList }) {
     const partnerColumns = useMemo(() => [
         {
             Header : 'Name',
-            accessor : 'business_name',
+            accessor : row => `${row.first_name} ${row.last_name}`,
             Cell : ({row}) => (
                 <p className={ adminStyles.tableDataTextClass }>
-                { row.original.business_name || row.original.first_name +' '+ row.original.last_name }
+                {  row.original.first_name +' '+ row.original.last_name }
                 </p>
             )
         },
         {
-            Header : 'Type of Business',
-            accessor : 'type_of_business',
+            Header : 'Role',
+            accessor : 'business_name',
             Cell : ({row}) => (
-                <p className="text-sm text-gray-800">{ row.original.type_of_business || 'N/A' }</p>
+                <p className="text-sm text-gray-800">{ row.original.business_name || 'N/A' }</p>
             )
         },
         {

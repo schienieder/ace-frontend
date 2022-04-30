@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import adminStyles from '../../styles/Admin.module.css'
 import { Menu, Transition, Switch } from '@headlessui/react'
@@ -78,7 +78,7 @@ const TopNav = ({ username }) => {
                             <Menu.Item>
                                 {({ active }) => (
                                     <div
-                                    className={`${active ? adminStyles.popOverItemActive : adminStyles.popOverItem} color-transition border-b border-gray-200 dark:border-gray-700 dark:hover:bg-gray-800`}
+                                        className={`${active ? adminStyles.popOverItemActive : adminStyles.popOverItem} color-transition border-b border-gray-200 dark:border-gray-700 dark:hover:bg-gray-800`}
                                     >
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 

@@ -99,9 +99,6 @@ export default function event({ eventInfo, clientInfo, taskList, partnerList }) 
                                             No.
                                         </th>
                                         <th scope="col" className={ adminStyles.tableHeadingClass }>
-                                            Task
-                                        </th>
-                                        <th scope="col" className={ adminStyles.tableHeadingClass }>
                                             Assigned To
                                         </th>
                                         <th scope="col" className={ adminStyles.tableHeadingClass }>
@@ -118,11 +115,6 @@ export default function event({ eventInfo, clientInfo, taskList, partnerList }) 
                                                 >
                                                     <td className={ adminStyles.tableDataClass }>
                                                         <p className={ adminStyles.tableDataTextClass }>{ index+1 }</p>
-                                                    </td>
-                                                    <td className={ adminStyles.tableDataClass }>
-                                                        <p className="text-sm text-gray-800">
-                                                            { task.task }
-                                                        </p>
                                                     </td>
                                                     <td className={ adminStyles.tableDataClass }>
                                                         <p className={ adminStyles.tableDataTextClass }>

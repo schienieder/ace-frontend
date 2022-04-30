@@ -21,14 +21,14 @@ export default function clients({ clientsList }) {
     const clientColumns = useMemo(() => [
         {
             Header : 'Name',
-            accessor : 'first_name',
+            accessor : row => `${row.first_name} ${row.last_name}`,
             Cell : ({row}) => (
                 <p className={ adminStyles.tableDataTextClass }>{ row.original.first_name +' '+ row.original.last_name }</p>
             )
         },
         {
             Header : 'Address',
-            accessor : 'street_address',
+            accessor : row => `${row.street_address} ${row.city} ${row.state_province}`,
             Cell : ({row}) => (
                 <p className={ adminStyles.tableDataTextClass }>{ row.original.street_address && row.original.city && row.original.state_province ? `${row.original.street_address}, ${row.original.city}, ${row.original.state_province}` : 'N/A' }</p>
             )
