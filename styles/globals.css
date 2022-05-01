@@ -61,7 +61,7 @@ html {
 }
 
 .searchBarInput {
-  @apply w-44 px-0 py-0 border-transparent focus:outline-none focus:ring-transparent focus:border-transparent text-sm;
+  @apply w-44 px-0 py-0 border-transparent focus:outline-none focus:ring-transparent focus:border-transparent text-sm bg-transparent;
 }
 
 .form-btn {

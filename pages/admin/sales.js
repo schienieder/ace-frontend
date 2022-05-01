@@ -4,6 +4,7 @@ import SideNav from '../../components/admin/SideNav'
 import Footer from '../../components/Footer'
 import PageHeader from '../../components/PageHeader'
 import SalesTable from '../../components/SalesTable'
+import HistoryTable from '../../components/HistoryTable'
 import moment from 'moment'
 import { useRouter } from 'next/router'
 import { ExportToCsv } from 'export-to-csv'
@@ -19,7 +20,7 @@ import {
     ResponsiveContainer
 } from "recharts";
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchSalesSummary } from '../../redux/sales/sales.slice'
+import { fetchSalesSummary, fetchSalesYears, fetchTotalSales, changeSelectedYear } from '../../redux/sales/sales.slice'
 import BeatLoader from 'react-spinners/BeatLoader'
 
 // const salesSummary = [
@@ -69,8 +70,8 @@ import BeatLoader from 'react-spinners/BeatLoader'
 //     }
 // ]
 
-export default function sales({ incuredEvents, totalSales }) {
-    const { isLoading } = useSelector(state => state.salesState)
+export default function sales({ incuredEvents }) {
+    const { isLoading, salesYears, yearSelected, totalSales } = useSelector(state => state.salesState)
     const [salesSummary, setSalesSummary] = useState([])
     const dispatch = useDispatch()
     const peso = value => currency(value, { symbol : '₱', precision : 0 })
@@ -109,12 +110,15 @@ export default function sales({ incuredEvents, totalSales }) {
         }
     }
     useEffect(() => {
-        dispatch(fetchSalesSummary()).then(res => {
+        const dateToday = new Date()
+        dispatch(fetchSalesSummary(dateToday.getFullYear())).then(res => {
             const formattedData = res.payload.map(sale => {
                 return {...sale, month : moment(sale.month).format('MMMM')}
             })
             setSalesSummary(formattedData)
         })
+        dispatch(fetchSalesYears())
+        dispatch(fetchTotalSales(dateToday.getFullYear()))
         readRole()
     }, [])
     const options = {
@@ -139,6 +143,16 @@ export default function sales({ incuredEvents, totalSales }) {
         })
         csvExporter.generateCsv(incuredEvents);
     }
+    const handleYearChange = (year) => {
+        dispatch(changeSelectedYear(year))
+        dispatch(fetchSalesSummary(year)).then(res => {
+            const formattedData = res.payload.map(sale => {
+                return {...sale, month : moment(sale.month).format('MMMM')}
+            })
+            setSalesSummary(formattedData)
+        })
+        dispatch(fetchTotalSales(year))
+    }
     return (
         <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="reports" />
@@ -146,11 +160,31 @@ export default function sales({ incuredEvents, totalSales }) {
                 <TopNav username={ userName } />
                 <div className="row-start-2 w-full h-full bg-true-100">
                     <div className="p-8 flex flex-col gap-y-8 min-h-screen">
-                        <PageHeader text="Sales Report">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                        </svg>
-                        </PageHeader>
+                        <div className="flex justify-between items-center">
+                            <PageHeader text={`Sales Report (${yearSelected})`}>
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                </svg>
+                            </PageHeader>
+                            <div className="searchBarContainer">
+                                <select 
+                                    className="searchBarInput"
+                                    onChange={ e => handleYearChange(e.target.value) }
+                                    defaultValue={ yearSelected }
+                                >
+                                    {
+                                        salesYears.map(syear => (
+                                            <option 
+                                                key={ syear.transaction_year }
+                                                value={ syear.transaction_year }
+                                            >{ syear.transaction_year }</option>
+                                        ))
+                                    }
+                                    {/* <option value={2021}>2021</option>
+                                    <option value={2020}>2020</option> */}
+                                </select>
+                            </div>
+                        </div>
                         <div className='w-full card'>
                             {
                                 isLoading ? 
@@ -215,10 +249,16 @@ export default function sales({ incuredEvents, totalSales }) {
                                 btnText="Export Data" 
                                 totalSales={ totalSales }
                             />
-                        </div>                      
-                        <div className="card w-full flex flex-col gap-y-5">
-                            <h4 className="text-base font-bold dark:text-gray-300">Transaction History</h4>
                         </div>
+                        <div className="card w-full flex flex-col gap-y-5">
+                            <HistoryTable 
+                                columns={ eventsColumns } 
+                                data={ table_data }
+                            />                
+                        </div>
+                        {/* <div className="card w-full flex flex-col gap-y-5">
+                            <h4 className="text-base font-bold dark:text-gray-300">Transaction History</h4>
+                        </div> */}
                     </div>
                     <Footer />
                 </div>
@@ -256,11 +296,6 @@ export const getServerSideProps = async ({ req }) => {
         headers : {'Authorization' : 'Bearer'+' '+token}
     })
     const data2 = await res2.json()
-    const res3 = await fetch(`${api}total_sales/`,{
-        method : 'GET',
-        headers : {'Authorization' : 'Bearer'+' '+token}
-    })
-    const data3 = await res3.json()
     const incuredCopy = data1.results
     for (let i = 0; i < data1.results.length; i++) {
         for (let j = 0; j < data2.results.length; j++) {
@@ -271,7 +306,6 @@ export const getServerSideProps = async ({ req }) => {
     return {
         props : {
             incuredEvents : incuredCopy,
-            totalSales : data3,
         }
     }
 

@@ -9,7 +9,7 @@ import adminStyles from '../../../styles/Admin.module.css'
 import Link from 'next/link'
 
 export default function event({ eventInfo, clientInfo, taskList, partnerList }) {
-    console.log(clientInfo)
+    console.log(eventInfo)
     const router = useRouter()
     const [userName, setUsername] = useState()
     const readRole = () => {
@@ -74,7 +74,7 @@ export default function event({ eventInfo, clientInfo, taskList, partnerList }) 
                                     </svg>
                                     <h4 className='font-bold'>Schedule</h4>
                                 </div>
-                                <p className='text-xs self-end'>{ moment(eventInfo.event_date).format('ll')+', '+eventInfo.time_schedule }</p>
+                                <p className='text-xs self-end'>{ moment(eventInfo.date_schedule).format('ll')+', '+eventInfo.time_schedule }</p>
                             </div>
                             <div className='card flex flex-col gap-y-5'>
                                 <div className='flex items-center gap-x-1'>
