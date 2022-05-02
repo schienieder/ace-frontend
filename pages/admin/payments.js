@@ -9,10 +9,10 @@ import CommonTable2 from '../../components/CommonTable2'
 import moment from 'moment'
 import currency from 'currency.js'
 
-export default function clients({ eventsList }) {
+export default function clients({ eventTransactions }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const peso = value => currency(value, { symbol : '₱', precision : 0 })
-    const data = useMemo(() => eventsList.results, [eventsList.count])
+    const data = useMemo(() => eventTransactions, [eventTransactions.count])
     const clientColumns = useMemo(() => [
         {
             Header : 'Event Name',
@@ -48,7 +48,7 @@ export default function clients({ eventsList }) {
         },
         {
             Header : 'Last Update',
-            accessor : 'updated_at',
+            accessor : 'last_update',
             Cell : ({row}) => (
                 <p className={ adminStyles.tableDataTextClass }>{ moment(row.original.updated_at).format('ll') }</p>
             )
@@ -98,14 +98,14 @@ export default function clients({ eventsList }) {
 export const getServerSideProps = async ({ req }) => {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const token = req.cookies.jwt
-    const res = await fetch(`${api}client_payments/`,{
+    const res = await fetch(`${api}present_transactions/`,{
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })
     const data = await res.json()
     return {
         props : {
-            eventsList : data
+            eventTransactions : JSON.parse(data)
         }
     }
 }
