@@ -125,7 +125,7 @@ function SalesTable({ columns, data, onClick, btnText, totalSales }) {
                     ><p className="text-xs font-bold text-gray-800 uppercase tracking-wide text-center">Total Sales</p></td>
                     <td 
                         className={`${adminStyles.tableDataClass} bg-gray-100`}
-                    ><p className="text-sm text-gray-700 font-medium">{ peso(totalSales.total_sales).format() }</p></td>
+                    ><p className="text-sm text-gray-700 font-medium">{ totalSales.total_sales > 0 ? peso(totalSales.total_sales).format() : 'Nothing to show.' }</p></td>
                 </tr>
             </tbody>
         </table>

@@ -16,13 +16,13 @@ import { fetchMessages } from '../../redux/messages/messages.slice'
 import { fetchChatRooms } from '../../redux/chatrooms/chatRooms.slice'
 import BeatLoader from 'react-spinners/BeatLoader'
 import ChatHeader from '../../components/ChatHeader'
-import ScrollableFeed from 'react-scrollable-feed'
+// import ScrollableFeed from 'react-scrollable-feed'
 import randomstring from 'randomstring'
 import useDarkMode from '../../hooks/useDarkMode'
 
 export default function messages() {
     const api = process.env.NEXT_PUBLIC_DRF_API
-    const socket_api = process.env.NETXT_PUBLIC_DRF_SOCKET
+    const socket_api = process.env.NEXT_PUBLIC_DRF_SOCKET
     const router = useRouter()
     const [userName, setUsername] = useState()
     const [isOpen, setIsOpen] = useState(false);

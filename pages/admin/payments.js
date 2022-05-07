@@ -98,7 +98,7 @@ export default function clients({ eventTransactions }) {
 export const getServerSideProps = async ({ req }) => {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const token = req.cookies.jwt
-    const res = await fetch(`${api}present_transactions/`,{
+    const res = await fetch(`${api}present_transactions/`, {
         method : 'GET',
         headers : {'Authorization' : 'Bearer'+' '+token}
     })

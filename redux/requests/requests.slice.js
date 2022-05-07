@@ -25,9 +25,9 @@ export const fetchDashboardRequests = createAsyncThunk(
     'requests/fetchDashboardRequests',
     async () => {
         const dashboardRequests = await axios.get(`${api}dashboard_affiliations/`, {
-            headers : {'Authorization' : 'Beader'+' '+jwt_token}
+            headers : {'Authorization' : 'Bearer'+' '+jwt_token}
         })
-        return dashboardRequests.data.results
+        return JSON.parse(dashboardRequests.data)
     }
 )
 

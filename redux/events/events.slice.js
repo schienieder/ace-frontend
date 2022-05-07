@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import moment from 'moment'
 
 const api = process.env.NEXT_PUBLIC_DRF_API
-const jwt_token = Cookies.get('jwt')
 
 const initialState = {
     events : [],
@@ -15,16 +15,22 @@ const initialState = {
 export const fetchEventsSummary = createAsyncThunk(
     'events/fetchEventsSummary',
     async () => {
+        const jwt_token = Cookies.get('jwt')
         const eventsSummary = await axios.get(`${api}events_summary/`, {
             headers : {'Authorization' : 'Bearer'+' '+jwt_token}
         })
-        return JSON.parse(eventsSummary.data)
+        const json_data = JSON.parse(eventsSummary.data)
+        const formattedData = json_data.map(event => {
+            return {...event, month : moment(event.month).format('MMMM')}
+        })
+        return formattedData 
     }
 )
 
 export const fetchEventsList = createAsyncThunk(
     'events/fetchEventsList',
     async () => {
+        const jwt_token = Cookies.get('jwt')
         const eventsList = await axios.get(`${api}events_list/`, {
             headers : {'Authorization' : 'Bearer'+' '+jwt_token}
         })
@@ -35,6 +41,7 @@ export const fetchEventsList = createAsyncThunk(
 export const fetchDashboardEvents = createAsyncThunk(
     'events/fetchDashboardEvents',
     async () => {
+        const jwt_token = Cookies.get('jwt')
         const dashboardEvents = await axios.get(`${api}dashboard_events/`, {
             headers : {'Authorization' : 'Bearer'+' '+jwt_token}
         })

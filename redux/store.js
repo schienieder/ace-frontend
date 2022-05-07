@@ -7,6 +7,7 @@ import salesSlice from './sales/sales.slice'
 import requestsSlice from './requests/requests.slice'
 import partnersSlice from './partners/partners.slice'
 import utilsSlice from './utils/utils.slice'
+import transactionsSlice from './transactions/transactions.slice'
 
 export const store = configureStore({
     reducer : {
@@ -16,6 +17,7 @@ export const store = configureStore({
         eventsState : eventsSlice,
         requestsState : requestsSlice,
         salesState : salesSlice,
-        utilsState : utilsSlice
+        utilsState : utilsSlice,
+        transactionState : transactionsSlice
     }
 })

@@ -1,7 +1,6 @@
 import Link from "next/link"
 
 const RecentRequests = ({ data }) => {
-    console.log(data)
     return (
         <div className="w-1/2 card flex flex-col gap-y-5">
             <div className="w-full flex justify-between">

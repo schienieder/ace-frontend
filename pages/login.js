@@ -33,29 +33,31 @@ export default function login() {
             const jwt_token = response.data.access
             let decoded_token = jwt_decode(jwt_token)
             Cookies.set('jwt', jwt_token)
-            axios({
-                method : 'GET',
-                url : `${api}account/${decoded_token.user_id}`,
-                headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
-            })
-            .then((response) => {
-                // localStorage.setItem('id', response.data.id.toString())
-                localStorage.setItem('username', response.data.username)
-                localStorage.setItem('role', response.data.role)
-                router.push(`/${response.data.role}`)
-                setIsLoading(false)
-            })
-            .catch((error) => {
-                setIsLoading(false)
-                Swal.fire({
-                    icon : 'error',
-                    title: 'Error',
-                    text: `${error.response}`,
-                    showCloseButton: true,
-                    confirmButtonColor: '#DB2777',
+            setTimeout(() => {
+                axios({
+                    method : 'GET',
+                    url : `${api}account/${decoded_token.user_id}`,
+                    headers : {'Authorization' : 'Bearer'+' '+ jwt_token}
                 })
-                console.log(error.response)
-            })
+                .then((response) => {
+                    // localStorage.setItem('id', response.data.id.toString())
+                    localStorage.setItem('username', response.data.username)
+                    localStorage.setItem('role', response.data.role)
+                    router.push(`/${response.data.role}`)
+                    setIsLoading(false)
+                })
+                .catch((error) => {
+                    setIsLoading(false)
+                    Swal.fire({
+                        icon : 'error',
+                        title: 'Error',
+                        text: `${error.response}`,
+                        showCloseButton: true,
+                        confirmButtonColor: '#DB2777',
+                    })
+                    console.log(error.response)
+                })
+            }, 500)
         })
         .catch((error) => {
             setIsLoading(false)

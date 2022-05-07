@@ -23,8 +23,8 @@ const UpcomingEvents = ({ data }) => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
                     {
-                        data.results.length ? 
-                            data.results.map((event) => (
+                        data.length ? 
+                            data.map((event) => (
                                 <tr 
                                     className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800"
                                     key={ event.id }

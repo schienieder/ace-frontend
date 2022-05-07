@@ -11,11 +11,11 @@ const initialState = {
 }
 
 const api = process.env.NEXT_PUBLIC_DRF_API
-const jwt_token = Cookies.get('jwt')
 
 export const fetchSalesYears = createAsyncThunk(
     'sales/fetchSalesYears',
     async () => {
+        const jwt_token = Cookies.get('jwt')
         const salesYears = await axios.get(`${api}sales_years/`, {
             headers : {'Authorization' : 'Bearer'+' '+jwt_token}
         })
@@ -26,6 +26,7 @@ export const fetchSalesYears = createAsyncThunk(
 export const fetchSalesSummary = createAsyncThunk(
     'sales/fetchSalesSummary',
     async (transaction_year) => {
+        const jwt_token = Cookies.get('jwt')
         const salesSummary = await axios.get(`${api}monthly_sales/${transaction_year}`, {
             headers : {'Authorization' : 'Bearer'+' '+jwt_token}
         })
@@ -36,10 +37,10 @@ export const fetchSalesSummary = createAsyncThunk(
 export const fetchTotalSales = createAsyncThunk(
     'sales/fetchTotalSales',
     async (transaction_year) => {
+        const jwt_token = Cookies.get('jwt')
         const totalSales = await axios.get(`${api}total_sales/${transaction_year}`, {
             headers : {'Authorization' : 'Bearer'+' '+jwt_token}
         })
-        console.log('The fvcking total sales: ', totalSales.data)
         return JSON.parse(totalSales.data.total_sales)
     }
 )

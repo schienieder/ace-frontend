@@ -10,7 +10,7 @@ import {
 } from 'recharts'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchEventsSummary } from '../../../redux/events/events.slice'
-import moment from 'moment'
+// import moment from 'moment'
 import BeatLoader from 'react-spinners/BeatLoader'
 
 // const events = [
@@ -28,18 +28,13 @@ import BeatLoader from 'react-spinners/BeatLoader'
 //     {"month" : "December", "total" : "24"},
 // ]
 
-const SalesOverview = () => {
+const EventsSummary = () => {
     
     const dispatch = useDispatch()
-    const { isLoading } = useSelector(state => state.eventsState)
-    const [events, setEvents] = useState([])
+    const { isLoading, eventsSummary } = useSelector(state => state.eventsState)
+    // const [events, setEvents] = useState([])
     useEffect(() => {
-        dispatch(fetchEventsSummary()).then(res => {
-            const formattedData = res.payload.map(event => {
-                return {...event, month : moment(event.month).format('MMMM')}
-            })
-            setEvents(formattedData)
-        })
+        dispatch(fetchEventsSummary())
     }, [])
 
     return (
@@ -53,7 +48,7 @@ const SalesOverview = () => {
                 :
                 <ResponsiveContainer width="100%" height={400}>
                     <BarChart
-                        data={ events }
+                        data={ eventsSummary }
                         margin={{
                             top: 10,
                             bottom: 5,
@@ -110,4 +105,4 @@ function CustomToolTip({ active, payload, label }) {
     return null
 }
 
-export default SalesOverview
+export default EventsSummary
