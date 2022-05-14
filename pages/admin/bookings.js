@@ -40,7 +40,7 @@ export default function bookings({ bookingsList }) {
             Header : 'Event Budget',
             accessor : 'event_budget',
             Cell : ({row}) => (
-                <p className="text-sm text-gray-800">{ peso(row.original.event_budget).format() }</p>
+                <p className="text-sm text-gray-800 dark:text-gray-300">{ peso(row.original.event_budget).format() }</p>
             )
         },
         {

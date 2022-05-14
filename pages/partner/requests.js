@@ -11,6 +11,7 @@ import PageHeader from '../../components/PageHeader'
 import Link from 'next/link'
 
 export default function requests({ requestList, eventsList }) {
+    console.log(eventsList)
     const router = useRouter()
     const [userName, setUsername] = useState()
     const readRole = () => {
@@ -52,6 +53,9 @@ export default function requests({ requestList, eventsList }) {
                                             Date
                                         </th>
                                         <th scope="col" className={ partnerStyles.tableHeadingClass }>
+                                            Time
+                                        </th>
+                                        <th scope="col" className={ partnerStyles.tableHeadingClass }>
                                             Venue
                                         </th>
                                         <th scope="col" className={ partnerStyles.tableHeadingClass }>
@@ -83,7 +87,18 @@ export default function requests({ requestList, eventsList }) {
                                                             {
                                                                 eventsList.results.map((event) => {
                                                                     if (event.id === request.event) {
-                                                                        return moment(event.event_date).format('ll')
+                                                                        return moment(event.date_schedule).format('ll')
+                                                                    }
+                                                                })
+                                                            }
+                                                        </p>
+                                                    </td>
+                                                    <td className={ partnerStyles.tableDataClass }>
+                                                        <p className="text-sm text-gray-800">
+                                                            {
+                                                                eventsList.results.map((event) => {
+                                                                    if (event.id === request.event) {
+                                                                        return event.time_schedule
                                                                     }
                                                                 })
                                                             }

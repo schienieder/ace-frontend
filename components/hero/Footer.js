@@ -5,7 +5,7 @@ const Footer = () => {
     const currYear = currDate.getFullYear()
     return (
         <div className="w-full h-full flex flex-col text-gray-200">
-            <div className="bg-gray-800 h-3/4 flex flex-col md:flex-row items-center md:justify-around gap-y-6 gap-x-10 py-8">
+            {/* <div className="bg-gray-800 h-3/4 flex flex-col md:flex-row items-center md:justify-around gap-y-6 gap-x-10 py-8">
                 <div className="flex flex-row md:flex-col gap-x-8 gap-y-3">
                     <CopyToClipboard text="This is the address of Alas!">
                         <div className="flex items-center gap-x-2">
@@ -62,11 +62,11 @@ const Footer = () => {
                     <p className="text-xs md:text-sm">Terms & Conditions</p>
                     <p className="text-xs md:text-sm">Privacy Policy</p>
                 </div>
-            </div>
-            <div className="bg-gray-900 h-1/4 flex flex-col md:flex-row justify-between items-center px-20 py-3">
-                <div className="hidden md:flex items-center gap-x-1">
+            </div> */}
+            <div className="bg-gray-900 flex flex-col md:flex-row justify-center items-center py-3">
+                <div className="flex items-center gap-x-1">
                     <svg 
-                        className="w-7 h-7"
+                        className="h-5 w-5 md:w-7 md:h-7"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
                     >
@@ -77,10 +77,10 @@ const Footer = () => {
                             fill="#E5E7EB"
                         />
                     </svg>
-                    <h4 className="text-sm font-medium border-r border-gray-200 pr-1">Marahuyo { currYear }</h4>
-                    <p className="text-sm font-medium">All Rights Reserved</p>
+                    <h4 className="text-xs md:text-sm font-medium border-r border-gray-200 pr-1">Marahuyo { currYear }</h4>
+                    <p className="text-xs md:text-sm font-medium">All Rights Reserved</p>
                 </div>
-                <div className="flex gap-x-5">
+                {/* <div className="flex gap-x-5">
                     <svg 
                         className="w-6 h-6 md:w-7 md:h-7"
                         xmlns="http://www.w3.org/2000/svg" 
@@ -120,7 +120,7 @@ const Footer = () => {
                             fill="#E5E7EB"
                         />
                     </svg>
-                </div>
+                </div> */}
             </div>
         </div>
     )

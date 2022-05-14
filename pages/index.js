@@ -21,17 +21,20 @@ export default function hero() {
   return (
     <div className="min-h-screen w-full bg-white flex flex-col">
       {
-        isShowing && <MobileNav onClick={ showMobileNav } />
+        isShowing ? <MobileNav onClick={ showMobileNav } />
+        :
+        <>
+        <ScrollTopBtn />
+        <Nav onClick={ showMobileNav } />
+        <Hero />
+        <Awards />
+        <About />
+        <Services />
+        <Testimonials />
+        <Rate />
+        <Footer />
+        </>
       }
-      <ScrollTopBtn />
-      <Nav onClick={ showMobileNav } />
-      <Hero />
-      <Awards />
-      <About />
-      <Services />
-      <Testimonials />
-      <Rate />
-      <Footer />
     </div>
   )
 }

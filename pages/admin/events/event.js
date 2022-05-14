@@ -127,10 +127,10 @@ export default function event({ eventInfo, clientInfo, taskList, partnerList }) 
                                                     key={ task.id }
                                                 >
                                                     <td className={ adminStyles.tableDataClass }>
-                                                        <p className={ adminStyles.tableDataTextClass }>{ index+1 }</p>
+                                                        <p className={`${adminStyles.tableDataTextClass} dark:text-gray-300`}>{ index+1 }</p>
                                                     </td>
                                                     <td className={ adminStyles.tableDataClass }>
-                                                        <p className={ adminStyles.tableDataTextClass }>
+                                                        <p className={`${adminStyles.tableDataTextClass} dark:text-gray-300`}>
                                                             {
                                                                 partnerList.results.map((partner) => {
                                                                     if (partner.id === task.partner) {

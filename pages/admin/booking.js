@@ -253,7 +253,7 @@ export default function booking({ bookingInfo, clientInfo }) {
 
                                                     <div className="flex flex-col gap-y-1">
                                                         <label className="inputFieldLabel">Time</label>
-                                                        <div className='w-63 px-4 py-1 flex items-center justify-between bg-transparent gap-x-5 border border-gray-300 focus-within:border-gray-600 rounded-lg'>
+                                                        <div className='w-52 md:w-63 px-4 py-1 flex items-center justify-between bg-transparent gap-x-5 border border-gray-300 focus-within:border-gray-600 rounded-lg'>
                                                             <select 
                                                                 className='customTime'
                                                                 {...register("interview_hour")}
@@ -319,9 +319,9 @@ export default function booking({ bookingInfo, clientInfo }) {
                             {/* End of Create Modal */}
                         </div>
                         <div className='card w-80 md:w-client-profile-form-container'>
-                            <div className='w-full rounded-xl px-16 py-8 flex flex-col items-center border border-gray-300 dark:border-gray-700 gap-y-16'>
+                            <div className='w-full rounded-xl px-16 py-8 flex flex-col items-center border border-gray-300 dark:border-gray-700 gap-y-8 md:gap-y-16'>
                                 {/* Name & Event Type Start */}
-                                <div className='w-full flex flex-col md:flex-row justify-between'>
+                                <div className='w-full flex flex-col md:flex-row justify-between gap-y-5'>
                                     <div className='flex flex-col gap-y-1'>
                                         <h4 className='text-md font-bold text-gray-700 dark:text-gray-300'>Client Name</h4>
                                         <p className='text-sm text-gray-700 dark:text-gray-300'>{ clientInfo.first_name+' '+clientInfo.last_name }</p>
@@ -333,7 +333,7 @@ export default function booking({ bookingInfo, clientInfo }) {
                                 </div>
                                 {/* Name & Event Type End */}
                                 {/* Date/Time & Budget Start */}
-                                <div className='w-full flex flex-col md:flex-row justify-between'>
+                                <div className='w-full flex flex-col md:flex-row justify-between gap-y-5'>
                                     <div className='flex flex-col gap-y-1'>
                                         <h4 className='text-md font-bold text-gray-700 dark:text-gray-300'>Date & Time</h4>
                                         <p className='text-sm text-gray-700 dark:text-gray-300'>{ moment(bookingInfo.desired_date).format('ll')+' '+bookingInfo.time_schedule }</p>
@@ -345,7 +345,7 @@ export default function booking({ bookingInfo, clientInfo }) {
                                 </div>
                                 {/* Date/Time & Budget End */}
                                 {/* Guests & Status Start */}
-                                <div className='w-full flex flex-col md:flex-row justify-between'>
+                                <div className='w-full flex flex-col md:flex-row justify-between gap-y-5'>
                                     <div className='flex flex-col gap-y-1'>
                                         <h4 className='text-md font-bold text-gray-700 dark:text-gray-300'>Guests No.</h4>
                                         <p className='text-sm text-gray-700 dark:text-gray-300'>{ bookingInfo.guests_no }</p>
@@ -361,12 +361,40 @@ export default function booking({ bookingInfo, clientInfo }) {
                                         className="px-5 py-2 bg-pink-600 hover:bg-pink-500 rounded-lg text-white color-transition focus:outline-none"
                                         onClick={ openModal }
                                     >
-                                        <p className="text-base font-bold tracking-wide">Set Interview</p>
+                                        <svg 
+                                            xmlns="http://www.w3.org/2000/svg" 
+                                            className="h-5 w-5 text-current block md:hidden" 
+                                            fill="none" 
+                                            viewBox="0 0 24 24" 
+                                            stroke="currentColor"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                                        </svg>
+                                        {/* <svg 
+                                            xmlns="http://www.w3.org/2000/svg" 
+                                            className="h-5 w-5 text-current block md:hidden" 
+                                            fill="none" 
+                                            viewBox="0 0 24 24" 
+                                            stroke="currentColor"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg> */}
+                                        <p className="text-base font-bold tracking-wide hidden md:block">Set Interview</p>
                                     </button>
                                     <button 
                                         className='commonBtn2 color-transition'
                                         onClick={ () => declineBooking(bookingInfo.id) }
-                                    >Decline</button>
+                                    >
+                                        <svg 
+                                            xmlns="http://www.w3.org/2000/svg" 
+                                            className="h-5 w-5 text-current block md:hidden" 
+                                            viewBox="0 0 20 20" 
+                                            fill="currentColor"
+                                        >
+                                            <path fillRule="evenodd" d="M6.707 4.879A3 3 0 018.828 4H15a3 3 0 013 3v6a3 3 0 01-3 3H8.828a3 3 0 01-2.12-.879l-4.415-4.414a1 1 0 010-1.414l4.414-4.414zm4 2.414a1 1 0 00-1.414 1.414L10.586 10l-1.293 1.293a1 1 0 101.414 1.414L12 11.414l1.293 1.293a1 1 0 001.414-1.414L13.414 10l1.293-1.293a1 1 0 00-1.414-1.414L12 8.586l-1.293-1.293z" clipRule="evenodd" />
+                                        </svg>
+                                        <p className="hidden md:block">Decline</p>
+                                    </button>
                                 </div>
                             </div>
                         </div>

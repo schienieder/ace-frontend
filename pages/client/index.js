@@ -75,7 +75,7 @@ export default function dashboard({ clientProfile, bookingInfo, interviewInfo, e
                         {
                             !clientProfile.first_name || !clientProfile.last_name || !clientProfile.mobile_number || !clientProfile.email || !clientProfile.street_address || !clientProfile.city || !clientProfile.state_province ?
                             (
-                                <div className="w-full p-5 rounded-lg bg-white flex justify-center items-center gap-x-1 text-gray-800">
+                                <div className="w-full p-5 rounded-lg bg-white dark:bg-gray-900 flex justify-center items-center gap-x-1 text-gray-800">
                                     <svg 
                                         xmlns="http://www.w3.org/2000/svg" 
                                         className="h-7 w-7 text-pink-600 animate-wiggle" 
@@ -85,7 +85,7 @@ export default function dashboard({ clientProfile, bookingInfo, interviewInfo, e
                                     >
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                     </svg>
-                                    <p className="font-normal">Profile information incomplete! Proceed <Link href="/client/profile"><a className="text-pink-600 font-bold hover:underline">here</a></Link> to remove this warning.</p>
+                                    <p className="font-normal dark:text-gray-300">Profile information incomplete! Proceed <Link href="/client/profile"><a className="text-pink-600 font-bold hover:underline">here</a></Link> to remove this warning.</p>
                                 </div>
                             )
                             : ''

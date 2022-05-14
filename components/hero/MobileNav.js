@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 const MobileNav = ({ onClick }) => {
     return (
-        <div className="z-10 bg-white h-screen w-full flex flex-col items-center gap-y-8 py-5">
+        <div className="z-20 bg-white h-screen w-full flex flex-col items-center gap-y-8 py-5">
             <div className="w-full flex justify-between items-center px-8">
                 <div className="flex items-center gap-x-3">
                     <Image 
@@ -26,9 +26,9 @@ const MobileNav = ({ onClick }) => {
                     </svg>
                 </button>
             </div>
-            <h4 className="text-sm font-medium hover:text-gray-200 uppercase cursor-pointer">about</h4>
-            <h4 className="text-sm font-medium hover:text-gray-200 uppercase cursor-pointer">services</h4>
-            <h4 className="text-sm font-medium hover:text-gray-200 uppercase cursor-pointer">testimonials</h4>
+            <a href="#destination1" onClick={ onClick }><h4 className="text-sm font-medium hover:text-gray-200 uppercase cursor-pointer">about</h4></a>
+            <a href="#destination2" onClick={ onClick }><h4 className="text-sm font-medium hover:text-gray-200 uppercase cursor-pointer">services</h4></a>
+            <a href="#destination3" onClick={ onClick }><h4 className="text-sm font-medium hover:text-gray-200 uppercase cursor-pointer">testimonials</h4></a>
             <Link href="/login"><h4 className="text-sm font-medium hover:text-gray-200 uppercase cursor-pointer">login</h4></Link>
         </div>
     )

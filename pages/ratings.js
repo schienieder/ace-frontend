@@ -107,7 +107,7 @@ export default function ratings() {
                 </div>
             </nav>
             <div className="row-start-2 w-full flex flex-col justify-center items-center gap-y-5 p-8">
-                <div className="flex items-center gap-x-2 w-custom-textarea">
+                <div className="flex items-center gap-x-2 w-80 md:w-custom-textarea">
                     <svg 
                         xmlns="http://www.w3.org/2000/svg" 
                         className="h-7 w-7 text-current" 
@@ -130,7 +130,7 @@ export default function ratings() {
                     >
                         <FormizStep
                             name="step1"
-                            className="w-custom-textarea flex flex-col gap-y-8"
+                            className="w-80 md:w-custom-textarea flex flex-col gap-y-8"
                         >
                             <div className='w-full card flex flex-col gap-y-5'>
                                 <div className="flex flex-wrap text-sm">
@@ -185,7 +185,7 @@ export default function ratings() {
                         </FormizStep>
                         <FormizStep
                             name="step2"
-                            className="w-custom-textarea flex flex-col gap-y-8"
+                            className="w-80 md:w-custom-textarea flex flex-col gap-y-8"
                         >
                             <MySelectField 
                                 id="rating_venue"
@@ -233,7 +233,7 @@ export default function ratings() {
                         </FormizStep>
                         <FormizStep
                             name="step3"
-                            className="w-custom-textarea flex flex-col gap-y-8"
+                            className="w-80 md:w-custom-textarea flex flex-col gap-y-8"
                         >
                             <MySelectField 
                                 id="rating_mc"

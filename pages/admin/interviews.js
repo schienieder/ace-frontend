@@ -264,7 +264,7 @@ export default function interviews({ interviewsList, allInterviews }) {
                                     leaveFrom="opacity-100 scale-100"
                                     leaveTo="opacity-0 scale-95"
                                 >
-                                <div className="inline-block w-client-profile-form-container my-8 p-5 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl border-b border-gray-200 rounded-xl">
+                                <div className="inline-block w-80 md:w-client-profile-form-container my-8 p-5 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl border-b border-gray-200 rounded-xl">
                                     <div className="p-5 border border-gray-300 rounded-xl">
                                         
                                         <div className="w-full flex justify-end">
@@ -292,7 +292,7 @@ export default function interviews({ interviewsList, allInterviews }) {
                                             <h4 className="text-base font-bold">Edit Schedule</h4>
 
                                             {/* This is for the contact field */}
-                                            <div className="flex gap-x-5">
+                                            <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
 
                                                 <div className="flex flex-col gap-y-1">
                                                     <label className="inputFieldLabel">Date</label>
@@ -320,7 +320,7 @@ export default function interviews({ interviewsList, allInterviews }) {
 
                                                 <div className="flex flex-col gap-y-1">
                                                     <label className="inputFieldLabel">Time</label>
-                                                    <div className='w-63 px-4 py-1 flex items-center justify-between bg-transparent gap-x-5 border border-gray-300 focus-within:border-gray-600 rounded-lg'>
+                                                    <div className='w-52 md:w-63 px-4 py-1 flex items-center justify-between bg-transparent gap-x-5 border border-gray-300 focus-within:border-gray-600 rounded-lg'>
                                                         <select 
                                                             className='customTime'
                                                             {...register("interview_hour")}
