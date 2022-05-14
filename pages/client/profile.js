@@ -10,12 +10,16 @@ import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
 import Swal from 'sweetalert2'
 import axios from 'axios'
+import useDarkMode from '../../hooks/useDarkMode'
+import ClientMobileNav from '../../components/client/ClientMobileNav'
 
 
 export default function profile({ clientProfile }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const router = useRouter()
     const [userName, setUsername] = useState()
+    const { isDarkMode } = useDarkMode()
+    const [showMobileNav, setShowMobileNav] = useState(false)
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
         const role = localStorage.getItem('role')
@@ -75,17 +79,28 @@ export default function profile({ clientProfile }) {
         })
     }
     return (
-        <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
+        <div className={`${isDarkMode ? 'dark' : ''} w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800 dark:text-gray-300`}>
             <SideNav isActive="" />
-            <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav username={ userName } />
-                <div className="row-start-2 w-full h-full bg-true-100">
-                    <div className="p-8 flex flex-col items-center gap-y-5 min-h-screen">
-                        <div className="w-client-profile-form-container">
+            {
+                showMobileNav ? 
+                <ClientMobileNav 
+                    isActive="messages" 
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                : null
+            }
+            <div className="col-start-1 md:col-start-2 grid grid-rows-custom-layout overflow-y-auto">
+                <TopNav 
+                    username={ userName } 
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                <div className="row-start-2 w-full h-full bg-true-100 dark:bg-gray-800">
+                    <div className="p-5 md:p-8 flex flex-col items-center gap-y-5 min-h-screen">
+                        <div className="w-80 md:w-client-profile-form-container">
                             <PageHeader text="Client Profile">
                                 <svg 
                                     xmlns="http://www.w3.org/2000/svg" 
-                                    className="w-7 h-7 text-current" 
+                                    className="w-7 h-7 text-gray-800 dark:text-gray-300" 
                                     fill="none" 
                                     viewBox="0 0 24 24" 
                                     stroke="currentColor"
@@ -94,34 +109,34 @@ export default function profile({ clientProfile }) {
                                 </svg>
                             </PageHeader>
                         </div>
-                        <div className="card w-client-profile-form-container">
+                        <div className="card w-80 md:w-client-profile-form-container">
                             <form 
                                 onSubmit={ handleSubmit(handleSubmitForm) }
-                                className="w-full rounded-xl p-5 flex flex-col items-center border border-gray-300 gap-y-7"
+                                className="w-full rounded-xl p-5 flex flex-col items-center border border-gray-300 dark:border-gray-700 gap-y-7"
                             >
 
                                 <div className="w-full flex flex-col gap-y-2">
-                                    <p className="inputFieldLabel">Image</p>
-                                    <div className='inputContainer'>
+                                    <p className="inputFieldLabel dark:text-gray-300">Image</p>
+                                    <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                         <input
                                             type="file"
                                             { ...register("client_profile") } 
-                                            className="inputField"
+                                            className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
                                         />
                                     </div>
                                 </div>
 
                                 {/* This is for the name field */}
                                 <div className="flex flex-col gap-y-2">
-                                    <p className="inputFieldLabel">Name</p>
-                                    <div className="flex gap-x-5">
+                                    <p className="inputFieldLabel dark:text-gray-300">Name</p>
+                                    <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
 
                                         <div className="flex flex-col gap-y-1">
-                                            <p className="text-xs">First Name</p>
-                                            <div className="inputContainer">
+                                            <p className="text-xs dark:text-gray-300">First Name</p>
+                                            <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                                 <svg 
                                                     xmlns="http://www.w3.org/2000/svg" 
-                                                    className="inputIcon" 
+                                                    className="h-5 w-5 text-gray-800 dark:text-gray-300" 
                                                     fill="none" 
                                                     viewBox="0 0 24 24" 
                                                     stroke="currentColor"
@@ -131,7 +146,7 @@ export default function profile({ clientProfile }) {
                                                 <input
                                                     type="text"
                                                     { ...register("client_fname", { required : "This field cannot be empty" }) } 
-                                                    className="inputField"
+                                                    className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
                                                     defaultValue={ clientProfile.first_name }
                                                 />
                                             </div>
@@ -145,11 +160,11 @@ export default function profile({ clientProfile }) {
                                         </div>
 
                                         <div className="flex flex-col gap-y-1">
-                                            <p className="text-xs">Last Name</p>
-                                            <div className="inputContainer">
+                                            <p className="text-xs dark:text-gray-300">Last Name</p>
+                                            <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                                 <svg 
                                                     xmlns="http://www.w3.org/2000/svg" 
-                                                    className="inputIcon" 
+                                                    className="h-5 w-5 text-gray-800 dark:text-gray-300"
                                                     fill="none" 
                                                     viewBox="0 0 24 24" 
                                                     stroke="currentColor"
@@ -159,7 +174,7 @@ export default function profile({ clientProfile }) {
                                                 <input
                                                     type="text"
                                                     { ...register("client_lname", { required : "This field cannot be empty" }) } 
-                                                    className="inputField"
+                                                    className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
                                                     defaultValue={ clientProfile.last_name }
                                                 />
                                             </div>
@@ -177,15 +192,15 @@ export default function profile({ clientProfile }) {
 
                                 {/* This is for the contact field */}
                                 <div className="flex flex-col gap-y-2">
-                                    <p className="inputFieldLabel">Contact</p>
-                                    <div className="flex gap-x-5">
+                                    <p className="inputFieldLabel dark:text-gray-300">Contact</p>
+                                    <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
 
                                         <div className="flex flex-col gap-y-1">
-                                            <p className="text-xs">Mobile Number</p>
-                                            <div className="inputContainer">
+                                            <p className="text-xs dark:text-gray-300">Mobile Number</p>
+                                            <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                                 <svg 
                                                     xmlns="http://www.w3.org/2000/svg" 
-                                                    className="inputIcon" 
+                                                    className="h-5 w-5 text-gray-800 dark:text-gray-300"
                                                     fill="none" 
                                                     viewBox="0 0 24 24" 
                                                     stroke="currentColor"
@@ -195,7 +210,7 @@ export default function profile({ clientProfile }) {
                                                 <input
                                                     type="text"
                                                     { ...register("client_mobile", { required : "This field cannot be empty" }) } 
-                                                    className="inputField"
+                                                    className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
                                                     defaultValue={ clientProfile.mobile_number }
                                                 />
                                             </div>
@@ -209,11 +224,11 @@ export default function profile({ clientProfile }) {
                                         </div>
 
                                         <div className="flex flex-col gap-y-1">
-                                            <p className="text-xs">Email Address</p>
-                                            <div className="inputContainer">
+                                            <p className="text-xs dark:text-gray-300">Email Address</p>
+                                            <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                                 <svg 
                                                     xmlns="http://www.w3.org/2000/svg" 
-                                                    className="inputIcon" 
+                                                    className="h-5 w-5 text-gray-800 dark:text-gray-300"
                                                     fill="none" 
                                                     viewBox="0 0 24 24" 
                                                     stroke="currentColor"
@@ -223,7 +238,7 @@ export default function profile({ clientProfile }) {
                                                 <input
                                                     type="text"
                                                     { ...register("client_email", { required : "This field cannot be empty" }) } 
-                                                    className="inputField"
+                                                    className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
                                                     defaultValue={ clientProfile.email || '' }
                                                 />
                                             </div>
@@ -239,25 +254,25 @@ export default function profile({ clientProfile }) {
                                     </div>
                                 </div>
 
-                                <div className="flex gap-x-5">
+                                <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
 
                                     <div className="flex flex-col gap-y-1">
-                                            <label htmlFor="profile_sex" className="inputFieldLabel">Sex</label>
+                                            <label htmlFor="profile_sex" className="inputFieldLabel dark:text-gray-300">Sex</label>
                                             <select
-                                                className="inputSelect rounded-lg"
+                                                className="w-50 md:w-63 px-2 py-1 bg-transparent border-transparent text-sm text-gray-800 dark:text-gray-300 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 focus:outline-none focus:ring-transparent rounded-lg"
                                                 {...register("client_sex")}
                                                 defaultValue={ clientProfile.sex || '' }
                                             >
-                                                <option value="0">Male</option>
-                                                <option value="1">Female</option>
+                                                <option value="0" className="dark:text-gray-800 text-xs md:text-sm">Male</option>
+                                                <option value="1" className="dark:text-gray-800 text-xs md:text-sm">Female</option>
                                             </select>
                                         </div>
                                         <div className="flex flex-col gap-y-1">
-                                            <label htmlFor="profile_birth" className="inputFieldLabel">Birth Date</label>
-                                            <div className="inputContainer">
+                                            <label htmlFor="profile_birth" className="inputFieldLabel dark:text-gray-300">Birth Date</label>
+                                            <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                                 <input
                                                     type="date"
-                                                    className="inputFieldDateTime appearance-none"
+                                                    className="w-48 md:w-57 px-0 py-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm rounded-lg text-gray-800 dark:text-gray-300 appearance-none"
                                                     { ...register("client_birth", { required: "This field should not be empty!" }) }
                                                     autoComplete="off"
                                                     defaultValue={ clientProfile.birthdate || '' }
@@ -276,18 +291,18 @@ export default function profile({ clientProfile }) {
 
                                 {/* This is for the address field */}
                                 <div className="flex flex-col gap-y-2">
-                                    <p className="inputFieldLabel">Address</p>
+                                    <p className="inputFieldLabel dark:text-gray-300">Address</p>
 
                                     <div className="flex flex-col gap-y-7">
 
-                                    <div className="flex gap-x-5">
+                                    <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
 
                                         <div className="flex flex-col gap-y-1">
-                                            <p className="text-xs">Street Address</p>
-                                            <div className="inputContainer">
+                                            <p className="text-xs dark:text-gray-300">Street Address</p>
+                                            <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                                 <svg 
                                                     xmlns="http://www.w3.org/2000/svg" 
-                                                    className="inputIcon" 
+                                                    className="h-5 w-5 text-gray-800 dark:text-gray-300"
                                                     fill="none" 
                                                     viewBox="0 0 24 24" 
                                                     stroke="currentColor"
@@ -297,7 +312,7 @@ export default function profile({ clientProfile }) {
                                                 <input
                                                     type="text"
                                                     { ...register("client_st_add", { required : "This field cannot be empty" }) } 
-                                                    className="inputField"
+                                                    className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
                                                     defaultValue={ clientProfile.street_address || '' }
                                                 />
                                             </div>
@@ -311,11 +326,11 @@ export default function profile({ clientProfile }) {
                                         </div>
 
                                         <div className="flex flex-col gap-y-1">
-                                            <p className="text-xs">City</p>
-                                            <div className="inputContainer">
+                                            <p className="text-xs dark:text-gray-300">City</p>
+                                            <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                                 <svg 
                                                     xmlns="http://www.w3.org/2000/svg" 
-                                                    className="inputIcon" 
+                                                    className="h-5 w-5 text-gray-800 dark:text-gray-300"
                                                     fill="none" 
                                                     viewBox="0 0 24 24" 
                                                     stroke="currentColor"
@@ -325,7 +340,7 @@ export default function profile({ clientProfile }) {
                                                 <input
                                                     type="text"
                                                     { ...register("client_city", { required : "This field cannot be empty" }) } 
-                                                    className="inputField"
+                                                    className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
                                                     defaultValue={ clientProfile.city || '' }
                                                 />
                                             </div>
@@ -340,14 +355,14 @@ export default function profile({ clientProfile }) {
 
                                         </div>
 
-                                        <div className="flex gap-x-5">
+                                        <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
 
                                         <div className="flex flex-col gap-y-1">
-                                            <p className="text-xs">State / Province</p>
-                                            <div className="inputContainer">
+                                            <p className="text-xs dark:text-gray-300">State / Province</p>
+                                            <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                                 <svg 
                                                     xmlns="http://www.w3.org/2000/svg" 
-                                                    className="inputIcon" 
+                                                    className="h-5 w-5 text-gray-800 dark:text-gray-300"
                                                     fill="none" 
                                                     viewBox="0 0 24 24" 
                                                     stroke="currentColor"
@@ -357,7 +372,7 @@ export default function profile({ clientProfile }) {
                                                 <input
                                                     type="text"
                                                     { ...register("client_province", { required : "This field cannot be empty" }) } 
-                                                    className="inputField"
+                                                    className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
                                                     defaultValue={ clientProfile.state_province || '' }
                                                 />
                                             </div>
@@ -371,11 +386,11 @@ export default function profile({ clientProfile }) {
                                         </div>
 
                                         <div className="flex flex-col gap-y-1">
-                                            <p className="text-xs">Postal / Zip Code</p>
-                                            <div className="inputContainer">
+                                            <p className="text-xs dark:text-gray-300">Postal / Zip Code</p>
+                                            <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                                 <svg 
                                                     xmlns="http://www.w3.org/2000/svg" 
-                                                    className="inputIcon" 
+                                                    className="h-5 w-5 text-gray-800 dark:text-gray-300"
                                                     fill="none" 
                                                     viewBox="0 0 24 24" 
                                                     stroke="currentColor"
@@ -385,7 +400,7 @@ export default function profile({ clientProfile }) {
                                                 <input
                                                     type="text"
                                                     { ...register("client_zip", { required : "This field cannot be empty" }) } 
-                                                    className="inputField"
+                                                    className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
                                                     defaultValue={ clientProfile.postal_zip || '' }
                                                 />
                                             </div>
@@ -413,8 +428,8 @@ export default function profile({ clientProfile }) {
                                 </div>
 
                                 <div className='self-start flex flex-col gap-y-1 text-xs'>
-                                    <h4 className='text-sm font-medium'>Note:</h4>
-                                    <p>This website follows the Data Privacy Act of the Philippines or <a href="https://www.privacy.gov.ph/data-privacy-act/" target="_blank" rel="noreferrer" className='text-pink-600 font-medium hover:underline'>RA 10173</a>, all 
+                                    <h4 className='text-sm font-medium dark:text-gray-300'>Note:</h4>
+                                    <p className="dark:text-gray-300">This website follows the Data Privacy Act of the Philippines or <a href="https://www.privacy.gov.ph/data-privacy-act/" target="_blank" rel="noreferrer" className='text-pink-600 font-medium hover:underline'>RA 10173</a>, all 
                                     information collected in this website are confidential and will not be shared into anyone.</p>
                                 </div>
 
