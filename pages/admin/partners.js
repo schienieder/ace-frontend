@@ -14,16 +14,19 @@ import axios from 'axios'
 import CommonTable from '../../components/CommonTable'
 import Link from 'next/link'
 import debounce from 'debounce'
+import useDarkMode from '../../hooks/useDarkMode'
+import AdminMobileNav from '../../components/admin/AdminMobileNav'
 
 export default function partners({ partnersList }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
+    const { isDarkMode } = useDarkMode()
     const data = useMemo(() => partnersList.results, [partnersList.count])
     const partnerColumns = useMemo(() => [
         {
             Header : 'Name',
             accessor : row => `${row.first_name} ${row.last_name}`,
             Cell : ({row}) => (
-                <p className={ adminStyles.tableDataTextClass }>
+                <p className={`${adminStyles.tableDataTextClass} text-gray-800 dark:text-gray-300`}>
                 {  row.original.first_name +' '+ row.original.last_name }
                 </p>
             )
@@ -32,7 +35,7 @@ export default function partners({ partnersList }) {
             Header : 'Role',
             accessor : 'business_name',
             Cell : ({row}) => (
-                <p className="text-sm text-gray-800">{ row.original.business_name || 'N/A' }</p>
+                <p className="text-sm text-gray-800 dark:text-gray-300">{ row.original.business_name || 'N/A' }</p>
             )
         },
         {
@@ -86,6 +89,7 @@ export default function partners({ partnersList }) {
     let [isOpen, setIsOpen] = useState(false)
     const router = useRouter()
     const [userName, setUsername] = useState()
+    const [showMobileNav, setShowMobileNav] = useState(false)
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
         const role = localStorage.getItem('role')
@@ -212,16 +216,27 @@ export default function partners({ partnersList }) {
         setIsOpen(true)
     }
     return (
-        <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
+        <div className={`${isDarkMode ? 'dark' : ''} w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800`}>
             <SideNav isActive="partners" />
-            <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav username={ userName } />
-                <div className="row-start-2 w-full h-full bg-true-100">
-                    <div className="p-8 flex flex-col gap-y-5 min-h-screen">
+            {
+                showMobileNav ?
+                <AdminMobileNav 
+                    isActive="partners"
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                /> 
+                : null
+            }
+            <div className="col-start-1 md:col-start-2 grid grid-rows-custom-layout overflow-y-auto">
+                <TopNav 
+                    username={ userName } 
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                <div className="row-start-2 w-full h-full bg-true-100 dark:bg-gray-800">
+                    <div className="p-5 md:p-8 flex flex-col gap-y-5 min-h-screen">
                         <PageHeader text="Partner List">
                             <svg 
                                 xmlns="http://www.w3.org/2000/svg" 
-                                className="w-7 h-7 text-current"
+                                className="w-7 h-7 text-gray-800 dark:text-gray-300"
                                 fill="none" 
                                 viewBox="0 0 24 24" 
                                 stroke="currentColor"
@@ -264,7 +279,7 @@ export default function partners({ partnersList }) {
                                     leaveFrom="opacity-100 scale-100"
                                     leaveTo="opacity-0 scale-95"
                                 >
-                                <div className="inline-block w-client-profile-form-container my-8 p-5 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl border-b border-gray-200 rounded-xl">
+                                <div className="inline-block w-80 md:w-client-profile-form-container my-8 p-5 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl border-b border-gray-200 rounded-xl">
                                     <div className="p-5 border border-gray-300 rounded-xl">
                                         
                                         <div className="w-full flex justify-end">
@@ -290,12 +305,12 @@ export default function partners({ partnersList }) {
                                             onSubmit={ handleSubmit(addPartner) }
                                         >
 
-                                            <h4 className="text-base font-bold tracking-wide">New Business Partner</h4>
+                                            <h4 className="text-sm md:text-base font-bold tracking-wide">New Business Partner</h4>
 
                                             {/* This is for the name field */}
                                             <div className="flex flex-col gap-y-2">
                                                 <p className="inputFieldLabel">Name</p>
-                                                <div className="flex gap-x-5">
+                                                <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
 
                                                     <div className="flex flex-col gap-y-1">
                                                         <p className="text-xs">First Name</p>
@@ -357,7 +372,7 @@ export default function partners({ partnersList }) {
                                             {/* This is for the contact field */}
                                             <div className="flex flex-col gap-y-2">
                                                 <p className="inputFieldLabel">Contact</p>
-                                                <div className="flex gap-x-5">
+                                                <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
 
                                                     <div className="flex flex-col gap-y-1">
                                                         <p className="text-xs">Mobile Number</p>
@@ -456,7 +471,7 @@ export default function partners({ partnersList }) {
                                             </div>
 
                                             {/* This is for the account fields */}
-                                            <div className="flex gap-x-5">
+                                            <div className="w-50 md:w-full flex flex-col md:flex-row gap-y-5 gap-x-5">
 
                                                 <div className="flex flex-col gap-y-1">
                                                     <label className="inputFieldLabel">Username</label>
@@ -587,7 +602,7 @@ export default function partners({ partnersList }) {
                             </div>
                             </Dialog>
                         </Transition>
-                        <div className="card w-full flex flex-col gap-y-5">
+                        <div className="card w-65 md:w-full overflow-x-auto flex flex-col gap-y-5">
                             <CommonTable columns={ partnerColumns } data={ data } onClick={ openModal } btnText="New Partner" cols={4} />
                         </div>
                     </div>

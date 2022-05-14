@@ -23,17 +23,17 @@ function CommonTable({ columns, data, onClick, btnText, cols }) {
     return (
         <Fragment>
         <div className="w-full flex justify-between items-center">
-            <div className="searchBarContainer">
+            <div className="searchBarContainer dark:border-gray-700">
                 <input 
                     type="text"
-                    className="searchBarInput"
+                    className="searchBarInput dark:bg-gray-900 dark:text-gray-300"
                     placeholder="Search here . . ."
                     value={ globalFilter || '' }
                     onChange={ e => setGlobalFilter(e.target.value) }
                 />
                 <svg 
                     xmlns="http://www.w3.org/2000/svg" 
-                    className="h-4 w-4 text-current" 
+                    className="inputIcon dark:text-gray-500" 
                     fill="none" 
                     viewBox="0 0 24 24" 
                     stroke="currentColor"
@@ -55,18 +55,18 @@ function CommonTable({ columns, data, onClick, btnText, cols }) {
                 >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                <p className="text-sm font-bold">{ btnText }</p>
+                <p className="hidden md:block text-sm font-bold">{ btnText }</p>
             </button>
         </div>
         <table 
-            className="min-w-full divide-y divide-gray-200 border-b border-gray-200"
+            className="min-w-full divide-y divide-gray-200 border-b border-gray-200 dark:border-gray-700 dark:divide-gray-700"
             { ...getTableProps() }
         >
-            <thead className={ adminStyles.theadClass }>
+            <thead className="bg-gray-100 dark:bg-gray-800">
                 { 
                     headerGroups.map(headerGroup => (
                         <tr 
-                            className="text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+                            className="text-left text-xs uppercase tracking-wider text-gray-700 dark:text-gray-400"
                             {...headerGroup.getHeaderGroupProps() }
                         >
                             {
@@ -85,7 +85,7 @@ function CommonTable({ columns, data, onClick, btnText, cols }) {
                 }
             </thead>
             <tbody 
-                className={ adminStyles.tbodyClass }
+                className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700"
                 { ...getTableBodyProps() }
             >
                 {
@@ -94,7 +94,7 @@ function CommonTable({ columns, data, onClick, btnText, cols }) {
                         prepareRow(row)
                         return (
                             <tr
-                                className={`${adminStyles.tableRowClass} color-transition`}
+                                className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-300"
                                 { ...row.getRowProps() }
                             >
                                 {
@@ -116,7 +116,7 @@ function CommonTable({ columns, data, onClick, btnText, cols }) {
                             className="px-6 py-3 whitespace-nowrap text-center"
                             colSpan={cols}
                         >
-                            <p className="text-sm">Nothing to show.</p>
+                            <p className="text-sm dark:text-gray-300">Nothing to show.</p>
                         </td>
                     </tr>
                 }
@@ -163,7 +163,7 @@ function CommonTable({ columns, data, onClick, btnText, cols }) {
                 <div className="searchBarContainer">
                     <input 
                         type="number"
-                        className="searchBarInput"
+                        className="searchBarInput dark:bg-gray-900 dark:text-gray-300"
                         placeholder="Page Number . . ."
                         defaultValue={pageIndex + 1}
                         onChange={ e =>  {
@@ -172,7 +172,7 @@ function CommonTable({ columns, data, onClick, btnText, cols }) {
                         }}
                     />
                 </div>
-                <p className="font-normal">Page <span className="font-bold">{pageOptions.length ? pageIndex + 1 : pageIndex}</span> of <span className="font-bold">{pageOptions.length}</span></p>
+                <p className="font-normal dark:text-gray-300">Page <span className="font-bold">{pageOptions.length ? pageIndex + 1 : pageIndex}</span> of <span className="font-bold">{pageOptions.length}</span></p>
             </div>
             {/* GO TO PAGE INPUT END */}
         </div>

@@ -23,12 +23,12 @@ export default function bookings({ bookingDetails }) {
         await readRole()
     }, [])
     return (
-        <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
+        <div className="w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="booking" />
-            <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
+            <div className="col-start-1 md:col-start-2 grid grid-rows-custom-layout overflow-y-auto">
                 <TopNav username={ userName } />
                 <div className="row-start-2 w-full h-full bg-true-100">
-                    <div className="p-8 flex flex-col items-center gap-y-5 min-h-screen">
+                    <div className="p-5 md:p-8 flex flex-col items-center gap-y-5 min-h-screen">
                         <div className="w-full flex justify-between">
                             <PageHeader text="Event Bookings">
                                 <svg 

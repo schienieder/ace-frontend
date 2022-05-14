@@ -11,11 +11,13 @@ import Cookies from 'js-cookie'
 import axios from 'axios'
 import clientStyles from '../../styles/Client.module.css'
 import moment from 'moment'
-import {QRCodeCanvas} from "qrcode.react";
+import {QRCodeCanvas} from 'qrcode.react'
+import ClientMobileNav from '../../components/client/ClientMobileNav'
 
 export default function dashboard({ clientProfile, bookingInfo, interviewInfo, eventInfo, totalTasks, completedTasks }) {
     const router = useRouter()
     const [userName, setUsername] = useState()
+    const [showMobileNav, setShowMobileNav] = useState(false)
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
         const role = localStorage.getItem('role')
@@ -40,12 +42,23 @@ export default function dashboard({ clientProfile, bookingInfo, interviewInfo, e
         document.body.removeChild(downloadLink);
     }
     return (
-        <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
+        <div className="w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="dashboard" />
-            <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav username={ userName } />
+            {
+                showMobileNav ? 
+                <ClientMobileNav 
+                    isActive="dashboard" 
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                : null
+            }
+            <div className="col-start-1 md:col-start-2 grid grid-rows-custom-layout overflow-y-auto">
+                <TopNav 
+                    username={ userName } 
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
                 <div className="row-start-2 w-full h-full bg-true-100">
-                    <div className="min-h-screen p-8 flex flex-col gap-y-5">
+                    <div className="min-h-screen p-5 md:p-8 flex flex-col gap-y-5">
                         <PageHeader text="Dashboard">
                             <svg 
                                 xmlns="http://www.w3.org/2000/svg" 
@@ -93,10 +106,10 @@ export default function dashboard({ clientProfile, bookingInfo, interviewInfo, e
                                     >
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                     </svg>
-                                    <p>Download QR</p>
+                                    <p className="hidden md:block">Download QR</p>
                                 </button>
                             </div>
-                            <div className='w-full grid grid-cols-4 gap-x-5'>
+                            <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-5'>
                                 <div className='card flex flex-col gap-y-5'>
                                     <div className='flex gap-x-1 items-center'>
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">

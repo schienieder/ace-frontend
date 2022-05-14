@@ -12,9 +12,12 @@ import moment from 'moment'
 import Link from 'next/link'
 import CommonTable2 from '../../components/CommonTable2'
 import currency from 'currency.js'
+import useDarkMode from '../../hooks/useDarkMode'
+import AdminMobileNav from '../../components/admin/AdminMobileNav'
 
 export default function bookings({ bookingsList }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
+    const { isDarkMode } = useDarkMode()
     const peso = value => currency(value, { symbol : '₱', precision : 0 })
     const data = useMemo(() => bookingsList, [bookingsList.length])
     const bookingColumns = useMemo(() => [
@@ -85,6 +88,7 @@ export default function bookings({ bookingsList }) {
     ], [])
     const router = useRouter()
     const [userName, setUsername] = useState()
+    const [showMobileNav, setShowMobileNav] = useState(false)
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
         const role = localStorage.getItem('role')
@@ -138,16 +142,27 @@ export default function bookings({ bookingsList }) {
         })
     }
     return (
-        <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
+        <div className={`${ isDarkMode ? 'dark' : '' } w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800`}>
             <SideNav isActive="bookings" />
-            <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav username={ userName } />
-                <div className="row-start-2 w-full h-full bg-true-100">
-                    <div className="p-8 flex flex-col gap-y-5 min-h-screen">
+            {
+                showMobileNav ?
+                <AdminMobileNav 
+                    isActive="bookings"
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                /> 
+                : null
+            }
+            <div className="col-start-1 md:col-start-2 grid grid-rows-custom-layout overflow-y-auto">
+                <TopNav 
+                    username={ userName } 
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                <div className="row-start-2 w-full h-full bg-true-100 dark:bg-gray-800">
+                    <div className="p-5 md:p-8 flex flex-col gap-y-5 min-h-screen">
                         <PageHeader text="Bookings List">
                             <svg 
                                 xmlns="http://www.w3.org/2000/svg" 
-                                className="h-7 w-7 text-current" 
+                                className="h-7 w-7 text-gray-800 dark:text-gray-300" 
                                 fill="none" 
                                 viewBox="0 0 24 24" 
                                 stroke="currentColor"
@@ -155,7 +170,7 @@ export default function bookings({ bookingsList }) {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                             </svg>
                         </PageHeader>
-                        <div className="card w-full flex flex-col gap-y-5">
+                        <div className="card w-65 md:w-full overflow-x-auto flex flex-col gap-y-5">
                             <CommonTable2 columns={ bookingColumns } data={ data } cols={5} />
                         </div>
                     </div>

@@ -1,36 +1,28 @@
 import React, { Fragment } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
-import clientStyles from '../../styles/Client.module.css'
-import useDarkMode from '../../hooks/useDarkMode'
-// import { Disclosure, Transition } from '@headlessui/react'
 
-const SideNav = ({ isActive }) => {
-
-    
-
+const ClientMobileNav = ({ isActive, onClick }) => {
     return (
-        <div className="hidden md:col-start-1 h-screen bg-white border-r border-gray-200 md:flex flex-col">
-            <div className="w-full py-4 flex justify-center items-center gap-x-1 text-gray-800">
-                <Link href="/client">
-                    <div className="flex items-center gap-x-3 cursor-pointer">
-                        <Image 
-                            src="/images/logo.svg"
-                            width={ 50 }
-                            height={ 50 }
-                            alt="Logo"
-                        />
-                        <h4 className="text-2xl font-source font-black">Marahuyo</h4>
-                    </div>
-                </Link>
+        <div className="z-50 w-full h-screen bg-white flex flex-col items-center gap-y-8 py-8">
+            <div className="w-full flex justify-end px-8">
+                <button onClick={ onClick }>
+                    <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        className="h-5 w-5" 
+                        viewBox="0 0 20 20" 
+                        fill="currentColor"
+                    >
+                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                </button>
             </div>
             <Link href="/client" passHref>
                 <a 
-                    className={`${isActive === 'dashboard' ? clientStyles.sideNavItemActive : clientStyles.sideNavItem} ${isActive === 'dashboard' ? 'dark:bg-gray-800' : 'dark:bg-gray-900 hover:bg-gray-800'}`}
+                    className={`${isActive === 'dashboard' ? 'text-pink-600' : 'text-gray-800' } flex items-center gap-x-1 text-sm`}
                 >
                     <svg 
                         xmlns="http://www.w3.org/2000/svg" 
-                        className="h-6 w-6 text-current" 
+                        className="h-5 w-5 text-current" 
                         fill="none" 
                         viewBox="0 0 24 24" 
                         stroke="currentColor"
@@ -42,11 +34,11 @@ const SideNav = ({ isActive }) => {
             </Link>
             <Link href="/client/bookings" passHref>
                 <a 
-                    className={`${isActive === 'booking' ? clientStyles.sideNavItemActive : clientStyles.sideNavItem}`}
+                    className={`${isActive === 'booking' ? 'text-pink-600' : 'text-gray-800' } flex items-center gap-x-1 text-sm`}
                 >
                     <svg 
                         xmlns="http://www.w3.org/2000/svg" 
-                        className={ clientStyles.sideNavIcon } 
+                        className="h-5 w-5 text-current" 
                         fill="none" 
                         viewBox="0 0 24 24" 
                         stroke="currentColor"
@@ -56,13 +48,13 @@ const SideNav = ({ isActive }) => {
                     <p className="font-mont font-bold text-sm">Event Bookings</p>
                 </a>
             </Link>
-            <Link href="/client/messages" passHref>
+            <Link href="/client/bookings" passHref>
                 <a 
-                    className={ isActive === 'messages' ? clientStyles.sideNavItemActive : clientStyles.sideNavItem }
+                    className={`${isActive === 'messages' ? 'text-pink-600' : 'text-gray-800' } flex items-center gap-x-1 text-sm`}
                 >
                     <svg 
                         xmlns="http://www.w3.org/2000/svg" 
-                        className={ clientStyles.sideNavIcon } 
+                        className="h-5 w-5 text-current" 
                         fill="none" 
                         viewBox="0 0 24 24" 
                         stroke="currentColor"
@@ -76,4 +68,4 @@ const SideNav = ({ isActive }) => {
     )
 }
 
-export default SideNav
+export default ClientMobileNav

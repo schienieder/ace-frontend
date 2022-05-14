@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import useDarkMode from '../../hooks/useDarkMode'
 
-const TopNav = ({ username }) => {
+const TopNav = ({ username, onClick }) => {
     const router = useRouter()
     const { isDarkMode, handleModeChange } = useDarkMode()
     const darkMode = Boolean(isDarkMode)
@@ -16,18 +16,24 @@ const TopNav = ({ username }) => {
         router.push('/login')
     }
     return (
-        <nav className={`row-start-1 w-full top-0 py-3 px-10 flex justify-between items-center border-b ${darkMode ? 'dark bg-gray-900 text-gray-200 border-gray-700' : 'bg-true-100 text-gray-600 border-gray-200'}`}>
-            <button className={`${adminStyles.topNavBtn} color-transition rounded-lg bg-transparent focus:outline-none`}>
-                <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    className="h-6 w-6 text-current" 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
-                    stroke="currentColor"
+        <nav className={`row-start-1 w-full top-0 py-3 px-5 md:px-10 flex justify-between items-center border-b ${darkMode ? 'dark bg-gray-900 text-gray-200 border-gray-700' : 'bg-true-100 text-gray-600 border-gray-200'}`}>
+            <div className="block lg:hidden">
+                <button 
+                    className={`${adminStyles.topNavBtn} color-transition rounded-lg bg-transparent focus:outline-none`}
+                    onClick={ onClick }
                 >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-            </button>
+                    <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        className="h-6 w-6 text-current" 
+                        fill="none" 
+                        viewBox="0 0 24 24" 
+                        stroke="currentColor"
+                    >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+            <div className="hidden lg:block"></div>
             <div className="flex items-center gap-x-3">
                 <Link href="/admin/messages">
                     <a 
@@ -36,7 +42,7 @@ const TopNav = ({ username }) => {
                     >
                         <svg 
                             xmlns="http://www.w3.org/2000/svg" 
-                            className="h-6 w-6 text-current" 
+                            className="h-5 w-5 md:h-6 md:w-6 text-current" 
                             fill="none" 
                             viewBox="0 0 24 24" 
                             stroke="currentColor"
@@ -53,7 +59,7 @@ const TopNav = ({ username }) => {
                     >
                         <svg 
                             xmlns="http://www.w3.org/2000/svg" 
-                            className="h-5 w-5 text-current"
+                            className="h-5 w-5 md:h-6 md:w-6 text-current"
                             fill="none" 
                             viewBox="0 0 24 24" 
                             stroke="currentColor"

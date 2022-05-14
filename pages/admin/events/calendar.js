@@ -16,8 +16,8 @@ export default function cards() {
             router.push('/login')
         }
     }
-    useEffect( async () => {
-        await readRole()
+    useEffect(() => {
+        readRole()
     }, [])
     const { calendarRows, selectedDate, todayFormatted, daysShort, monthNames, getNextMonth, getPrevMonth } = CalendarHook()
     const dateClickHandler = date => {

@@ -1,13 +1,16 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import clientStyles from '../../styles/Client.module.css'
+import adminStyles from '../../styles/Admin.module.css'
 import { Menu, Transition, Switch } from '@headlessui/react'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
+import useDarkMode from '../../hooks/useDarkMode'
 
-const TopNav = ({ username }) => {
-    const [toggleDark, setToggleDark] = useState(false)
+const TopNav = ({ username, onClick }) => {
     const router = useRouter()
+    const { isDarkMode, handleModeChange } = useDarkMode()
+    const darkMode = Boolean(isDarkMode)
     const handleLogOut = () => {
         localStorage.clear()
         Cookies.remove('jwt')
@@ -15,34 +18,40 @@ const TopNav = ({ username }) => {
     }
     return (
         <>
-        <nav className="row-start-1 w-full top-0 z-20 py-3 px-10 bg-true-100 text-gray-600 border-b border-gray-200 flex justify-between items-center">
-            <button className={`${clientStyles.topNavBtn} color-transition`}>
-                <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    className="h-6 w-6 text-current" 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
-                    stroke="currentColor"
+        <nav className={`row-start-1 w-full top-0 py-3 px-5 md:px-10 flex justify-between items-center border-b ${darkMode ? 'dark bg-gray-900 text-gray-200 border-gray-700' : 'bg-true-100 text-gray-600 border-gray-200'}`}>
+            <div className="block lg:hidden">
+                <button 
+                    className={`${clientStyles.topNavBtn} color-transition rounded-lg bg-transparent focus:outline-none`}
+                    onClick={ onClick }
                 >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-            </button>
+                    <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        className="h-6 w-6 text-current" 
+                        fill="none" 
+                        viewBox="0 0 24 24" 
+                        stroke="currentColor"
+                    >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+            <div className="hidden lg:block"></div>
             <div className="flex items-center gap-x-3 text-gray-600">
                 <Menu as="div">
                     <Menu.Button
                         type="button"
-                        className={`${clientStyles.navItem} p-2`}
+                        className="flex items-center gap-x-1 p-2 focus:outline-none cursor-pointer"
                     >
                         <svg 
                             xmlns="http://www.w3.org/2000/svg" 
-                            className={ clientStyles.navItemIcon } 
+                            className="h-5 w-5 md:h-6 md:w-6 text-current"
                             fill="none" 
                             viewBox="0 0 24 24" 
                             stroke="currentColor"
                         >
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
-                        <p className={ clientStyles.navItemText }>{ username }</p>
+                        <p className="text-sm font-bold">{ username }</p>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                         </svg>
@@ -61,7 +70,7 @@ const TopNav = ({ username }) => {
                                 {({ active }) => (
                                     <Link href="/client/profile" passHref>
                                         <a
-                                            className={`${active ? clientStyles.popOverItemActive : clientStyles.popOverItem} color-transition border-b border-gray-200`}
+                                            className={`${active ? adminStyles.popOverItemActive : adminStyles.popOverItem} color-transition border-b border-gray-200 dark:border-gray-700 dark:hover:bg-gray-800`}
                                         >
                                             <svg 
                                                 xmlns="http://www.w3.org/2000/svg" 
@@ -80,7 +89,7 @@ const TopNav = ({ username }) => {
                             <Menu.Item>
                                 {({ active }) => (
                                     <div
-                                    className={`${active ? clientStyles.popOverItemActive : clientStyles.popOverItem} color-transition`}
+                                        className={`${active ? adminStyles.popOverItemActive : adminStyles.popOverItem} color-transition border-b border-gray-200 dark:border-gray-700 dark:hover:bg-gray-800`}
                                     >
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 
@@ -93,11 +102,11 @@ const TopNav = ({ username }) => {
                                         </svg>
                                         <p className={ clientStyles.popOverText }>Dark Mode</p>
                                         <Switch 
-                                            checked={ toggleDark }
-                                            onChange={ setToggleDark }
-                                            className={`${toggleDark ? 'bg-pink-600' : 'bg-gray-300'} ml-6 rounded-full w-14 p-1 focus:outline-none transition-colors ease-in-out duration-200`}
+                                            checked={ isDarkMode }
+                                            onChange={ handleModeChange }
+                                            className={`${isDarkMode ? 'bg-pink-600' : 'bg-gray-300'} ml-6 rounded-full w-14 p-1 focus:outline-none transition-colors ease-in-out duration-200`}
                                         >
-                                            <div className={`w-5 h-5 bg-white rounded-full transition ease-in-out duration-200 ${toggleDark ? clientStyles.toggleDarkOn : clientStyles.toggleDarkOff}`}></div>
+                                            <div className={`w-5 h-5 bg-white rounded-full transition ease-in-out duration-200 ${isDarkMode ? adminStyles.toggleDarkOn : adminStyles.toggleDarkOff}`}></div>
                                         </Switch>
                                     </div>
                                 )}
@@ -106,7 +115,7 @@ const TopNav = ({ username }) => {
                                 {({ active }) => (
                                     <button
                                         onClick={ handleLogOut }
-                                        className={`${active ? clientStyles.popOverItemActive : clientStyles.popOverItem} color-transition`}
+                                        className={`${active ? adminStyles.popOverItemActive : adminStyles.popOverItem} color-transition dark:hover:bg-gray-800`}
                                     >
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 

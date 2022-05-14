@@ -3,7 +3,6 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 
 const api = process.env.NEXT_PUBLIC_DRF_API
-const jwt_token = Cookies.get('jwt')
 
 const initialState = {
     requests : [],
@@ -14,6 +13,7 @@ const initialState = {
 export const fetchRequests = createAsyncThunk(
     'requests/fetchRequests',
     async () => {
+        const jwt_token = Cookies.get('jwt')
         const requestsList = await axios.get(`${api}affiliations_list/`, {
             headers : {'Authorization' : 'Bearer'+' '+jwt_token}
         })
@@ -24,6 +24,7 @@ export const fetchRequests = createAsyncThunk(
 export const fetchDashboardRequests = createAsyncThunk(
     'requests/fetchDashboardRequests',
     async () => {
+        const jwt_token = Cookies.get('jwt')
         const dashboardRequests = await axios.get(`${api}dashboard_affiliations/`, {
             headers : {'Authorization' : 'Bearer'+' '+jwt_token}
         })

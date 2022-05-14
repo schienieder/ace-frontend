@@ -3,7 +3,7 @@ import moment from "moment"
 
 const UpcomingEvents = ({ data }) => {
     return (
-        <div className="w-1/2 card flex flex-col gap-y-5">
+        <div className="w-full md:w-1/2 card flex flex-col gap-y-5">
             <div className="w-full flex justify-between">
                 <h4 className="text-base font-bold dark:text-gray-300">Upcoming Events</h4>
                 <Link href="/admin/events">

@@ -2,9 +2,9 @@ import React from 'react'
 
 const PageHeader = ({ text, children }) => {
     return (
-        <div className="flex items-center gap-x-2">
+        <div className="flex items-center gap-x-1 md:gap-x-2">
             { children }
-            <h4 className="text-xl font-bold dark:text-gray-300">{ text }</h4>
+            <h4 className="text-md md:text-xl font-bold dark:text-gray-300">{ text }</h4>
         </div>
     )
 }

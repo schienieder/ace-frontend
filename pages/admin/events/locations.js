@@ -10,11 +10,14 @@ import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css"
 import ReactMapGL, { Marker,FlyToInterpolator } from 'react-map-gl'
 import Geocoder from "react-map-gl-geocoder"
 import Image from 'next/image'
-
+import useDarkMode from '../../../hooks/useDarkMode'
+import AdminMobileNav from '../../../components/admin/AdminMobileNav'
 
 export default function locations({ eventsList, centerLat, centerLong }) {
+    const { isDarkMode } = useDarkMode()
     const router = useRouter()
     const [userName, setUsername] = useState()
+    const [showMobileNav, setShowMobileNav] = useState(false)
     const [viewport, setViewport] = useState({
         height : "100%",
         width : "100%",
@@ -66,16 +69,27 @@ export default function locations({ eventsList, centerLat, centerLong }) {
         </Marker>
     )), [eventsList])
     return (
-        <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
+        <div className={`${isDarkMode ? 'dark' : ''} w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800`}>
             <SideNav isActive="events" />
-            <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav username={ userName } />
-                <div className="row-start-2 w-full h-full bg-true-100">
-                    <div className="p-8 flex flex-col gap-y-5 min-h-screen">
+            {
+                showMobileNav ?
+                <AdminMobileNav 
+                    isActive="events"
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                /> 
+                : null
+            }
+            <div className="col-start-1 md:col-start-2 grid grid-rows-custom-layout overflow-y-auto">
+                <TopNav 
+                    username={ userName } 
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                <div className="row-start-2 w-full h-full bg-true-100 dark:bg-gray-800">
+                    <div className="p-5 md:p-8 flex flex-col gap-y-5 min-h-screen">
                         <PageHeader text="Event Locations">
                             <svg 
                                 xmlns="http://www.w3.org/2000/svg" 
-                                className="h-7 w-7 text-current" 
+                                className="h-7 w-7 text-gray-800 dark:text-gray-300" 
                                 fill="none" 
                                 viewBox="0 0 24 24" 
                                 stroke="currentColor"

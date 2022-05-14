@@ -16,6 +16,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchPartners } from '../../redux/partners/partners.slice'
 import { fetchEventsList } from '../../redux/events/events.slice'
 import MultiSelect from '../../components/MultiSelect'
+import useDarkMode from '../../hooks/useDarkMode'
+import AdminMobileNav from '../../components/admin/AdminMobileNav'
 
 // const colourOptions = [
 //     { value: "ocean1", label: "Ocean" },
@@ -33,6 +35,7 @@ import MultiSelect from '../../components/MultiSelect'
 export default function reports({ affiliationsList }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const dispatch = useDispatch()
+    const { isDarkMode } = useDarkMode()
     const data = useMemo(() => affiliationsList, [affiliationsList.length])
     const requestColumns = useMemo(() => [
         {
@@ -43,7 +46,7 @@ export default function reports({ affiliationsList }) {
             Header : 'Partner',
             accessor : row => `${row.partner__first_name} ${row.partner__last_name}`,
             Cell : ({ row }) => (
-                <div>
+                <div className="dark:text-gray-300">
                     {`${row.original.partner__first_name} ${row.original.partner__last_name}`}
                 </div>
             )
@@ -94,6 +97,7 @@ export default function reports({ affiliationsList }) {
     ], [])
     const router = useRouter()
     const [userName, setUsername] = useState()
+    const [showMobileNav, setShowMobileNav] = useState(false)
     const [addRequestOpen, setAddRequestOpen] = useState(false)
     const [selectedPartners, setSelectedPartners] = useState([])
     const [noPartners, setNoPartners] = useState(false)
@@ -214,16 +218,27 @@ export default function reports({ affiliationsList }) {
         setSelectedPartners(val)
     }
     return (
-        <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
+        <div className={`${ isDarkMode ? 'dark' : '' } w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800`}>
             <SideNav isActive="partners" />
-            <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav username={ userName } />
-                <div className="row-start-2 w-full h-full bg-true-100">
-                    <div className="p-8 flex flex-col gap-y-5 min-h-screen">
+            {
+                showMobileNav ?
+                <AdminMobileNav 
+                    isActive="partners"
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                /> 
+                : null
+            }
+            <div className="col-start-1 md:col-start-2 grid grid-rows-custom-layout overflow-y-auto">
+                <TopNav 
+                    username={ userName } 
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                <div className="row-start-2 w-full h-full bg-true-100 dark:bg-gray-800">
+                    <div className="p-5 md:p-8 flex flex-col gap-y-5 min-h-screen">
                         <PageHeader text="Affiliation Requests">
                             <svg 
                                 xmlns="http://www.w3.org/2000/svg" 
-                                className="w-7 h-7 text-current"
+                                className="w-7 h-7 text-gray-800 dark:text-gray-300"
                                 fill="none" 
                                 viewBox="0 0 24 24" 
                                 stroke="currentColor"
@@ -231,7 +246,6 @@ export default function reports({ affiliationsList }) {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                             </svg>
                         </PageHeader>
-                        <div className="card w-full flex flex-col gap-y-5">
                         <Transition appear show={ addRequestOpen } as={ Fragment }>
                             <Dialog
                                 as="div"
@@ -267,7 +281,7 @@ export default function reports({ affiliationsList }) {
                                     leaveFrom="opacity-100 scale-100"
                                     leaveTo="opacity-0 scale-95"
                                 >
-                                <div className="inline-block w-client-profile-form-container my-8 p-5 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl border-b border-gray-200 rounded-xl">
+                                <div className="inline-block w-80 md:w-client-profile-form-container my-8 p-5 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl border-b border-gray-200 rounded-xl">
                                     <div className="p-5 border border-gray-300 rounded-xl">
                                         
                                         <div className="w-full flex justify-end">
@@ -414,6 +428,7 @@ export default function reports({ affiliationsList }) {
                             </div>
                             </Dialog>
                         </Transition>
+                        <div className="card w-65 md:w-full overflow-x-auto flex flex-col gap-y-5">
                             <CommonTable columns={ requestColumns } data={ data } onClick={ openAddModal } btnText="New Request" cols={4} />
                         </div>
                     </div>

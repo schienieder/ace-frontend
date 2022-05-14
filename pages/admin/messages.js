@@ -19,12 +19,14 @@ import ChatHeader from '../../components/ChatHeader'
 // import ScrollableFeed from 'react-scrollable-feed'
 import randomstring from 'randomstring'
 import useDarkMode from '../../hooks/useDarkMode'
+import AdminMobileNav from '../../components/admin/AdminMobileNav'
 
 export default function messages() {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const socket_api = process.env.NEXT_PUBLIC_DRF_SOCKET
     const router = useRouter()
     const [userName, setUsername] = useState()
+    const [showMobileNav, setShowMobileNav] = useState(false)
     const [isOpen, setIsOpen] = useState(false);
     
     const [userChat, setUserChat] = useState('')
@@ -47,9 +49,11 @@ export default function messages() {
             router.push('/login')
         }
     }
+
     const client = useMemo(() => {
         return new W3CWebSocket(`ws://${socket_api}/ws/chat/${roomName ? roomName : userName}/`)
     }, [roomName])
+
     useEffect(() => {
         dispatch(fetchChatRooms()).then(res => setRoomsList(res.payload))
         readRole()
@@ -57,6 +61,7 @@ export default function messages() {
             console.log('WebSocket Connection Successful!')
         }
     }, [])
+    
     useEffect(() => {
         client.onmessage = (message) => {
             const serverData = JSON.parse(message.data)
@@ -68,6 +73,7 @@ export default function messages() {
             }
         }
     }, [chatMessages])
+
     useEffect(() => {
         let searchTimeOut;
         if (rooms.length) {
@@ -163,10 +169,21 @@ export default function messages() {
         // messagesContainerRef.current.style.overflowY = "auto"
     }
     return (
-        <div className={`${isDarkMode ? 'dark' : ''} w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800`}>
+        <div className={`${isDarkMode ? 'dark' : ''} w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800`}>
             <SideNav isActive="" />
-            <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav username={ userName } />
+            {
+                showMobileNav ?
+                <AdminMobileNav 
+                    isActive=""
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                /> 
+                : null
+            }
+            <div className="col-start-1 md:col-start-2 grid grid-rows-custom-layout overflow-y-auto">
+                <TopNav 
+                    username={ userName } 
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
                 <div className="row-start-2 w-full h-full bg-true-100 dark:bg-gray-800">
                     <div className="p-8 flex flex-col gap-y-5 min-h-screen">
                         <PageHeader text="Messages">
@@ -320,10 +337,10 @@ export default function messages() {
                             </Dialog>
                         </Transition>
                         {/* End of Create Modal */}
-                        <div className="card w-full grid grid-cols-custom-layout gap-x-5">
+                        <div className="card w-full grid grid-cols-1 md:grid-cols-custom-layout gap-x-5">
 
                             {/* Chat names part */}
-                            <div className="col-start-1 rounded-xl flex flex-col border border-gray-300 dark:border-gray-700 p-5 gap-y-3">
+                            <div className="col-start-1 rounded-xl hidden md:flex flex-col border border-gray-300 dark:border-gray-700 p-5 gap-y-3">
                                 <div className="flex flex-col gap-y-2">
                                     <div className="searchBarContainer dark:border-gray-700">
                                         <input 
@@ -376,12 +393,12 @@ export default function messages() {
                             </div>
 
                             {/* Messages part */}
-                            <div className="col-start-2 w-full h-full border border-gray-300 dark:border-gray-700 rounded-xl flex flex-col p-5 gap-y-5">
+                            <div className="col-start-1 md:col-start-2 w-full h-screen md:h-full border border-gray-300 dark:border-gray-700 rounded-xl flex flex-col p-5 gap-y-5">
                                 { roomName ? <ChatHeader roomKey={ roomName } /> : null }
                                 <div
                                     id="messagesContainer"
                                     ref={ messagesContainerRef } 
-                                    className="w-full h-messages-container bg-gray-100 dark:bg-gray-800 rounded-xl p-5 flex flex-col justify-end gap-y-5 overflow-y-auto"
+                                    className="w-full h-full bg-gray-100 dark:bg-gray-800 rounded-xl p-5 flex flex-col justify-end gap-y-5 overflow-y-auto"
                                 >
                                     {/* {
                                         isLoading ?

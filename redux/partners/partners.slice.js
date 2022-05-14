@@ -3,7 +3,7 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 
 const api = process.env.NEXT_PUBLIC_DRF_API
-const jwt_token = Cookies.get('jwt')
+
 
 const initialState = {
     partners : [],
@@ -13,6 +13,7 @@ const initialState = {
 export const fetchPartners = createAsyncThunk(
     'partners/fetchPartners',
     async () => {
+        const jwt_token = Cookies.get('jwt')
         const partnersList = await axios.get(`${api}partners_list/`, {
             headers : {'Authorization' : 'Bearer'+' '+jwt_token}
         })

@@ -20,6 +20,7 @@ import ChatHeader from '../../components/ChatMemberHeader'
 
 export default function messages({ clientProfile }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
+    const socket_api = process.env.NEXT_PUBLIC_DRF_SOCKET
     const router = useRouter()
     const [userName, setUsername] = useState()
     const [isOpen, setIsOpen] = useState(false)
@@ -42,9 +43,11 @@ export default function messages({ clientProfile }) {
             router.push('/login')
         }
     }
+
     const client = useMemo(() => {
-        return new W3CWebSocket(`ws://localhost:8000/ws/chat/${roomName ? roomName : userName}/`)
+        return new W3CWebSocket(`ws://${socket_api}/ws/chat/${roomName ? roomName : userName}/`)
     }, [roomName])
+
     useEffect(() => {
         dispatch(fetchMemberRooms()).then(res => setRoomsList(res.payload))
         readRole()
@@ -52,6 +55,7 @@ export default function messages({ clientProfile }) {
             console.log('WebSocket Connection Successful!')
         }
     }, [])
+
     useEffect(() => {
         client.onmessage = (message) => {
             const serverData = JSON.parse(message.data)
@@ -63,6 +67,7 @@ export default function messages({ clientProfile }) {
             }
         }
     }, [chatMessages])
+
     useEffect(() => {
         let searchTimeOut;
         if (memberRooms.length) {
@@ -82,6 +87,7 @@ export default function messages({ clientProfile }) {
             clearTimeout(searchTimeOut)
         }
     }, [roomSearch])
+
     const { register, reset, handleSubmit, formState : { errors } } = useForm()
     const closeModal = () => {
         setIsOpen(false)
@@ -187,13 +193,23 @@ export default function messages({ clientProfile }) {
         messagesContainerRef.current.style.overflowY = "auto"
     }
     return (
-        <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
+        <div className="w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800">
             <SideNav isActive="messages" />
-            <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
+            <div className="col-start-1 md:col-start-2 grid grid-rows-custom-layout overflow-y-auto">
                 <TopNav username={ userName } />
                 <div className="row-start-2 w-full h-full bg-true-100">
-                    <div className="p-8 flex flex-col gap-y-5 min-h-screen">
-                        <PageHeader text="Messages" />
+                    <div className="p-5 md:p-8 flex flex-col gap-y-5 min-h-screen">
+                        <PageHeader text="Messages">
+                            <svg 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                className="h-7 w-7 text-gray-800 dark:text-gray-300" 
+                                fill="none" 
+                                viewBox="0 0 24 24" 
+                                stroke="currentColor"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+                            </svg>
+                        </PageHeader>
                         {/* Start of Create Modal */}
                         <Transition appear show={isOpen} as={Fragment}>
                             <Dialog

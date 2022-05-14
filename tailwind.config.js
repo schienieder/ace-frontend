@@ -43,9 +43,11 @@ module.exports = {
         'rating-form' : '42rem',
         'custom-textarea': '32rem',
         '49' : '11.5rem',
+        '50' : '205px',
         '57' : '14.5rem',
         '63': '15.625rem',
-        '65' : '21rem'
+        '65' : '21rem',
+        '82' : '22rem'
       },
       gridTemplateRows: {
           // landing page

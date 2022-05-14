@@ -25,17 +25,17 @@ function SalesTable({ columns, data, onClick, btnText, totalSales }) {
     return (
         <Fragment>
         <div className="w-full flex justify-between items-center">
-            <div className="searchBarContainer">
+            <div className="searchBarContainer dark:border-gray-700">
                 <input 
                     type="text"
-                    className="searchBarInput"
+                    className="searchBarInput dark:bg-gray-900 dark:text-gray-300"
                     placeholder="Search here . . ."
                     value={ globalFilter || '' }
                     onChange={ e => setGlobalFilter(e.target.value) }
                 />
                 <svg 
                     xmlns="http://www.w3.org/2000/svg" 
-                    className="h-4 w-4 text-current" 
+                    className="inputIcon dark:text-gray-500" 
                     fill="none" 
                     viewBox="0 0 24 24" 
                     stroke="currentColor"
@@ -59,20 +59,20 @@ function SalesTable({ columns, data, onClick, btnText, totalSales }) {
                     >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    <p className="text-sm font-bold">{ btnText }</p>
+                    <p className="hidden md:block text-sm font-bold">{ btnText }</p>
                 </button>
                 : null
             }
         </div>
         <table 
-            className="min-w-full divide-y divide-gray-200 border-b border-gray-200"
+            className="min-w-full divide-y divide-gray-200 border-b border-gray-200 dark:border-gray-700 dark:divide-gray-700"
             { ...getTableProps() }
         >
-            <thead className={ adminStyles.theadClass }>
+            <thead className="bg-gray-100 dark:bg-gray-800">
                 { 
                     headerGroups.map(headerGroup => (
                         <tr 
-                            className="text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+                            className="text-left text-xs uppercase tracking-wider text-gray-700 dark:text-gray-400"
                             {...headerGroup.getHeaderGroupProps() }
                         >
                             {
@@ -91,7 +91,7 @@ function SalesTable({ columns, data, onClick, btnText, totalSales }) {
                 }
             </thead>
             <tbody 
-                className={ adminStyles.tbodyClass }
+                className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700"
                 { ...getTableBodyProps() }
             >
                 {
@@ -99,7 +99,7 @@ function SalesTable({ columns, data, onClick, btnText, totalSales }) {
                         prepareRow(row)
                         return (
                             <tr
-                                className={`${adminStyles.tableRowClass} color-transition`}
+                                className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-300"
                                 { ...row.getRowProps() }
                             >
                                 {
@@ -117,15 +117,15 @@ function SalesTable({ columns, data, onClick, btnText, totalSales }) {
                     })
                 }
                 <tr
-                    className={`${adminStyles.tableRowClass} color-transition`}
+                    className={`${adminStyles.tableRowClass} border-b-0 color-transition`}
                 >
                     <td 
-                        className="bg-gray-100"
+                        className="bg-gray-100 dark:bg-gray-800"
                         colSpan="5"
-                    ><p className="text-xs font-bold text-gray-800 uppercase tracking-wide text-center">Total Sales</p></td>
+                    ><p className="text-xs font-bold text-gray-800 dark:text-gray-300 uppercase tracking-wide text-center">Total Sales</p></td>
                     <td 
-                        className={`${adminStyles.tableDataClass} bg-gray-100`}
-                    ><p className="text-sm text-gray-700 font-medium">{ peso(totalSales).format() }</p></td>
+                        className={`${adminStyles.tableDataClass} bg-gray-100 dark:bg-gray-800`}
+                    ><p className="text-sm text-gray-700 dark:text-gray-300 font-medium">{ peso(totalSales).format() }</p></td>
                 </tr>
             </tbody>
         </table>
@@ -170,7 +170,7 @@ function SalesTable({ columns, data, onClick, btnText, totalSales }) {
                 <div className="searchBarContainer">
                     <input 
                         type="number"
-                        className="searchBarInput"
+                        className="searchBarInput dark:bg-gray-900 dark:text-gray-300"
                         placeholder="Page Number . . ."
                         defaultValue={pageIndex + 1}
                         onChange={ e =>  {
@@ -179,7 +179,7 @@ function SalesTable({ columns, data, onClick, btnText, totalSales }) {
                         }}
                     />
                 </div>
-                <p className="font-normal">Page <span className="font-bold">{pageOptions.length ? pageIndex + 1 : pageIndex}</span> of <span className="font-bold">{pageOptions.length}</span></p>
+                <p className="font-normal dark:text-gray-300">Page <span className="font-bold">{pageOptions.length ? pageIndex + 1 : pageIndex}</span> of <span className="font-bold">{pageOptions.length}</span></p>
             </div>
             {/* GO TO PAGE INPUT END */}
         </div>

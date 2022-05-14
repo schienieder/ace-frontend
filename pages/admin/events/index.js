@@ -18,9 +18,13 @@ import MinutesOptions from '../../../components/admin/events/MinutesOptions'
 import AutocompletePlace from '../../../components/admin/events/AutocompletePlace'
 import { ExportToCsv } from 'export-to-csv'
 import currency from 'currency.js'
+import useDarkMode from '../../../hooks/useDarkMode'
+import AdminMobileNav from '../../../components/admin/AdminMobileNav'
 
 export default function cards({ clientsList, eventsList, totalList, completedList, csvEvents }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
+    const { isDarkMode } = useDarkMode()
+    const [showMobileNav, setShowMobileNav] = useState(false)
     const peso = value => currency(value, { symbol : '₱', precision : 0 })
     let [isOpen, setIsOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false);
@@ -246,17 +250,28 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
         return defaultMinutes
     }
     return (
-        <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
+        <div className={`${isDarkMode ? 'dark' : ''} w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800`}>
             <SideNav isActive="events" />
-            <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav username={ userName } />
-                <div className="row-start-2 w-full h-full bg-true-100">
-                    <div className="p-8 flex flex-col gap-y-5 min-h-screen">
+            {
+                showMobileNav ?
+                <AdminMobileNav 
+                    isActive="events"
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                /> 
+                : null
+            }
+            <div className="col-start-1 md:col-start-2 grid grid-rows-custom-layout overflow-y-auto">
+                <TopNav 
+                    username={ userName } 
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                <div className="row-start-2 w-full h-full bg-true-100 dark:bg-gray-800">
+                    <div className="p-5 md:p-8 flex flex-col gap-y-5 min-h-screen">
                         <div className="w-full flex justify-between items-center">
                             <PageHeader text="Events">
                                 <svg 
                                     xmlns="http://www.w3.org/2000/svg" 
-                                    className="h-7 w-7 text-current"
+                                    className="h-7 w-7 text-gray-800 dark:text-gray-300"
                                     fill="none" 
                                     viewBox="0 0 24 24" 
                                     stroke="currentColor"
@@ -264,12 +279,12 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                                 </svg>
                             </PageHeader>
-                            <div className='flex gap-x-5'>
+                            <div className='flex gap-x-3 md:gap-x-5'>
                                 {
                                     csvEvents.length ? 
                                     <button
                                         type="button"
-                                        className="px-5 py-2 bg-transparent hover:bg-pink-600 border border-pink-600 rounded-lg text-pink-600 hover:text-white font-bold text-base tracking-wide flex justify-center items-center gap-x-1 focus:outline-none color-transition"
+                                        className="px-3 md:px-5 py-2 bg-transparent hover:bg-pink-600 border border-pink-600 rounded-lg text-pink-600 hover:text-white font-bold text-base tracking-wide flex justify-center items-center gap-x-1 focus:outline-none color-transition"
                                         onClick={ () => exportData() }
                                     >
                                         <svg 
@@ -281,7 +296,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                         >
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                         </svg>
-                                        <p className="text-sm font-bold">Export Data</p>
+                                        <p className="hidden md:block text-sm font-bold">Export Data</p>
                                     </button>
                                     : null
                                 }
@@ -299,7 +314,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                     >
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                     </svg>
-                                    <p className="text-sm font-bold">New Event</p>
+                                    <p className="hidden md:block text-sm font-bold">New Event</p>
                                 </button>
                             </div>
                             {/* Start of Create Modal */}
@@ -338,7 +353,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                         leaveFrom="opacity-100 scale-100"
                                         leaveTo="opacity-0 scale-95"
                                     >
-                                    <div className="inline-block w-client-profile-form-container my-8 p-5 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl border-b border-gray-200 rounded-xl">
+                                    <div className="inline-block w-80 md:w-client-profile-form-container my-8 p-5 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl border-b border-gray-200 rounded-xl">
                                         <div className="p-5 border border-gray-300 rounded-xl">
                                             
                                             <div className="w-full flex justify-end">
@@ -366,7 +381,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                 <h4 className="text-base font-bold">New Event</h4>
 
                                                 {/* This is for the event name field and venue location */}
-                                                <div className="flex gap-x-5">
+                                                <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
 
                                                     <div className="flex flex-col gap-y-1">
                                                         <label className="inputFieldLabel">Event Name</label>
@@ -435,7 +450,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                 </div>
 
                                                 {/* This is for the venue name & package cost */}
-                                                <div className="flex gap-x-5">
+                                                <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
 
                                                     <div className="flex flex-col gap-y-1">
                                                         <label className="inputFieldLabel">Venue Name</label>
@@ -496,9 +511,9 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                 </div>
 
                                                 {/* This is for the schedule fields */}
-                                                <div className="flex gap-x-5">
+                                                <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
 
-                                                    <div className="flex flex-col gap-y-1">
+                                                    <div className="flex flex-col gap-y-1 md:w-63">
                                                         <label className="inputFieldLabel">Date Schedule</label>
                                                         <div className="inputContainer">
                                                             <input
@@ -518,7 +533,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
 
                                                     <div className="flex flex-col gap-y-1">
                                                         <label className="inputFieldLabel">Time Schedule</label>
-                                                        <div className='w-63 px-4 py-1 flex items-center justify-between bg-transparent gap-x-5 border border-gray-300 focus-within:border-gray-600 rounded-lg'>
+                                                        <div className='w-50 md:w-63 px-4 py-1 flex items-center justify-between bg-transparent gap-x-5 border border-gray-300 focus-within:border-gray-600 rounded-lg'>
                                                             <select 
                                                                 className='customTime'
                                                                 {...register("event_hour")}
@@ -545,7 +560,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                 </div>
 
                                                 {/* This is for the payment & client fields */}
-                                                <div className="flex gap-x-5">
+                                                <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
 
                                                     <div className="flex flex-col gap-y-1">
                                                         <label className="inputFieldLabel">Client Payment</label>
@@ -592,7 +607,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                     </div>
                                                 </div>
 
-                                                <div className="w-full pr-2 mt-5 flex justify-end gap-x-3">
+                                                <div className="w-full pr-4 md:pr-2 mt-5 flex justify-end gap-x-3">
                                                     <button
                                                         className="modalAddBtn color-transition"
                                                         onClick={ onAddEvent }
@@ -652,7 +667,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                         leaveFrom="opacity-100 scale-100"
                                         leaveTo="opacity-0 scale-95"
                                     >
-                                    <div className="inline-block w-client-profile-form-container my-8 p-5 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl border-b border-gray-200 rounded-xl">
+                                    <div className="inline-block w-80 md:w-client-profile-form-container my-8 p-5 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl border-b border-gray-200 rounded-xl">
                                         <div className="p-5 border border-gray-300 rounded-xl">
                                             
                                             <div className="w-full flex justify-end">
@@ -680,7 +695,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                 <h4 className="text-base font-bold">Update Event</h4>
 
                                                 {/* This is for the name field */}
-                                                <div className="flex gap-x-5">
+                                                <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
 
                                                     <div className="flex flex-col gap-y-1">
                                                         <label className="inputFieldLabel">Event Name</label>
@@ -739,7 +754,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                 </div>
 
                                                 {/* This is for the venue name & package cost */}
-                                                <div className="flex gap-x-5">
+                                                <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
 
                                                     <div className="flex flex-col gap-y-1">
                                                         <label className="inputFieldLabel">Venue Name</label>
@@ -802,7 +817,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                 </div>
 
                                                 {/* This is for the contact field */}
-                                                <div className="flex gap-x-5">
+                                                <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
 
                                                     <div className="flex flex-col gap-y-1">
                                                         <label className="inputFieldLabel">Date Schedule</label>
@@ -825,7 +840,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
 
                                                     <div className="flex flex-col gap-y-1">
                                                         <label className="inputFieldLabel">Time Schedule</label>
-                                                        <div className='w-63 px-4 py-1 flex items-center justify-between bg-transparent gap-x-5 border border-gray-300 focus-within:border-gray-600 rounded-lg'>
+                                                        <div className='w-40 md:w-63 px-4 py-1 flex items-center justify-between bg-transparent gap-x-5 border border-gray-300 focus-within:border-gray-600 rounded-lg'>
                                                             <select 
                                                                 className='customTime'
                                                                 {...register2("update_event_hour")}
@@ -854,7 +869,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                 </div>
 
                                                 {/* This is for the account fields */}
-                                                <div className="flex gap-x-5">
+                                                <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
 
                                                     <div className="flex flex-col gap-y-1">
                                                         <label className="inputFieldLabel">Client Payment</label>
@@ -934,7 +949,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                         key={ event.id }
                                         className="relative card w-full flex flex-col gap-y-6"
                                     >
-                                        <h4 className="text-base font-semibold capitalize">{ event.event_name }</h4>
+                                        <h4 className="text-base font-semibold capitalize dark:text-gray-300">{ event.event_name }</h4>
                                         <div className="flex flex-col gap-y-2">
                                             <div className="flex items-center gap-x-2">
                                                 <svg 
@@ -947,14 +962,14 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                                 </svg>
-                                                <p className="text-sm font-medium">Venue Name</p>
+                                                <p className="text-sm font-medium dark:text-gray-300">Venue Name</p>
                                             </div>
                                             <Link 
                                                 href={`/admin/events/locations?lat=${event.venue_lat}&long=${event.venue_long}`}
                                                 passHref
                                             >
                                                 <a 
-                                                    className="text-gray-500 hover:text-pink-600 hover:underline text-xs"
+                                                    className="text-gray-500 dark:text-gray-300 hover:text-pink-600 hover:underline text-xs"
                                                 >
                                                     { event.venue_name }
                                                 </a>
@@ -972,7 +987,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                     >
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                                     </svg>
-                                                    <p className="text-sm font-medium">{ moment(event.date_schedule).format('ll') }</p>
+                                                    <p className="text-sm font-medium dark:text-gray-300">{ moment(event.date_schedule).format('ll') }</p>
                                                 </div>
                                                 <div className="flex items-center gap-x-2">
                                                     <svg 
@@ -980,7 +995,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                         className="h-5 w-5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                     </svg>
-                                                    <p className="text-sm font-medium">{ event.time_schedule }</p>
+                                                    <p className="text-sm font-medium dark:text-gray-300">{ event.time_schedule }</p>
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-x-2">
@@ -993,13 +1008,13 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                                 >
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                                                 </svg>
-                                                <p className="text-sm font-medium">{peso(event.package_cost).format()}</p>
+                                                <p className="text-sm font-medium dark:text-gray-300">{peso(event.package_cost).format()}</p>
                                             </div>
                                         </div>
                                         <div className="flex flex-col gap-y-1">
                                             <div className="flex items-center gap-x-2">
-                                                <p className="text-xs font-medium">Progress</p>
-                                                <p className="text-sm font-normal">{ completedList[event_index] === 0 ? 0 : Math.round((completedList[event_index] / totalList[event_index]) * 100) }%</p>
+                                                <p className="text-xs font-medium dark:text-gray-300">Progress</p>
+                                                <p className="text-sm font-normal dark:text-gray-300">{ completedList[event_index] === 0 ? 0 : Math.round((completedList[event_index] / totalList[event_index]) * 100) }%</p>
                                             </div>
                                             <div className="w-full h-2 rounded-md bg-gray-200">
                                                 <div className="h-2 rounded-md bg-pink-600" style={{width : completedList[event_index] === 0 ? 0 : Math.round((completedList[event_index] / totalList[event_index]) * 100) + '%'}}></div>
@@ -1007,7 +1022,7 @@ export default function cards({ clientsList, eventsList, totalList, completedLis
                                         </div>
                                         <Menu as="div" className="w-full flex justify-end">
                                             <Menu.Button
-                                                className={ adminStyles.cardPopOverBtn }
+                                                className={`bg-gray-100 dark:bg-gray-900 hover:bg-gray-200 dark:hover:bg-gray-800 focus:bg-gray-200 focus:outline-none text-gray-500 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 focus:text-gray-700 dark:focus:text-gray-300 ${adminStyles.cardPopOverBtn}`  }
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" className={ adminStyles.actionBtnIcon } fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />

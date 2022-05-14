@@ -9,11 +9,11 @@ const initialState = {
 }
 
 const api = process.env.NEXT_PUBLIC_DRF_API
-const jwt_token = Cookies.get('jwt')
 
 export const fetchPastTransactions = createAsyncThunk(
     'transactions/fetchPastTransactions',
     async (transaction_year) => {
+        const jwt_token = Cookies.get('jwt')
         const pastTransactions = await axios.get(`${api}past_transactions/${transaction_year}`, {
             headers : {'Authorization' : 'Bearer'+' '+jwt_token}
         })
@@ -31,7 +31,6 @@ const transactionsSlice = createSlice({
             return { ...state, isLoadingTransactions : true }
         })
         builder.addCase(fetchPastTransactions.fulfilled, (state, action) => {
-            console.log(action.payload)
             return { ...state, isLoadingTransactions : false, pastTransactions : action.payload }
         })
         builder.addCase(fetchPastTransactions.rejected, (state) => {

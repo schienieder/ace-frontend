@@ -23,8 +23,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchSalesSummary, fetchSalesYears, fetchTotalSales, changeSelectedYear } from '../../redux/sales/sales.slice'
 import { fetchPastTransactions } from '../../redux/transactions/transactions.slice'
 import BeatLoader from 'react-spinners/BeatLoader'
+import useDarkMode from '../../hooks/useDarkMode'
+import AdminMobileNav from '../../components/admin/AdminMobileNav'
 
 const SalesMain = () => {
+    const { isDarkMode } = useDarkMode()
     const { isLoading, salesYears, yearSelected, totalSales } = useSelector(state => state.salesState)
     const { pastTransactions } = useSelector(state => state.transactionState)
     const [salesSummary, setSalesSummary] = useState([])
@@ -40,37 +43,41 @@ const SalesMain = () => {
             Header : 'Schedule',
             accessor : 'event_schedule',
             Cell : ({row}) => (
-                <p className="text-sm text-gray-800">{ moment(row.original.event_schedule).format('ll') }</p>
+                <p className="text-sm text-gray-800 dark:text-gray-300">{ moment(row.original.event_schedule).format('ll') }</p>
             )
         },
         {
             Header : 'Package Cost',
             accessor : 'package_cost',
             Cell : ({row}) => (
-                <p className="text-sm text-gray-800">{ peso(row.original.package_cost).format() }</p>
+                <p className="text-sm text-gray-800 dark:text-gray-300">{ peso(row.original.package_cost).format() }</p>
             )
         },
         {
             Header : 'Total Payment',
             accessor : 'client_payment',
             Cell : ({row}) => (
-                <p className="text-sm text-gray-800">{ peso(row.original.client_payment).format() }</p>
+                <p className="text-sm text-gray-800 dark:text-gray-300">{ peso(row.original.client_payment).format() }</p>
             )
         },
         {
             Header : 'Last Update',
             accessor : 'last_update',
             Cell : ({row}) => (
-                <p className="text-sm text-gray-800">{ moment(row.original.event_schedule).format('ll') }</p>
+                <p className="text-sm text-gray-800 dark:text-gray-300">{ moment(row.original.event_schedule).format('ll') }</p>
             )
         },
         {
             Header : 'Status',
-            accessor : 'payment_status'
+            accessor : 'payment_status',
+            Cell : ({row}) => (
+                <p className={row.original.payment_status === 'Partially Paid' ? `text-sm text-yellow-500` : `text-sm text-teal-600` }>{ row.original.payment_status}</p>
+            )
         },
     ], [])
     const router = useRouter()
     const [userName, setUsername] = useState()
+    const [showMobileNav, setShowMobileNav] = useState(false)
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
         const role = localStorage.getItem('role')
@@ -137,21 +144,38 @@ const SalesMain = () => {
         dispatch(fetchPastTransactions(year))
     }
     return (
-        <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
+        <div className={`${ isDarkMode ? 'dark' : '' } w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800`}>
             <SideNav isActive="reports" />
-            <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto overflow-x-hidden">
-                <TopNav username={ userName } />
-                <div className="row-start-2 w-full h-full bg-true-100">
-                    <div className="p-8 flex flex-col gap-y-8 min-h-screen">
+            {
+                showMobileNav ?
+                <AdminMobileNav 
+                    isActive="reports"
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                /> 
+                : null
+            }
+            <div className="col-start-1 md:col-start-2 grid grid-rows-custom-layout overflow-y-auto overflow-x-hidden">
+                <TopNav 
+                    username={ userName } 
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                <div className="row-start-2 w-full h-full bg-true-100 dark:bg-gray-800">
+                    <div className="p-5 md:p-8 flex flex-col gap-y-8 min-h-screen">
                         <div className="flex justify-between items-center">
                             <PageHeader text={`Sales Report (${yearSelected})`}>
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg 
+                                    xmlns="http://www.w3.org/2000/svg" 
+                                    className="h-7 w-7 text-gray-800 dark:text-gray-300" 
+                                    fill="none" 
+                                    viewBox="0 0 24 24" 
+                                    stroke="currentColor"
+                                >
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                                 </svg>
                             </PageHeader>
                             <div className="searchBarContainer">
                                 <select 
-                                    className="searchBarInput"
+                                    className="searchBarInput dark:bg-gray-800 dark:text-gray-300"
                                     onChange={ e => handleYearChange(e.target.value) }
                                     defaultValue={ yearSelected }
                                 >
@@ -233,7 +257,7 @@ const SalesMain = () => {
                                 totalSales={ totalSales }
                             />
                         </div> */}
-                        <div className="card w-full flex flex-col gap-y-5">
+                        <div className="card w-65 md:w-full overflow-x-auto flex flex-col gap-y-5">
                             <HistoryTable 
                                 columns={ eventsColumns } 
                                 data={ table_data }

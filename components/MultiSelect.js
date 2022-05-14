@@ -115,7 +115,7 @@ export default class Example extends Component {
                 data-content="Please selecet account(s)"
             >
                 <MySelect
-                    className="w-65"
+                    className="w-50 md:w-65"
                     options={this.props.options}
                     isMulti
                     isClearable={false}

@@ -4,7 +4,7 @@ const Footer = () => {
     return (
         <div className="w-full h-14 bg-true-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 flex justify-center items-center gap-x-1">
             <svg 
-                className="w-6 h-6"
+                className="w-5 h-5 md:w-6 md:h-6"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
             >
@@ -15,7 +15,7 @@ const Footer = () => {
                     fill="#4B5563"
                 />
             </svg>
-            <p className="text-sm border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-200 font-bold">Marahuyo { currYear } <span className="border-l border-gray-600 pl-1">All Rights Reserved</span></p>
+            <p className="text-xs md:text-sm border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-200 font-bold">Marahuyo { currYear } <span className="border-l border-gray-600 pl-1">All Rights Reserved</span></p>
         </div>
     )
 }

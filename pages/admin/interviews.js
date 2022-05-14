@@ -16,9 +16,12 @@ import HoursOptions from '../../components/admin/events/HoursOptions'
 import MinutesOptions from '../../components/admin/events/MinutesOptions'
 import BeatLoader from "react-spinners/BeatLoader"
 import CommonTable2 from '../../components/CommonTable2'
+import useDarkMode from '../../hooks/useDarkMode'
+import AdminMobileNav from '../../components/admin/AdminMobileNav'
 
 export default function interviews({ interviewsList, allInterviews }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
+    const { isDarkMode } = useDarkMode()
     const data = useMemo(() => allInterviews, [allInterviews.length])
     const interviewColumns = useMemo(() => [
         {
@@ -85,6 +88,7 @@ export default function interviews({ interviewsList, allInterviews }) {
     const [isLoading, setIsLoading] = useState(false)
     const { register, reset, handleSubmit, formState : { errors } } = useForm()
     const [userName, setUsername] = useState()
+    const [showMobileNav, setShowMobileNav] = useState(false)
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
         const role = localStorage.getItem('role')
@@ -189,7 +193,7 @@ export default function interviews({ interviewsList, allInterviews }) {
         editIndex.current = sched_index
     }
     return (
-        <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
+        <div className={`${ isDarkMode ? 'dark' : '' } w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800`}>
             <div className={`absolute z-10 w-full h-full ${isLoading ? 'flex' : 'hidden'} flex-col justify-center items-center bg-white backdrop-filter backdrop-blur-sm`}>
                 <BeatLoader 
                     color="#DB2777"
@@ -198,14 +202,25 @@ export default function interviews({ interviewsList, allInterviews }) {
                 <h4 className="text-base">Processing, please wait</h4>
             </div>
             <SideNav isActive="bookings" />
-            <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav username={ userName } />
-                <div className="row-start-2 w-full h-full bg-true-100">
-                    <div className="p-8 flex flex-col gap-y-5 min-h-screen">
+            {
+                showMobileNav ?
+                <AdminMobileNav 
+                    isActive="bookings"
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                /> 
+                : null
+            }
+            <div className="col-start-1 md:col-start-2 grid grid-rows-custom-layout overflow-y-auto">
+                <TopNav 
+                    username={ userName } 
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                <div className="row-start-2 w-full h-full bg-true-100 dark:bg-gray-800">
+                    <div className="p-5 md:p-8 flex flex-col gap-y-5 min-h-screen">
                         <PageHeader text="Interview Schedules">
                             <svg 
                                 xmlns="http://www.w3.org/2000/svg" 
-                                className="h-7 w-7 text-current"
+                                className="h-7 w-7 text-gray-800 dark:text-gray-300"
                                 fill="none" 
                                 viewBox="0 0 24 24" 
                                 stroke="currentColor"
@@ -370,7 +385,7 @@ export default function interviews({ interviewsList, allInterviews }) {
                             </Dialog>
                         </Transition>
                         {/* End of Edit Modal */}
-                        <div className="card w-full flex flex-col gap-y-5">
+                        <div className="card w-65 md:w-full overflow-x-auto flex flex-col gap-y-5">
                             <CommonTable2 columns={ interviewColumns } data={ data } cols={5} />
                         </div>
                     </div>

@@ -14,11 +14,15 @@ import moment from 'moment'
 import HoursOptions from '../../components/admin/events/HoursOptions'
 import MinutesOptions from '../../components/admin/events/MinutesOptions'
 import BeatLoader from "react-spinners/BeatLoader"
+import useDarkMode from '../../hooks/useDarkMode'
+import AdminMobileNav from '../../components/admin/AdminMobileNav'
 
 export default function booking({ bookingInfo, clientInfo }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
+    const { isDarkMode } = useDarkMode()
     const router = useRouter()
     const [userName, setUsername] = useState()
+    const [showMobileNav, setShowMobileNav] = useState(false)
     let [isOpen, setIsOpen] = useState(false)
     const { register, reset, handleSubmit, formState : { errors } } = useForm()
     const [isLoading, setIsLoading] = useState(false)
@@ -127,7 +131,7 @@ export default function booking({ bookingInfo, clientInfo }) {
         setIsOpen(true)
     }
     return (
-        <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
+        <div className={`${ isDarkMode ? 'dark' : '' } w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800`}>
             <div className={`absolute z-10 w-full h-full ${isLoading ? 'flex' : 'hidden'} flex-col justify-center items-center bg-white backdrop-filter backdrop-blur-sm`}>
                 <BeatLoader 
                     color="#DB2777"
@@ -136,15 +140,26 @@ export default function booking({ bookingInfo, clientInfo }) {
                 <h4 className="text-base">Processing, please wait</h4>
             </div>
             <SideNav isActive="bookings" />
-            <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav username={ userName } />
-                <div className="row-start-2 w-full h-full bg-true-100">
-                    <div className="p-8 flex flex-col items-center gap-y-5 min-h-screen">
-                        <div className='w-client-profile-form-container'>
+            {
+                showMobileNav ?
+                <AdminMobileNav 
+                    isActive="bookings"
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                /> 
+                : null
+            }
+            <div className="col-start-1 md:col-start-2 grid grid-rows-custom-layout overflow-y-auto">
+                <TopNav 
+                    username={ userName } 
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                <div className="row-start-2 w-full h-full bg-true-100 dark:bg-gray-800">
+                    <div className="p-5 md:p-8 flex flex-col items-center gap-y-5 min-h-screen">
+                        <div className='w-80 md:w-client-profile-form-container'>
                             <PageHeader text="Booking Details">
                                 <svg 
                                     xmlns="http://www.w3.org/2000/svg" 
-                                    className="h-6 w-6 text-current" 
+                                    className="h-6 w-6 text-gray-800 dark:text-gray-300" 
                                     fill="none" 
                                     viewBox="0 0 24 24" 
                                     stroke="currentColor"
@@ -188,7 +203,7 @@ export default function booking({ bookingInfo, clientInfo }) {
                                         leaveFrom="opacity-100 scale-100"
                                         leaveTo="opacity-0 scale-95"
                                     >
-                                    <div className="inline-block w-client-profile-form-container my-8 p-5 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl border-b border-gray-200 rounded-xl">
+                                    <div className="inline-block w-80 md:w-client-profile-form-container my-8 p-5 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl border-b border-gray-200 rounded-xl">
                                         <div className="p-5 border border-gray-300 rounded-xl">
                                             
                                             <div className="w-full flex justify-end">
@@ -216,7 +231,7 @@ export default function booking({ bookingInfo, clientInfo }) {
                                                 <h4 className="text-base font-bold">Schedule Interview</h4>
 
                                                 {/* This is for the contact field */}
-                                                <div className="flex gap-x-5">
+                                                <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
 
                                                     <div className="flex flex-col gap-y-1">
                                                         <label className="inputFieldLabel">Date</label>
@@ -303,41 +318,41 @@ export default function booking({ bookingInfo, clientInfo }) {
                             </Transition>
                             {/* End of Create Modal */}
                         </div>
-                        <div className='card w-client-profile-form-container'>
-                            <div className='w-full rounded-xl px-16 py-8 flex flex-col items-center border border-gray-300 gap-y-16'>
+                        <div className='card w-80 md:w-client-profile-form-container'>
+                            <div className='w-full rounded-xl px-16 py-8 flex flex-col items-center border border-gray-300 dark:border-gray-700 gap-y-16'>
                                 {/* Name & Event Type Start */}
-                                <div className='w-full flex justify-between'>
+                                <div className='w-full flex flex-col md:flex-row justify-between'>
                                     <div className='flex flex-col gap-y-1'>
-                                        <h4 className='text-md font-bold text-gray-700'>Client Name</h4>
-                                        <p className='text-sm text-gray-700'>{ clientInfo.first_name+' '+clientInfo.last_name }</p>
+                                        <h4 className='text-md font-bold text-gray-700 dark:text-gray-300'>Client Name</h4>
+                                        <p className='text-sm text-gray-700 dark:text-gray-300'>{ clientInfo.first_name+' '+clientInfo.last_name }</p>
                                     </div>
                                     <div className='flex flex-col gap-y-1'>
-                                        <h4 className='text-md font-bold text-gray-700'>Type of Event</h4>
-                                        <p className='text-sm text-gray-700'>{ bookingInfo.type_of_event }</p>
+                                        <h4 className='text-md font-bold text-gray-700 dark:text-gray-300'>Type of Event</h4>
+                                        <p className='text-sm text-gray-700 dark:text-gray-300'>{ bookingInfo.type_of_event }</p>
                                     </div>
                                 </div>
                                 {/* Name & Event Type End */}
                                 {/* Date/Time & Budget Start */}
-                                <div className='w-full flex justify-between'>
+                                <div className='w-full flex flex-col md:flex-row justify-between'>
                                     <div className='flex flex-col gap-y-1'>
-                                        <h4 className='text-md font-bold text-gray-700'>Date & Time</h4>
-                                        <p className='text-sm text-gray-700'>{ moment(bookingInfo.desired_date).format('ll')+' '+bookingInfo.time_schedule }</p>
+                                        <h4 className='text-md font-bold text-gray-700 dark:text-gray-300'>Date & Time</h4>
+                                        <p className='text-sm text-gray-700 dark:text-gray-300'>{ moment(bookingInfo.desired_date).format('ll')+' '+bookingInfo.time_schedule }</p>
                                     </div>
                                     <div className='flex flex-col gap-y-1'>
-                                        <h4 className='text-md font-bold text-gray-700'>Budget</h4>
-                                        <p className='text-sm text-gray-700'>{ bookingInfo.event_budget }</p>
+                                        <h4 className='text-md font-bold text-gray-700 dark:text-gray-300'>Budget</h4>
+                                        <p className='text-sm text-gray-700 dark:text-gray-300'>{ bookingInfo.event_budget }</p>
                                     </div>
                                 </div>
                                 {/* Date/Time & Budget End */}
                                 {/* Guests & Status Start */}
-                                <div className='w-full flex justify-between'>
+                                <div className='w-full flex flex-col md:flex-row justify-between'>
                                     <div className='flex flex-col gap-y-1'>
-                                        <h4 className='text-md font-bold text-gray-700'>Guests No.</h4>
-                                        <p className='text-sm text-gray-700'>{ bookingInfo.guests_no }</p>
+                                        <h4 className='text-md font-bold text-gray-700 dark:text-gray-300'>Guests No.</h4>
+                                        <p className='text-sm text-gray-700 dark:text-gray-300'>{ bookingInfo.guests_no }</p>
                                     </div>
                                     <div className='flex flex-col gap-y-1'>
-                                        <h4 className='text-md font-bold text-gray-700'>Status</h4>
-                                        <p className='text-sm text-gray-700'>{ bookingInfo.status }</p>
+                                        <h4 className='text-md font-bold text-gray-700 dark:text-gray-300'>Status</h4>
+                                        <p className='text-sm text-gray-700 dark:text-gray-300'>{ bookingInfo.status }</p>
                                     </div>
                                 </div>
                                 {/* Guests & Status End */}
