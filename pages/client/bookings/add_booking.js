@@ -12,11 +12,15 @@ import Swal from 'sweetalert2'
 import axios from 'axios'
 import HoursOptions from '../../../components/admin/events/HoursOptions'
 import MinutesOptions from '../../../components/admin/events/MinutesOptions'
+import useDarkMode from '../../../hooks/useDarkMode'
+import ClientMobileNav from '../../../components/client/ClientMobileNav'
 
 export default function add_booking({ clientProfile }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const router = useRouter()
     const [userName, setUsername] = useState()
+    const { isDarkMode } = useDarkMode()
+    const [showMobileNav, setShowMobileNav] = useState(false)
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
         const role = localStorage.getItem('role')
@@ -24,8 +28,8 @@ export default function add_booking({ clientProfile }) {
             router.push('/login')
         }
     }
-    useEffect( async () => {
-        await readRole()
+    useEffect(() => {
+        readRole()
     }, [])
     const { register, reset, handleSubmit, formState : { errors } } = useForm()
     const handleFormSubmit = (data) => {
@@ -69,17 +73,28 @@ export default function add_booking({ clientProfile }) {
         })
     }
     return (
-        <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
+        <div className={`${isDarkMode ? 'dark' : ''} w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800 dark:text-gray-300`}>
             <SideNav isActive="booking" />
-            <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav username={ userName } />
-                <div className="row-start-2 w-full h-full bg-true-100">
-                    <div className="p-8 flex flex-col items-center gap-y-5 min-h-screen">
-                        <div className="w-client-profile-form-container">
+            {
+                showMobileNav ? 
+                <ClientMobileNav 
+                    isActive="booking" 
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                : null
+            }
+            <div className="col-start-1 md:col-start-2 grid grid-rows-custom-layout overflow-y-auto">
+                <TopNav 
+                    username={ userName } 
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                <div className="row-start-2 w-full h-full bg-true-100 dark:bg-gray-800">
+                    <div className="p-5 md:p-8 flex flex-col items-center gap-y-5 min-h-screen">
+                        <div className="w-80 md:w-client-profile-form-container">
                             <PageHeader text="Book Event">
                                 <svg 
                                     xmlns="http://www.w3.org/2000/svg" 
-                                    className="h-7 w-7 text-current" 
+                                    className="h-7 w-7 text-gray-800 dark:text-gray-300" 
                                     fill="none" 
                                     viewBox="0 0 24 24" 
                                     stroke="currentColor"
@@ -88,39 +103,39 @@ export default function add_booking({ clientProfile }) {
                                 </svg>
                             </PageHeader>
                         </div>
-                        <div className="card w-client-profile-form-container">
+                        <div className="card w-80 md:w-client-profile-form-container">
                             <form
                                 onSubmit={ handleSubmit(handleFormSubmit) }
-                                className="w-full rounded-xl p-5 flex flex-col items-center border border-gray-300 gap-y-10"
+                                className="w-full rounded-xl p-5 flex flex-col items-center border border-gray-300 dark:border-gray-700 gap-y-10"
                             >
                                 {/* type of event & desired date fields */}
-                                <div className="flex gap-x-5">
+                                <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
                                     <div className="flex flex-col gap-y-1">
-                                        <label htmlFor="booking_event_type" className="inputFieldLabel">Type of Event</label>
+                                        <label htmlFor="booking_event_type" className="inputFieldLabel dark:text-gray-300">Type of Event</label>
                                         <select
-                                            className="inputSelect rounded-lg"
+                                            className="w-50 md:w-63 px-2 py-1 bg-transparent border-transparent text-sm text-gray-800 dark:text-gray-300 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 focus:outline-none focus:ring-transparent rounded-lg"
                                             {...register("booking_event_type")}
                                         >
-                                            <option value="Wedding Event">Wedding Event</option>
-                                            <option value="Debut Event">Debut Event</option>
-                                            <option value="Corporate Event">Corporate Event</option>
-                                            <option value="Conferences Event">Conferences Event</option>
-                                            <option value="Dinner Galas Event">Dinner Galas Event</option>
-                                            <option value="Fundraisers Event">Fundraisers Event</option>
-                                            <option value="Long Service Awards Event">Long Service Awards Event</option>
-                                            <option value="Grand Openings Event">Grand Openings Event</option>
-                                            <option value="Family Day’s Event">Family Day’s Event</option>
-                                            <option value="Pageantries Event">Pageantries Event</option>
-                                            <option value="Conventions Event">Conventions Event</option>
-                                            <option value="Private Event">Private Event</option>
+                                            <option value="Wedding Event" className="dark:text-gray-800 text-xs md:text-sm">Wedding Event</option>
+                                            <option value="Debut Event" className="dark:text-gray-800 text-xs md:text-sm">Debut Event</option>
+                                            <option value="Corporate Event" className="dark:text-gray-800 text-xs md:text-sm">Corporate Event</option>
+                                            <option value="Conferences Event" className="dark:text-gray-800 text-xs md:text-sm">Conferences Event</option>
+                                            <option value="Dinner Galas Event" className="dark:text-gray-800 text-xs md:text-sm">Dinner Galas Event</option>
+                                            <option value="Fundraisers Event" className="dark:text-gray-800 text-xs md:text-sm">Fundraisers Event</option>
+                                            <option value="Long Service Awards Event" className="dark:text-gray-800 text-xs md:text-sm">Long Service Awards Event</option>
+                                            <option value="Grand Openings Event" className="dark:text-gray-800 text-xs md:text-sm">Grand Openings Event</option>
+                                            <option value="Family Day’s Event" className="dark:text-gray-800 text-xs md:text-sm">Family Day’s Event</option>
+                                            <option value="Pageantries Event" className="dark:text-gray-800 text-xs md:text-sm">Pageantries Event</option>
+                                            <option value="Conventions Event" className="dark:text-gray-800 text-xs md:text-sm">Conventions Event</option>
+                                            <option value="Private Event" className="dark:text-gray-800 text-xs md:text-sm">Private Event</option>
                                         </select>
                                     </div>
                                     <div className="flex flex-col gap-y-1">
-                                        <label htmlFor="booking_venue_name" className="inputFieldLabel">Venue Name</label>
-                                        <div className="inputContainer">
+                                        <label htmlFor="booking_venue_name" className="inputFieldLabel dark:text-gray-300">Venue Name</label>
+                                        <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                             <svg 
                                                 xmlns="http://www.w3.org/2000/svg" 
-                                                className="inputIcon" 
+                                                className="h-5 w-5 text-gray-800 dark:text-gray-300" 
                                                 fill="none" 
                                                 viewBox="0 0 24 24" 
                                                 stroke="currentColor"
@@ -129,7 +144,7 @@ export default function add_booking({ clientProfile }) {
                                             </svg>
                                             <input
                                                 type="text"
-                                                className="inputField appearance-none"
+                                                className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
                                                 { ...register("booking_venue_name", { required: "This field should not be empty!" }) }
                                                 autoComplete="off"
                                             />
@@ -144,13 +159,13 @@ export default function add_booking({ clientProfile }) {
                                     </div>
                                 </div>
                                 {/* event budget & desired date fields */}
-                                <div className="flex gap-x-5">
+                                <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
                                     <div className="flex flex-col gap-y-1">
-                                        <label htmlFor="booking_guests_no" className="inputFieldLabel">Event Budget</label>
-                                        <div className="inputContainer">
+                                        <label htmlFor="booking_guests_no" className="inputFieldLabel dark:text-gray-300">Event Budget</label>
+                                        <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                             <svg 
                                                 xmlns="http://www.w3.org/2000/svg" 
-                                                className="inputIcon" 
+                                                className="h-5 w-5 text-gray-800 dark:text-gray-300" 
                                                 fill="none" 
                                                 viewBox="0 0 24 24" 
                                                 stroke="currentColor"
@@ -159,7 +174,7 @@ export default function add_booking({ clientProfile }) {
                                             </svg>
                                             <input
                                                 type="number"
-                                                className="inputField appearance-none"
+                                                className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
                                                 { ...register("booking_budget", { required: "This field should not be empty!" }) }
                                                 autoComplete="off"
                                             />
@@ -173,11 +188,11 @@ export default function add_booking({ clientProfile }) {
                                         }
                                     </div>
                                     <div className="flex flex-col gap-y-1">
-                                        <label htmlFor="booking_des_date" className="inputFieldLabel">Desired Date</label>
-                                        <div className="inputContainer">
+                                        <label htmlFor="booking_des_date" className="inputFieldLabel dark:text-gray-300">Desired Date</label>
+                                        <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                             <input
                                                 type="date"
-                                                className="inputFieldDateTime appearance-none"
+                                                className="w-48 md:w-57 px-0 py-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm rounded-lg text-gray-800 dark:text-gray-300 appearance-none"
                                                 { ...register("booking_des_date", { required: "This field should not be empty!" }) }
                                                 autoComplete="off"
                                             />
@@ -192,25 +207,25 @@ export default function add_booking({ clientProfile }) {
                                     </div>
                                 </div>
                                 {/* time sched & guests no fields */}
-                                <div className="flex gap-x-5">
+                                <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
                                     <div className="flex flex-col gap-y-1">
-                                        <label className="inputFieldLabel">Time Schedule</label>
-                                        <div className='w-63 px-4 py-1 flex items-center justify-between bg-transparent gap-x-5 border border-gray-300 focus-within:border-gray-600 rounded-lg'>
+                                        <label className="inputFieldLabel dark:text-gray-300">Time Schedule</label>
+                                        <div className='w-50 md:w-63 px-4 py-1 flex items-center justify-between bg-transparent gap-x-5 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg'>
                                             <select 
-                                                className='customTime'
+                                                className='customTime bg-transparent dark:text-gray-300'
                                                 {...register("booking_hour")}
                                             >
                                                 <HoursOptions />
                                             </select>
                                             <p className='text-sm font-medium text-gray-800 -mx-6'>:</p>
                                             <select 
-                                                className='customTime'
+                                                className='customTime bg-transparent dark:text-gray-300'
                                                 {...register("booking_minute")}
                                             >
                                                 <MinutesOptions />
                                             </select>
                                             <select 
-                                                className='customTime'
+                                                className='customTime bg-transparent dark:text-gray-300'
                                                 {...register("booking_schedule")}
                                             >
                                                 <option value="AM">AM</option>
@@ -219,11 +234,11 @@ export default function add_booking({ clientProfile }) {
                                         </div>
                                     </div>
                                     <div className="flex flex-col gap-y-1">
-                                        <label htmlFor="booking_guests_no" className="inputFieldLabel">No. of Guests</label>
-                                        <div className="inputContainer">
+                                        <label htmlFor="booking_guests_no" className="inputFieldLabel dark:text-gray-300">No. of Guests</label>
+                                        <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                             <svg 
                                                 xmlns="http://www.w3.org/2000/svg" 
-                                                className="inputIcon" 
+                                                className="h-5 w-5 text-gray-800 dark:text-gray-300" 
                                                 fill="none" 
                                                 viewBox="0 0 24 24" 
                                                 stroke="currentColor"
@@ -232,7 +247,7 @@ export default function add_booking({ clientProfile }) {
                                             </svg>
                                             <input
                                                 type="number"
-                                                className="inputField appearance-none"
+                                                className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
                                                 { ...register("booking_guests_no", { required: "This field should not be empty!" }) }
                                                 autoComplete="off"
                                             />
@@ -253,7 +268,7 @@ export default function add_booking({ clientProfile }) {
                                         <p className="text-base font-bold tracking-wide">Save</p>
                                     </button>
                                 </div>
-                                <p className="pl-2 text-sm"><span className="font-bold">Note:</span> As for the mode of payment, it will be on the contract signing for the finalization of the event.</p>
+                                <p className="pl-2 text-xs md:text-sm dark:text-gray-300"><span className="font-bold">Note:</span> As for the mode of payment, it will be on the contract signing for the finalization of the event.</p>
                             </form>
                         </div>
                     </div>

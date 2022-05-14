@@ -2,16 +2,19 @@ import React, { Fragment } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import clientStyles from '../../styles/Client.module.css'
+import adminStyles from '../../styles/Admin.module.css'
 import useDarkMode from '../../hooks/useDarkMode'
+import useNav from '../../hooks/useNav'
 // import { Disclosure, Transition } from '@headlessui/react'
 
 const SideNav = ({ isActive }) => {
 
-    
+    const { isDarkMode } = useDarkMode()
+    const { handleNavClass } = useNav()
 
     return (
-        <div className="hidden md:col-start-1 h-screen bg-white border-r border-gray-200 md:flex flex-col">
-            <div className="w-full py-4 flex justify-center items-center gap-x-1 text-gray-800">
+        <div className={`hidden md:col-start-1 h-screen border-r shadow md:flex flex-col ${isDarkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'}`}>
+            <div className={`w-full py-4 flex justify-center ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
                 <Link href="/client">
                     <div className="flex items-center gap-x-3 cursor-pointer">
                         <Image 
@@ -26,7 +29,7 @@ const SideNav = ({ isActive }) => {
             </div>
             <Link href="/client" passHref>
                 <a 
-                    className={`${isActive === 'dashboard' ? clientStyles.sideNavItemActive : clientStyles.sideNavItem} ${isActive === 'dashboard' ? 'dark:bg-gray-800' : 'dark:bg-gray-900 hover:bg-gray-800'}`}
+                    className={`${isActive === 'dashboard' ? handleNavClass(true, isDarkMode) : handleNavClass(false, isDarkMode) }`}
                 >
                     <svg 
                         xmlns="http://www.w3.org/2000/svg" 
@@ -42,7 +45,7 @@ const SideNav = ({ isActive }) => {
             </Link>
             <Link href="/client/bookings" passHref>
                 <a 
-                    className={`${isActive === 'booking' ? clientStyles.sideNavItemActive : clientStyles.sideNavItem}`}
+                    className={`${isActive === 'booking' ? handleNavClass(true, isDarkMode) : handleNavClass(false, isDarkMode) }`}
                 >
                     <svg 
                         xmlns="http://www.w3.org/2000/svg" 
@@ -58,7 +61,7 @@ const SideNav = ({ isActive }) => {
             </Link>
             <Link href="/client/messages" passHref>
                 <a 
-                    className={ isActive === 'messages' ? clientStyles.sideNavItemActive : clientStyles.sideNavItem }
+                    className={`${isActive === 'messages' ? handleNavClass(true, isDarkMode) : handleNavClass(false, isDarkMode) }`}
                 >
                     <svg 
                         xmlns="http://www.w3.org/2000/svg" 

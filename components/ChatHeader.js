@@ -2,19 +2,15 @@ import React, { Fragment } from 'react'
 import adminStyles from '../styles/Admin.module.css'
 import { Transition, Menu } from '@headlessui/react'
 import { useSelector } from 'react-redux'
-import useDarkMode from '../hooks/useDarkMode'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import Swal from 'sweetalert2'
-import { useRouter } from 'next/router'
 
 const ChatHeader = ({ roomKey }) => {
 
     const api = process.env.NEXT_PUBLIC_DRF_API
     const { rooms } = useSelector(state => state.chatRoomsState)
     const chatRoom = rooms.find(room => room.room_key === roomKey)
-    const { isDarkMode } = useDarkMode()
-    const router = useRouter()
 
     const deleteChatRoom = (room_name, room_key) => {
         Swal.fire({

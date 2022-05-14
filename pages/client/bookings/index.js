@@ -8,10 +8,14 @@ import { useRouter } from 'next/router'
 import jwt_decode from 'jwt-decode'
 import moment from 'moment'
 import Link from 'next/link'
+import useDarkMode from '../../../hooks/useDarkMode'
+import ClientMobileNav from '../../../components/client/ClientMobileNav'
 
 export default function bookings({ bookingDetails }) {
     const router = useRouter()
     const [userName, setUsername] = useState()
+    const { isDarkMode } = useDarkMode()
+    const [showMobileNav, setShowMobileNav] = useState(false)
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
         const role = localStorage.getItem('role')
@@ -19,21 +23,32 @@ export default function bookings({ bookingDetails }) {
             router.push('/login')
         }
     }
-    useEffect( async () => {
-        await readRole()
+    useEffect(() => {
+        readRole()
     }, [])
     return (
-        <div className="w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800">
+        <div className={`${isDarkMode ? 'dark' : ''} w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800 dark:text-gray-300`}>
             <SideNav isActive="booking" />
+            {
+                showMobileNav ? 
+                <ClientMobileNav 
+                    isActive="booking" 
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                : null
+            }
             <div className="col-start-1 md:col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav username={ userName } />
-                <div className="row-start-2 w-full h-full bg-true-100">
+                <TopNav 
+                    username={ userName } 
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                <div className="row-start-2 w-full h-full bg-true-100 dark:bg-gray-800">
                     <div className="p-5 md:p-8 flex flex-col items-center gap-y-5 min-h-screen">
                         <div className="w-full flex justify-between">
                             <PageHeader text="Event Bookings">
                                 <svg 
                                     xmlns="http://www.w3.org/2000/svg" 
-                                    className="h-7 w-7 text-current" 
+                                    className="h-7 w-7 text-gray-800 dark:text-gray-300" 
                                     fill="none" 
                                     viewBox="0 0 24 24" 
                                     stroke="currentColor"
@@ -55,102 +70,102 @@ export default function bookings({ bookingDetails }) {
                                     >
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                     </svg>
-                                    <p className="text-sm font-bold">Book Event</p>
+                                    <p className="text-sm font-bold hidden md:block">Book Event</p>
                                 </button>
                             </Link>
                         </div>
-                        <div className="card w-full flex flex-col items-center gap-y-10">
-                        {
-                            bookingDetails.id ?
-                        <table 
-                            className="min-w-full divide-y divide-gray-200 border-b border-gray-200"
-                        >
-                            <thead className={ clientStyles.theadClass }>
-                                <tr 
-                                    className="text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
-                                >
-                                    <th 
-                                        scope="col" 
-                                        className={ clientStyles.tableHeadingClass }
-                                    >
-                                        Event Type
-                                    </th>
-                                    <th 
-                                        scope="col" 
-                                        className={ clientStyles.tableHeadingClass }
-                                    >
-                                        Venue
-                                    </th>
-                                    <th 
-                                        scope="col" 
-                                        className={ clientStyles.tableHeadingClass }
-                                    >
-                                        Budget
-                                    </th>
-                                    <th 
-                                        scope="col" 
-                                        className={ clientStyles.tableHeadingClass }
-                                    >
-                                        Date & Time
-                                    </th>
-                                    <th 
-                                        scope="col" 
-                                        className={ clientStyles.tableHeadingClass }
-                                    >
-                                        Guests No.
-                                    </th>
-                                    <th 
-                                        scope="col" 
-                                        className={ clientStyles.tableHeadingClass }
-                                    >
-                                        Status
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody 
-                                className={ clientStyles.tbodyClass }
+                        <div className="card w-65 md:w-full overflow-x-auto flex flex-col items-center gap-y-10">
+                            {
+                                bookingDetails.id ?
+                            <table 
+                                className="min-w-full divide-y divide-gray-200 border-b border-gray-200 dark:border-gray-700 dark:divide-gray-700"
                             >
-                                <tr
-                                    className={`${clientStyles.tableRowClass} color-transition`}
+                                <thead className="bg-gray-100 dark:bg-gray-800">
+                                    <tr 
+                                        className="text-left text-xs uppercase tracking-wider text-gray-700 dark:text-gray-400"
+                                    >
+                                        <th 
+                                            scope="col" 
+                                            className={ clientStyles.tableHeadingClass }
+                                        >
+                                            Event Type
+                                        </th>
+                                        <th 
+                                            scope="col" 
+                                            className={ clientStyles.tableHeadingClass }
+                                        >
+                                            Venue
+                                        </th>
+                                        <th 
+                                            scope="col" 
+                                            className={ clientStyles.tableHeadingClass }
+                                        >
+                                            Budget
+                                        </th>
+                                        <th 
+                                            scope="col" 
+                                            className={ clientStyles.tableHeadingClass }
+                                        >
+                                            Date & Time
+                                        </th>
+                                        <th 
+                                            scope="col" 
+                                            className={ clientStyles.tableHeadingClass }
+                                        >
+                                            Guests No.
+                                        </th>
+                                        <th 
+                                            scope="col" 
+                                            className={ clientStyles.tableHeadingClass }
+                                        >
+                                            Status
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody 
+                                    className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-300"
                                 >
-                                    <td 
-                                        className={ clientStyles.tableDataClass }
-                                    >{ bookingDetails.type_of_event }</td>
-                                    <td 
-                                        className={ clientStyles.tableDataClass }
-                                    >{ bookingDetails.venue_name }</td>
-                                    <td 
-                                        className={ clientStyles.tableDataClass }
-                                    >{ bookingDetails.event_budget }</td>
-                                    <td 
-                                        className={ clientStyles.tableDataClass }
-                                    >{ moment(bookingDetails.desired_date).format('ll') + ' ' + bookingDetails.time_schedule }</td>
-                                    <td 
-                                        className={ clientStyles.tableDataClass }
-                                    >{ bookingDetails.guests_no }</td>
-                                    {
-                                        bookingDetails.status === 'Pending' &&
+                                    <tr
+                                        className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-300"
+                                    >
                                         <td 
-                                            className={`${clientStyles.tableDataClass} text-yellow-500`}
-                                        >{ bookingDetails.status }</td>
-                                    }
-                                    {
-                                        bookingDetails.status === 'Declined' &&
+                                            className={ clientStyles.tableDataClass }
+                                        >{ bookingDetails.type_of_event }</td>
                                         <td 
-                                            className={`${clientStyles.tableDataClass} text-red-500`}
-                                        >{ bookingDetails.status }</td>
-                                    }
-                                    {
-                                        bookingDetails.status === 'Accepted' &&
+                                            className={ clientStyles.tableDataClass }
+                                        >{ bookingDetails.venue_name }</td>
                                         <td 
-                                            className={`${clientStyles.tableDataClass} text-teal-600`}
-                                        >{ bookingDetails.status }</td>
-                                    }
-                                </tr>
-                            </tbody>
-                        </table>
-                            : <h4 className='text-md text-center'>You currently don't have any bookings.</h4>
-                        }
+                                            className={ clientStyles.tableDataClass }
+                                        >{ bookingDetails.event_budget }</td>
+                                        <td 
+                                            className={ clientStyles.tableDataClass }
+                                        >{ moment(bookingDetails.desired_date).format('ll') + ' ' + bookingDetails.time_schedule }</td>
+                                        <td 
+                                            className={ clientStyles.tableDataClass }
+                                        >{ bookingDetails.guests_no }</td>
+                                        {
+                                            bookingDetails.status === 'Pending' &&
+                                            <td 
+                                                className={`${clientStyles.tableDataClass} text-yellow-500`}
+                                            >{ bookingDetails.status }</td>
+                                        }
+                                        {
+                                            bookingDetails.status === 'Declined' &&
+                                            <td 
+                                                className={`${clientStyles.tableDataClass} text-red-500`}
+                                            >{ bookingDetails.status }</td>
+                                        }
+                                        {
+                                            bookingDetails.status === 'Accepted' &&
+                                            <td 
+                                                className={`${clientStyles.tableDataClass} text-teal-600`}
+                                            >{ bookingDetails.status }</td>
+                                        }
+                                    </tr>
+                                </tbody>
+                            </table>
+                                : <h4 className='text-md text-center dark:text-gray-300'>You currently don't have any bookings.</h4>
+                            }
                         </div>
                     </div>
                     <Footer />

@@ -17,11 +17,10 @@ const TopNav = ({ username, onClick }) => {
         router.push('/login')
     }
     return (
-        <>
         <nav className={`row-start-1 w-full top-0 py-3 px-5 md:px-10 flex justify-between items-center border-b ${darkMode ? 'dark bg-gray-900 text-gray-200 border-gray-700' : 'bg-true-100 text-gray-600 border-gray-200'}`}>
             <div className="block lg:hidden">
                 <button 
-                    className={`${clientStyles.topNavBtn} color-transition rounded-lg bg-transparent focus:outline-none`}
+                    className={`${adminStyles.topNavBtn} color-transition rounded-lg bg-transparent focus:outline-none`}
                     onClick={ onClick }
                 >
                     <svg 
@@ -36,7 +35,7 @@ const TopNav = ({ username, onClick }) => {
                 </button>
             </div>
             <div className="hidden lg:block"></div>
-            <div className="flex items-center gap-x-3 text-gray-600">
+            <div className="flex items-center gap-x-3">
                 <Menu as="div">
                     <Menu.Button
                         type="button"
@@ -65,7 +64,7 @@ const TopNav = ({ username, onClick }) => {
                         leaveFrom="opacity-100 translate-y-0"
                         leaveTo="opacity-0 translate-y-1"
                     >
-                        <Menu.Items className={ clientStyles.popOverContainer }>
+                        <Menu.Items className={`${adminStyles.popOverContainer} ${isDarkMode ? adminStyles.popOverContainerDarkBg : adminStyles.popOverContainerBg}`}>
                             <Menu.Item>
                                 {({ active }) => (
                                     <Link href="/client/profile" passHref>
@@ -93,14 +92,14 @@ const TopNav = ({ username, onClick }) => {
                                     >
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 
-                                            className={ clientStyles.popOverIcon } 
+                                            className={ adminStyles.popOverIcon } 
                                             fill="none" 
                                             viewBox="0 0 24 24" 
                                             stroke="currentColor"
                                         >
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                                         </svg>
-                                        <p className={ clientStyles.popOverText }>Dark Mode</p>
+                                        <p className={ adminStyles.popOverText }>Dark Mode</p>
                                         <Switch 
                                             checked={ isDarkMode }
                                             onChange={ handleModeChange }
@@ -119,14 +118,14 @@ const TopNav = ({ username, onClick }) => {
                                     >
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" 
-                                            className={ clientStyles.popOverIcon } 
+                                            className={ adminStyles.popOverIcon } 
                                             fill="none" 
                                             viewBox="0 0 24 24" 
                                             stroke="currentColor"
                                         >
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                                         </svg>
-                                        <p className={ clientStyles.popOverText }>Logout</p>
+                                        <p className={ adminStyles.popOverText }>Logout</p>
                                     </button>
                                 )}
                             </Menu.Item>
@@ -135,7 +134,6 @@ const TopNav = ({ username, onClick }) => {
                 </Menu>
             </div>
         </nav>
-        </>
     )
 }
 

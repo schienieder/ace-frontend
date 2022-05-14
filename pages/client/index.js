@@ -13,9 +13,11 @@ import clientStyles from '../../styles/Client.module.css'
 import moment from 'moment'
 import {QRCodeCanvas} from 'qrcode.react'
 import ClientMobileNav from '../../components/client/ClientMobileNav'
+import useDarkMode from '../../hooks/useDarkMode'
 
 export default function dashboard({ clientProfile, bookingInfo, interviewInfo, eventInfo, totalTasks, completedTasks }) {
     const router = useRouter()
+    const { isDarkMode } = useDarkMode()
     const [userName, setUsername] = useState()
     const [showMobileNav, setShowMobileNav] = useState(false)
     const readRole = () => {
@@ -42,7 +44,7 @@ export default function dashboard({ clientProfile, bookingInfo, interviewInfo, e
         document.body.removeChild(downloadLink);
     }
     return (
-        <div className="w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800">
+        <div className={`${isDarkMode ? 'dark' : ''} w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800 dark:text-gray-300`}>
             <SideNav isActive="dashboard" />
             {
                 showMobileNav ? 
@@ -57,12 +59,12 @@ export default function dashboard({ clientProfile, bookingInfo, interviewInfo, e
                     username={ userName } 
                     onClick={ () => setShowMobileNav(!showMobileNav) }
                 />
-                <div className="row-start-2 w-full h-full bg-true-100">
+                <div className="row-start-2 w-full h-full bg-true-100 dark:bg-gray-800">
                     <div className="min-h-screen p-5 md:p-8 flex flex-col gap-y-5">
                         <PageHeader text="Dashboard">
                             <svg 
                                 xmlns="http://www.w3.org/2000/svg" 
-                                className="h-7 w-7 text-current" 
+                                className="h-7 w-7 text-gray-800 dark:text-gray-300" 
                                 fill="none" 
                                 viewBox="0 0 24 24" 
                                 stroke="currentColor"
@@ -91,7 +93,7 @@ export default function dashboard({ clientProfile, bookingInfo, interviewInfo, e
                         { eventInfo && 
                             <>
                             <div className="flex justify-between items-center">
-                                <h4 className='text-md font-bold -mb-3 mt-3'>Event Summary</h4>
+                                <h4 className='text-md font-bold -mb-3 mt-3 dark:text-gray-300'>Event Summary</h4>
                                 <button
                                     className="commonBtn flex items-center gap-x-1"
                                     onClick={ downloadQRCode }
@@ -109,7 +111,7 @@ export default function dashboard({ clientProfile, bookingInfo, interviewInfo, e
                                     <p className="hidden md:block">Download QR</p>
                                 </button>
                             </div>
-                            <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-5'>
+                            <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-5 dark:text-gray-300'>
                                 <div className='card flex flex-col gap-y-5'>
                                     <div className='flex gap-x-1 items-center'>
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -175,16 +177,16 @@ export default function dashboard({ clientProfile, bookingInfo, interviewInfo, e
                         {
                             eventInfo === '' &&
                             <div className="flex flex-col gap-y-5">
-                                <h4 className='text-md font-bold -mb-3 mt-3'>Booking Summary</h4>
-                                <div className='w-full card'>
+                                <h4 className='text-md font-bold -mb-3 mt-3 dark:text-gray-300'>Booking Summary</h4>
+                                <div className='w-65 md:w-full overflow-x-auto card'>
                                 {
                                     bookingInfo ?
                                     <table 
-                                        className="min-w-full divide-y divide-gray-200 border-b border-gray-200"
+                                        className="min-w-full divide-y divide-gray-200 border-b border-gray-200 dark:border-gray-700 dark:divide-gray-700"
                                     >
-                                        <thead className={ clientStyles.theadClass }>
+                                        <thead className="bg-gray-100 dark:bg-gray-800">
                                             <tr 
-                                                className="text-left text-xs font-medium text-gray-700 uppercase tracking-wider"
+                                                className="text-left text-xs uppercase tracking-wider text-gray-700 dark:text-gray-400"
                                             >
                                                 <th 
                                                     scope="col" 
@@ -213,10 +215,10 @@ export default function dashboard({ clientProfile, bookingInfo, interviewInfo, e
                                             </tr>
                                         </thead>
                                         <tbody 
-                                            className={ clientStyles.tbodyClass }
+                                            className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-300"
                                         >
                                             <tr
-                                                className={`${clientStyles.tableRowClass} color-transition`}
+                                                className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-300"
                                             >
                                                 <td 
                                                     className={ clientStyles.tableDataClass }
@@ -254,15 +256,15 @@ export default function dashboard({ clientProfile, bookingInfo, interviewInfo, e
                                             </tr>
                                         </tbody>
                                     </table>
-                                    : <h4 className='text-md text-center'>You currently don't have any bookings. Click <Link href="/client/bookings/add_booking"><a className="text-pink-600 font-bold hover:underline">here</a></Link> to add one!</h4>
+                                    : <h4 className='text-md text-center dark:text-gray-300'>You currently don't have any bookings. Click <Link href="/client/bookings/add_booking"><a className="text-pink-600 font-bold hover:underline">here</a></Link> to add one!</h4>
                                 }
                                 </div>
-                                <div className='w-full flex gap-x-5'>
-                                    <div className='w-2/5 flex flex-col gap-y-5'>
-                                        <h4 className='text-md font-bold -mb-3 mt-3'>Client Profile</h4>
+                                <div className='w-full flex flex-col md:flex-row gap-y-5 gap-x-5'>
+                                    <div className='w-full md:w-2/5 flex flex-col gap-y-5'>
+                                        <h4 className='text-md font-bold -mb-3 mt-3 dark:text-gray-300'>Client Profile</h4>
                                         <div className='bg-white dark:bg-gray-900 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl w-full flex flex-col gap-y-10 px-10 py-8'>
                                             {/* Name & Number Start */}
-                                            <div className='flex justify-between'>
+                                            <div className='flex flex-col md:flex-row justify-between gap-y-5 dark:text-gray-300'>
                                                 {/* Name Start */}
                                                 <div className='flex flex-col gap-y-2'>
                                                     <div className='flex gap-x-1 items-center'>
@@ -288,7 +290,7 @@ export default function dashboard({ clientProfile, bookingInfo, interviewInfo, e
                                             </div>
                                             {/* Name & Number End */}
                                             {/* Email & Birthdate Start */}
-                                            <div className='flex justify-between'>
+                                            <div className='flex flex-col md:flex-row justify-between gap-y-5 dark:text-gray-300'>
                                                 {/* Email Start */}
                                                 <div className='flex flex-col gap-y-2'>
                                                     <div className='flex gap-x-1 items-center'>
@@ -314,7 +316,7 @@ export default function dashboard({ clientProfile, bookingInfo, interviewInfo, e
                                             </div>
                                             {/* Email & Birthdate End */}
                                             {/* Address Start */}
-                                            <div className='flex flex-col gap-y-2'>
+                                            <div className='flex flex-col gap-y-2 dark:text-gray-300'>
                                                 <div className='flex gap-x-1 items-center'>
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -332,7 +334,7 @@ export default function dashboard({ clientProfile, bookingInfo, interviewInfo, e
                                             </Link>
                                         </div>
                                     </div>
-                                    <div className='w-3/5 flex flex-col gap-y-5'>
+                                    <div className='w-full md:w-3/5 flex flex-col gap-y-5 dark:text-gray-300'>
                                         <h4 className='text-md font-bold -mb-3 mt-3'>Interview Schedule</h4>
                                         <div className='flex-grow bg-white dark:bg-gray-900 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl w-full flex flex-col gap-y-10 px-10 py-8'>
                                         {

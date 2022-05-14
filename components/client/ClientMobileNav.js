@@ -48,7 +48,7 @@ const ClientMobileNav = ({ isActive, onClick }) => {
                     <p className="font-mont font-bold text-sm">Event Bookings</p>
                 </a>
             </Link>
-            <Link href="/client/bookings" passHref>
+            <Link href="/client/messages" passHref>
                 <a 
                     className={`${isActive === 'messages' ? 'text-pink-600' : 'text-gray-800' } flex items-center gap-x-1 text-sm`}
                 >
