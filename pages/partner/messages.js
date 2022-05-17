@@ -16,11 +16,16 @@ import { fetchMessages } from '../../redux/messages/messages.slice'
 import { fetchMemberRooms } from '../../redux/chatrooms/chatRooms.slice'
 import BeatLoader from 'react-spinners/BeatLoader'
 import ChatHeader from '../../components/ChatMemberHeader'
+import PartnerMobileNav from '../../components/partner/PartnerMobileNav'
+import useDarkMode from '../../hooks/useDarkMode'
+import PageHeader from '../../components/client/PageHeader'
 
 export default function messages({ partnerProfile }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const router = useRouter()
     const [userName, setUsername] = useState()
+    const { isDarkMode } = useDarkMode()
+    const [showMobileNav, setShowMobileNav] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
 
     const [userChat, setUserChat] = useState('')
@@ -189,13 +194,34 @@ export default function messages({ partnerProfile }) {
         dispatch(fetchMessages(room_id)).then(res => setChatMessages(res.payload))
     }
     return (
-        <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
+        <div className={`${isDarkMode ? 'dark' : ''} w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800 dark:text-gray-300`}>
             <SideNav isActive="messages" />
-            <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav username={ userName } />
-                <div className="row-start-2 w-full h-full bg-true-100">
-                    <div className="p-8 flex flex-col gap-y-5 min-h-screen">
-                        <h4 className="text-xl font-bold">Messages</h4>
+            {
+                showMobileNav ? 
+                <PartnerMobileNav 
+                    isActive="messages" 
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                : null
+            }
+            <div className="col-start-1 md:col-start-2 grid grid-rows-custom-layout overflow-y-auto">
+                <TopNav 
+                    username={ userName }
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                <div className="row-start-2 w-full h-full bg-true-100 dark:bg-gray-800">
+                    <div className="p-5 md:p-8 flex flex-col gap-y-5 min-h-screen">
+                        <PageHeader text="Messages">
+                            <svg 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                className="h-7 w-7 text-gray-800 dark:text-gray-300" 
+                                fill="none" 
+                                viewBox="0 0 24 24" 
+                                stroke="currentColor"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+                            </svg>
+                        </PageHeader>
                         {/* Start of Create Modal */}
                         <Transition appear show={isOpen} as={Fragment}>
                             <Dialog
@@ -306,12 +332,12 @@ export default function messages({ partnerProfile }) {
                             </Dialog>
                         </Transition>
                         {/* End of Create Modal */}
-                        <div className="card w-full grid grid-cols-custom-layout gap-x-5">
+                        <div className="card w-full grid grid-cols-1 md:grid-cols-custom-layout gap-x-5">
 
                             {/* Chat names part */}
-                            <div className="col-start-1 rounded-md flex flex-col border border-gray-300 p-5 gap-y-3">
+                            <div className="col-start-1 rounded-xl hidden md:flex flex-col border border-gray-300 dark:border-gray-700 p-5 gap-y-3">
                                 <div className="flex flex-col gap-y-2">
-                                    <div className="searchBarContainer">
+                                    <div className="searchBarContainer dark:border-gray-700">
                                         <input 
                                             type="text"
                                             className="searchBarInput"
@@ -344,17 +370,17 @@ export default function messages({ partnerProfile }) {
                                         <p className="text-sm font-bold">Join Group</p>
                                     </button>
                                 </div>
-                                <div className="w-full h-screen py-3 divide-y divide-gray-200 overflow-y-auto">
+                                <div className="w-full h-screen py-3 divide-y divide-gray-200 dark:divide-gray-700 overflow-y-auto">
                                     {
                                         loading ? <div className="flex justify-center"><BeatLoader color="#9ca3af" loading={ loading } size={15} /></div>
                                         : roomsList.map(room => (
                                             <div 
-                                                className="flex items-center gap-x-2 pl-3 py-3 cursor-pointer hover:bg-gray-50 color-transition"
+                                            className="flex items-center gap-x-2 pl-3 py-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 color-transition"
                                                 key={ room.id }
                                                 onClick={ () => setChat(room.room_key, room.id) }
                                             >
-                                                <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-                                                <p className="text-xs font-medium">{ room.room_key === userName ? 'Ace Cadayona' : room.room_name }</p>
+                                                <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+                                                <p className="text-xs font-medium dark:text-gray-300">{ room.room_key === userName ? 'Ace Cadayona' : room.room_name }</p>
                                             </div>
                                         ))
                                     }
@@ -378,11 +404,11 @@ export default function messages({ partnerProfile }) {
                             </div>
 
                             {/* Messages part */}
-                            <div className="col-start-2 h-full border border-gray-300 rounded-xl flex flex-col p-5 gap-y-5">
+                            <div className="col-start-1 md:col-start-2 h-screen md:h-full border border-gray-300 dark:border-gray-700 rounded-xl flex flex-col p-5 gap-y-5">
                                 { roomName ? <ChatHeader roomKey={ roomName } /> : null }
                                 <div
                                     ref={ messagesContainerRef } 
-                                    className="w-full h-messages-container bg-gray-100 rounded-xl p-5 flex flex-col justify-end gap-y-5 overflow-y-auto"
+                                    className="w-full h-full bg-gray-100 dark:bg-gray-800 rounded-xl p-5 flex flex-col justify-end gap-y-5 overflow-y-auto"
                                 >
                                     {/* {
                                         messages.length ? messages.map((message, index) => (
@@ -445,11 +471,11 @@ export default function messages({ partnerProfile }) {
                                         </svg>
                                     </button> */}
                                     <div 
-                                        className="w-full flex gap-x-1 px-2 py-1 items-center border border-gray-300 focus-within:border-gray-600 rounded-lg"
+                                        className="w-full flex gap-x-1 px-2 py-1 items-center border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg"
                                     >
                                         <input 
                                             type="text"
-                                            className="flex-1 px-0 py-0 border-transparent focus:outline-none focus:ring-transparent focus:border-transparent text-sm"
+                                            className="flex-1 px-0 py-0 border-transparent focus:outline-none focus:ring-transparent focus:border-transparent text-sm dark:bg-gray-900 dark:text-gray-300"
                                             placeholder="Type your message . . ."
                                             onChange={ e => setUserChat(e.target.value) }
                                             value={ userChat }

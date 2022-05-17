@@ -10,11 +10,15 @@ import moment from 'moment'
 import PageHeader from '../../components/PageHeader'
 import Swal from 'sweetalert2'
 import axios from 'axios'
+import PartnerMobileNav from '../../components/partner/PartnerMobileNav'
+import useDarkMode from '../../hooks/useDarkMode'
 
 export default function tasks({ requestList, eventsList }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const router = useRouter()
     const [userName, setUsername] = useState()
+    const [showMobileNav, setShowMobileNav] = useState(false)
+    const { isDarkMode } = useDarkMode()
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
         const role = localStorage.getItem('role')
@@ -68,16 +72,27 @@ export default function tasks({ requestList, eventsList }) {
         })
     }
     return (
-        <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
+        <div className={`${isDarkMode ? 'dark' : ''} w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800 dark:text-gray-300`}>
             <SideNav isActive="tasks" />
-            <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav username={ userName } />
-                <div className="row-start-2 w-full h-full bg-true-100">
-                    <div className="p-8 flex flex-col gap-y-5 min-h-screen">
+            {
+                showMobileNav ? 
+                <PartnerMobileNav 
+                    isActive="tasks" 
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                : null
+            }
+            <div className="col-start-1 md:col-start-2 grid grid-rows-custom-layout overflow-y-auto">
+                <TopNav 
+                    username={ userName }
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                <div className="row-start-2 w-full h-full bg-true-100 dark:bg-gray-800">
+                    <div className="p-5 md:p-8 flex flex-col gap-y-5 min-h-screen">
                         <PageHeader text="Events & Tasks">
                             <svg 
                                 xmlns="http://www.w3.org/2000/svg" 
-                                className="h-7 w-7 text-current" 
+                                className="h-7 w-7 text-gray-800 dark:text-gray-300" 
                                 fill="none" 
                                 viewBox="0 0 24 24" 
                                 stroke="currentColor"
@@ -85,99 +100,99 @@ export default function tasks({ requestList, eventsList }) {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                             </svg>
                         </PageHeader>
-                        <div className="card w-full flex flex-col gap-y-5">
-                        <table className="w-full divide-y divide-gray-200 border-b border-gray-200">
-                                <thead className={ partnerStyles.theadClass }>
-                                    <tr className="text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                                        <th scope="col" className={ partnerStyles.tableHeadingClass }>
-                                            Event Name
-                                        </th>
-                                        <th scope="col" className={ partnerStyles.tableHeadingClass }>
-                                            Date & Time
-                                        </th>
-                                        <th scope="col" className={ partnerStyles.tableHeadingClass }>
-                                            Status
-                                        </th>
-                                        <th scope="col" className={ partnerStyles.tableHeadingClass }>
-                                            Venue
-                                        </th>
-                                        <th scope="col" className={ partnerStyles.tableHeadingClass }>
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className={ partnerStyles.tbodyClass }>
-                                    {
-                                        requestList.results.length ?
-                                            requestList.results.map((request) => (
-                                                <tr 
-                                                    className={`${partnerStyles.tableRowClass} color-transition`}
-                                                    key={request.id}
-                                                >
-                                                    <td className={ partnerStyles.tableDataClass }>
-                                                        <p className={ partnerStyles.tableDataTextClass }>
-                                                            {
-                                                                eventsList.results.map((event) => {
-                                                                    if (event.id === request.event) {
-                                                                        return event.event_name
-                                                                    }
-                                                                })
-                                                            }
-                                                        </p>
-                                                    </td>
-                                                    <td className={ partnerStyles.tableDataClass }>
-                                                        <p className="text-sm text-gray-800">
-                                                            {
-                                                                eventsList.results.map((event) => {
-                                                                    if (event.id === request.event) {
-                                                                        return moment(event.event_date).format('ll') + ', ' + event.time_schedule
-                                                                    }
-                                                                })
-                                                            }
-                                                        </p>
-                                                    </td>
-                                                    <td className={ partnerStyles.tableDataClass }>
-                                                        <p className={`${request.task_status === 'Completed' ? 'text-teal-600' : 'text-yellow-500'} text-sm`}>{ request.task_status }</p>
-                                                    </td>
-                                                    <td className={`${partnerStyles.tableDataClass} max-w-xs`}>
-                                                        <p className="text-sm text-gray-800 overflow-ellipsis overflow-hidden">
-                                                            {
-                                                                eventsList.results.map((event) => {
-                                                                    if (event.id === request.event) {
-                                                                        return event.venue_name
-                                                                    }
-                                                                })
-                                                            }
-                                                        </p>
-                                                    </td>
-                                                    <td className={ partnerStyles.tableDataClass }>
-                                                        <div className="flex gap-x-2">
-                                                            <button
-                                                                type="button"
-                                                                className={`${partnerStyles.actionBtn} color-transition`}
-                                                                onClick={ () => confirmCompletion(request.id) }
-                                                            >
-                                                                <svg xmlns="http://www.w3.org/2000/svg" className={ partnerStyles.actionBtnIcon } fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                                </svg> 
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            ))
-                                        : 
-                                        <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
-                                            <td 
-                                                className="px-6 py-3 whitespace-nowrap text-center"
-                                                colSpan={6}
-                                            >
-                                                <p className="text-sm">Nothing to show.</p>
-                                            </td>
+                        <div className="card w-65 md:w-full overflow-x-auto flex flex-col gap-y-5">
+                            <table className="min-w-full divide-y divide-gray-200 border-b border-gray-200 dark:border-gray-700 dark:divide-gray-700">
+                                    <thead className="bg-gray-100 dark:bg-gray-800">
+                                        <tr className="text-left text-xs uppercase tracking-wider text-gray-700 dark:text-gray-400">
+                                            <th scope="col" className={`${partnerStyles.tableHeadingClass} text-xs md:text-base`}>
+                                                Event Name
+                                            </th>
+                                            <th scope="col" className={ partnerStyles.tableHeadingClass }>
+                                                Date & Time
+                                            </th>
+                                            <th scope="col" className={ partnerStyles.tableHeadingClass }>
+                                                Status
+                                            </th>
+                                            <th scope="col" className={ partnerStyles.tableHeadingClass }>
+                                                Venue
+                                            </th>
+                                            <th scope="col" className={ partnerStyles.tableHeadingClass }>
+                                                Actions
+                                            </th>
                                         </tr>
-                                    }
-                                </tbody>
-                            </table>
-                            <div className="flex gap-x-2 text-sm">
+                                    </thead>
+                                    <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                                        {
+                                            requestList.results.length ?
+                                                requestList.results.map((request) => (
+                                                    <tr 
+                                                        className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-300"
+                                                        key={request.id}
+                                                    >
+                                                        <td className={ partnerStyles.tableDataClass }>
+                                                            <p className={ partnerStyles.tableDataTextClass }>
+                                                                {
+                                                                    eventsList.results.map((event) => {
+                                                                        if (event.id === request.event) {
+                                                                            return event.event_name
+                                                                        }
+                                                                    })
+                                                                }
+                                                            </p>
+                                                        </td>
+                                                        <td className={ partnerStyles.tableDataClass }>
+                                                            <p className="text-sm text-gray-800">
+                                                                {
+                                                                    eventsList.results.map((event) => {
+                                                                        if (event.id === request.event) {
+                                                                            return moment(event.event_date).format('ll') + ', ' + event.time_schedule
+                                                                        }
+                                                                    })
+                                                                }
+                                                            </p>
+                                                        </td>
+                                                        <td className={ partnerStyles.tableDataClass }>
+                                                            <p className={`${request.task_status === 'Completed' ? 'text-teal-600' : 'text-yellow-500'} text-sm`}>{ request.task_status }</p>
+                                                        </td>
+                                                        <td className={`${partnerStyles.tableDataClass} max-w-xs`}>
+                                                            <p className="text-sm text-gray-800 overflow-ellipsis overflow-hidden">
+                                                                {
+                                                                    eventsList.results.map((event) => {
+                                                                        if (event.id === request.event) {
+                                                                            return event.venue_name
+                                                                        }
+                                                                    })
+                                                                }
+                                                            </p>
+                                                        </td>
+                                                        <td className={ partnerStyles.tableDataClass }>
+                                                            <div className="flex gap-x-2">
+                                                                <button
+                                                                    type="button"
+                                                                    className={`${partnerStyles.actionBtn} color-transition`}
+                                                                    onClick={ () => confirmCompletion(request.id) }
+                                                                >
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" className={ partnerStyles.actionBtnIcon } fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                                    </svg> 
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            : 
+                                            <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
+                                                <td 
+                                                    className="px-6 py-3 whitespace-nowrap text-center"
+                                                    colSpan={6}
+                                                >
+                                                    <p className="text-sm dark:text-gray-300">Nothing to show.</p>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            <div className="flex gap-x-2 text-sm dark:text-gray-300">
                                 <p className="font-normal">Total Events & Tasks: </p>
                                 <p className="font-bold">{ requestList.count }</p>
                             </div>

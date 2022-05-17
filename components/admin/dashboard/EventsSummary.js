@@ -80,6 +80,7 @@ const EventsSummary = () => {
                             axisLine={ true }
                             tickLine={ false }
                             tickFormatter={ number => `${number}` }
+                            domain={[0, "dataMax"]}
                             style={{
                                 fontSize : '10px',
                             }}

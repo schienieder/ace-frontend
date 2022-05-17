@@ -3,15 +3,19 @@ import TopNav from '../../components/partner/TopNav'
 import SideNav from '../../components/partner/SideNav'
 import Footer from '../../components/partner/Footer'
 import Link from 'next/link'
-import CalendarHook from '../../components/admin/events/CalendarHook'
+// import CalendarHook from '../../components/admin/events/CalendarHook'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
 import moment from 'moment'
+import PartnerMobileNav from '../../components/partner/PartnerMobileNav'
+import useDarkMode from '../../hooks/useDarkMode'
 
 export default function index({ partnerProfile, upComingEvents, recentRequests }) {
     const router = useRouter()
     const [userName, setUsername] = useState()
+    const [showMobileNav, setShowMobileNav] = useState(false)
+    const { isDarkMode } = useDarkMode()
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
         const role = localStorage.getItem('role')
@@ -22,21 +26,32 @@ export default function index({ partnerProfile, upComingEvents, recentRequests }
     useEffect(() => {
         readRole()
     }, [])
-    const { calendarRows, selectedDate, todayFormatted, daysShort, monthNames, getNextMonth, getPrevMonth } = CalendarHook()
-    const dateClickHandler = date => {
-        console.log(date);
-    }
+    // const { calendarRows, selectedDate, todayFormatted, daysShort, monthNames, getNextMonth, getPrevMonth } = CalendarHook()
+    // const dateClickHandler = date => {
+    //     console.log(date);
+    // }
     return (
-        <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
+        <div className={`${isDarkMode ? 'dark' : ''} w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800 dark:text-gray-300`}>
             <SideNav isActive="dashboard" />
-            <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav username={ userName } />
-                <div className="row-start-2 w-full h-full bg-true-100">
+            {
+                showMobileNav ? 
+                <PartnerMobileNav 
+                    isActive="dashboard" 
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                : null
+            }
+            <div className="col-start-1 md:col-start-2 grid grid-rows-custom-layout overflow-y-auto">
+                <TopNav 
+                    username={ userName }
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                <div className="row-start-2 w-full h-full bg-true-100 dark:bg-gray-800">
                     <div className="p-8 flex flex-col gap-y-5 min-h-screen">
                     <div className="flex items-center gap-x-2">
                         <svg 
                             xmlns="http://www.w3.org/2000/svg" 
-                            className="h-7 w-7 text-current" 
+                            className="h-7 w-7 text-gray-800 dark:text-gray-300" 
                             fill="none" 
                             viewBox="0 0 24 24" 
                             stroke="currentColor"
@@ -47,7 +62,7 @@ export default function index({ partnerProfile, upComingEvents, recentRequests }
                     </div>
                     {
                         !partnerProfile.first_name || !partnerProfile.last_name || !partnerProfile.mobile_number || !partnerProfile.email || !partnerProfile.street_address || !partnerProfile.city || !partnerProfile.state_province || !partnerProfile.business_name || !partnerProfile.type_of_business || !partnerProfile.services_offered ?
-                            <div className="w-full p-5 rounded-lg bg-white flex justify-center items-center gap-x-1 text-gray-800">
+                            <div className="w-full p-5 rounded-lg bg-white dark:bg-gray-9000 flex justify-center items-center gap-x-1 text-gray-800 dark:text-gray-300">
                                 <svg 
                                     xmlns="http://www.w3.org/2000/svg" 
                                     className="h-7 w-7 text-pink-600 animate-wiggle" 
@@ -61,12 +76,12 @@ export default function index({ partnerProfile, upComingEvents, recentRequests }
                             </div>
                         : null
                     }
-                        <div className="flex gap-x-5">
+                        <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
                             {/* Affiliation Request */}
-                            <div className="w-1/2 card flex flex-col gap-y-5">
+                            <div className="w-full md:w-1/2 overflow-x-auto card flex flex-col gap-y-5">
                                 <div className="w-full flex justify-between">
                                     <h4 className="text-base font-bold dark:text-gray-300">Affiliation Requests</h4>
-                                    <Link href="partner/requests/">
+                                    <Link href="/partner/requests">
                                         <a className="text-xs text-gray-500 hover:text-blue-600 cursor-pointer">View All</a>
                                     </Link>
                                 </div>
@@ -87,7 +102,10 @@ export default function index({ partnerProfile, upComingEvents, recentRequests }
                                         {
                                             recentRequests.length ? 
                                                 recentRequests.map((request) => (
-                                                    <tr className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800">
+                                                    <tr 
+                                                        className="bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800"
+                                                        key={ request.id }
+                                                    >
                                                         <td 
                                                             className="px-4 py-2 whitespace-nowrap flex flex-col"
                                                         >
@@ -116,7 +134,7 @@ export default function index({ partnerProfile, upComingEvents, recentRequests }
                                                         className="px-6 py-3 whitespace-nowrap text-center"
                                                         colSpan={2}
                                                     >
-                                                        <p className="text-sm">Nothing to show.</p>
+                                                        <p className="text-sm dark:text-gray-400">Nothing to show.</p>
                                                     </td>
                                                 </tr>
                                         }
@@ -124,10 +142,10 @@ export default function index({ partnerProfile, upComingEvents, recentRequests }
                                 </table>
                             </div>
                             {/* <AffiliationRequest data={ dummy } /> */}
-                            <div className="w-1/2 card flex flex-col gap-y-5">
+                            <div className="w-full md:w-1/2 overflow-x-auto card flex flex-col gap-y-5">
                                 <div className="w-full flex justify-between">
                                     <h4 className="text-base font-bold dark:text-gray-300">Upcoming Events</h4>
-                                    <Link href="partner/tasks/">
+                                    <Link href="/partner/tasks">
                                         <a className="text-xs text-gray-500 hover:text-blue-600 cursor-pointer">View All</a>
                                     </Link>
                                 </div>
@@ -161,7 +179,7 @@ export default function index({ partnerProfile, upComingEvents, recentRequests }
                                                     className="px-6 py-3 whitespace-nowrap text-center"
                                                     colSpan={2}
                                                 >
-                                                    <p className="text-sm">Nothing to show.</p>
+                                                    <p className="text-sm dark:text-gray-400">Nothing to show.</p>
                                                 </td>
                                             </tr>
                                         }

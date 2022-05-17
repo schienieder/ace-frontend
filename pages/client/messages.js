@@ -19,7 +19,7 @@ import BeatLoader from 'react-spinners/BeatLoader'
 import ChatHeader from '../../components/ChatMemberHeader'
 import useDarkMode from '../../hooks/useDarkMode'
 
-export default function messages({ clientProfile }) {
+export default function messages() {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const socket_api = process.env.NEXT_PUBLIC_DRF_SOCKET
     const router = useRouter()
@@ -506,30 +506,30 @@ export default function messages({ clientProfile }) {
     )
 }
 
-export const getServerSideProps = async ({ req }) => {
-    const api = process.env.NEXT_PUBLIC_DRF_API
-    const token = req.cookies.jwt
-    const decoded_token = jwt_decode(token)
-    const res1 = await fetch(`${api}client_profile/${decoded_token.user_id}`, {
-        method : 'GET',
-        headers : {'Authorization' : 'Bearer'+' '+token}
-    })
-    const data1 = await res1.json()
-    // const res2 = await fetch(`${api}member_rooms/`, {
-    //     method : 'GET',
-    //     headers : {'Authorization' : 'Bearer'+' '+token}
-    // })
-    // const data2 = await res2.json()
-    // const res3 = await fetch(`${api}chatroom_list/`, {
-    //     method : 'GET',
-    //     headers : {'Authorization' : 'Bearer'+' '+token}
-    // })
-    // const data3 = await res3.json()
-    return {
-        props : {
-            clientProfile : data1,
-            // memberRooms : data2,
-            // allRooms : data3
-        }
-    }
-}
+// export const getServerSideProps = async ({ req }) => {
+//     const api = process.env.NEXT_PUBLIC_DRF_API
+//     const token = req.cookies.jwt
+//     const decoded_token = jwt_decode(token)
+//     const res1 = await fetch(`${api}client_profile/${decoded_token.user_id}`, {
+//         method : 'GET',
+//         headers : {'Authorization' : 'Bearer'+' '+token}
+//     })
+//     const data1 = await res1.json()
+//     // const res2 = await fetch(`${api}member_rooms/`, {
+//     //     method : 'GET',
+//     //     headers : {'Authorization' : 'Bearer'+' '+token}
+//     // })
+//     // const data2 = await res2.json()
+//     // const res3 = await fetch(`${api}chatroom_list/`, {
+//     //     method : 'GET',
+//     //     headers : {'Authorization' : 'Bearer'+' '+token}
+//     // })
+//     // const data3 = await res3.json()
+//     return {
+//         props : {
+//             clientProfile : data1,
+//             // memberRooms : data2,
+//             // allRooms : data3
+//         }
+//     }
+// }

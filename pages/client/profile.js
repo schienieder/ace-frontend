@@ -115,7 +115,7 @@ export default function profile({ clientProfile }) {
                                 className="w-full rounded-xl p-5 flex flex-col items-center border border-gray-300 dark:border-gray-700 gap-y-7"
                             >
 
-                                <div className="w-full flex flex-col gap-y-2">
+                                <div className="w-file-mobile md:w-full flex flex-col gap-y-2">
                                     <p className="inputFieldLabel dark:text-gray-300">Image</p>
                                     <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                         <input

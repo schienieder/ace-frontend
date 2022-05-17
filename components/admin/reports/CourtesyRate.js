@@ -64,6 +64,7 @@ const CoutesyForecast = () => {
                             axisLine={ true }
                             tickLine={ false }
                             tickFormatter={ number => `${number}` }
+                            domain={[1, 5]}
                             style={{
                                 fontSize : '10px',
                             }}

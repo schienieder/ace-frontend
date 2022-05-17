@@ -9,11 +9,16 @@ import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
 import Swal from 'sweetalert2'
 import axios from 'axios'
+import PartnerMobileNav from '../../components/partner/PartnerMobileNav'
+import useDarkMode from '../../hooks/useDarkMode'
+import PageHeader from '../../components/PageHeader'
 
 export default function profile({ partnerProfile }) {
     const api = process.env.NEXT_PUBLIC_DRF_API
     const router = useRouter()
     const [userName, setUsername] = useState()
+    const [showMobileNav, setShowMobileNav] = useState(false)
+    const { isDarkMode } = useDarkMode()
     const readRole = () => {
         setUsername(localStorage.getItem('username'))
         const role = localStorage.getItem('role')
@@ -73,31 +78,52 @@ export default function profile({ partnerProfile }) {
         })
     }
     return (
-        <div className="w-full h-screen grid grid-cols-custom-layout font-mont text-gray-800">
+        <div className={`${isDarkMode ? 'dark' : ''} w-full h-screen grid grid-cols-1 md:grid-cols-custom-layout font-mont text-gray-800 dark:text-gray-300`}>
             <SideNav isActive="" />
-            <div className="col-start-2 grid grid-rows-custom-layout overflow-y-auto">
-                <TopNav username={ userName } />
-                <div className="row-start-2 w-full h-full bg-true-100">
-                    <div className="p-8 flex flex-col items-center gap-y-5 min-h-screen">
-                        <div className="w-client-profile-form-container">
-                        <h4 className="text-xl font-bold">Business Profile</h4>
+            {
+                showMobileNav ? 
+                <PartnerMobileNav 
+                    isActive="" 
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                : null
+            }
+            <div className="col-start-1 md:col-start-2 grid grid-rows-custom-layout overflow-y-auto">
+                <TopNav 
+                    username={ userName }
+                    onClick={ () => setShowMobileNav(!showMobileNav) }
+                />
+                <div className="row-start-2 w-full h-full bg-true-100 dark:bg-gray-800">
+                    <div className="p-5 md:p-8 flex flex-col items-center gap-y-5 min-h-screen">
+                        <div className="w-80 md:w-client-profile-form-container">
+                            <PageHeader text="Business Profile">
+                                <svg 
+                                    xmlns="http://www.w3.org/2000/svg" 
+                                    className="w-7 h-7 text-gray-800 dark:text-gray-300" 
+                                    fill="none" 
+                                    viewBox="0 0 24 24" 
+                                    stroke="currentColor"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                                </svg>
+                            </PageHeader>
                         </div>
                         
-                        <div className="card w-client-profile-form-container">
+                        <div className="card w-80 md:w-client-profile-form-container">
                             <form
                                 onSubmit={ handleSubmit(handleSubmitForm) }
-                                className="w-full flex flex-col items-center gap-y-6 border border-gray-300 rounded-xl p-5"
+                                className="w-full flex flex-col items-center gap-y-6 border border-gray-300 rounded-xl p-5 dark:text-gray-300"
                             >
                                 <h4 className="text-base font-bold">Personal Information</h4>
                                 
                                 {/* This is for the name field */}
                                 <div className="flex flex-col gap-y-2">
-                                    <p className="inputFieldLabel">Name</p>
-                                    <div className="flex gap-x-5">
+                                    <p className="inputFieldLabel dark:text-gray-300">Name</p>
+                                    <div className="flex flex-col md:flex-row gap-y-5 gap-x-5">
 
                                         <div className="flex flex-col gap-y-1">
                                             <p className="text-xs">First Name</p>
-                                            <div className="inputContainer">
+                                            <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                                 <svg 
                                                     xmlns="http://www.w3.org/2000/svg" 
                                                     className="inputIcon" 
@@ -110,7 +136,7 @@ export default function profile({ partnerProfile }) {
                                                 <input
                                                     type="text"
                                                     { ...register("partner_fname", { required : "This field cannot be empty" }) } 
-                                                    className="inputField"
+                                                    className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
                                                     defaultValue={ partnerProfile.first_name || '' }
                                                 />
                                             </div>
@@ -125,7 +151,7 @@ export default function profile({ partnerProfile }) {
 
                                         <div className="flex flex-col gap-y-1">
                                             <p className="text-xs">Last Name</p>
-                                            <div className="inputContainer">
+                                            <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                                 <svg 
                                                     xmlns="http://www.w3.org/2000/svg" 
                                                     className="inputIcon" 
@@ -138,7 +164,7 @@ export default function profile({ partnerProfile }) {
                                                 <input
                                                     type="text"
                                                     { ...register("partner_lname", { required : "This field cannot be empty" }) } 
-                                                    className="inputField"
+                                                    className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
                                                     defaultValue={ partnerProfile.last_name || '' }
                                                 />
                                             </div>
@@ -156,12 +182,12 @@ export default function profile({ partnerProfile }) {
 
                                 {/* This is for the contact field */}
                                 <div className="flex flex-col gap-y-2">
-                                    <p className="inputFieldLabel">Contact</p>
-                                    <div className="flex gap-x-5">
+                                    <p className="inputFieldLabel dark:text-gray-300">Contact</p>
+                                    <div className="flex flex-col md:flex-row gap-x-5 gap-y-5">
 
                                         <div className="flex flex-col gap-y-1">
                                             <p className="text-xs">Mobile Number</p>
-                                            <div className="inputContainer">
+                                            <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                                 <svg 
                                                     xmlns="http://www.w3.org/2000/svg" 
                                                     className="inputIcon" 
@@ -174,7 +200,7 @@ export default function profile({ partnerProfile }) {
                                                 <input
                                                     type="number"
                                                     { ...register("partner_mobile", { required : "This field cannot be empty" }) } 
-                                                    className="inputField"
+                                                    className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
                                                     defaultValue={ partnerProfile.mobile_number || '' }
                                                 />
                                             </div>
@@ -189,7 +215,7 @@ export default function profile({ partnerProfile }) {
 
                                         <div className="flex flex-col gap-y-1">
                                             <p className="text-xs">Email Address</p>
-                                            <div className="inputContainer">
+                                            <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                                 <svg 
                                                     xmlns="http://www.w3.org/2000/svg" 
                                                     className="inputIcon" 
@@ -202,7 +228,7 @@ export default function profile({ partnerProfile }) {
                                                 <input
                                                     type="text"
                                                     { ...register("partner_email", { required : "This field cannot be empty" }) } 
-                                                    className="inputField"
+                                                    className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
                                                     defaultValue={ partnerProfile.email || '' }
                                                 />
                                             </div>
@@ -220,23 +246,23 @@ export default function profile({ partnerProfile }) {
 
                                 <h4 className="text-base font-bold mt-5">Business Information</h4>
                                 
-                                <div className="w-full flex flex-col gap-y-2">
-                                    <p className="inputFieldLabel">Business Permit <span className='font-medium'>/</span> Work Profile</p>
-                                    <div className='inputContainer'>
+                                <div className="w-file-mobile md:w-full flex flex-col gap-y-2">
+                                    <p className="text-xs md:text-sm font-bold text-gray-700 dark:text-gray-300">Business Permit <span className='font-medium'>/</span> Work Profile</p>
+                                    <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                         <input
                                             type="file"
                                             { ...register("partner_permit") } 
-                                            className="inputField"
+                                            className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
                                         />
                                     </div>
                                 </div>
 
                                 {/* This is for the company name & business type fields */}
-                                <div className="flex gap-x-5">
+                                <div className="flex flex-col md:flex-row gap-x-5 gap-y-5">
 
                                     <div className="flex flex-col gap-y-1">
-                                        <label className="inputFieldLabel">Business <span className='font-medium'>/</span> Work Name</label>
-                                        <div className="inputContainer">
+                                        <label className="inputFieldLabel dark:text-gray-300">Business <span className='font-medium'>/</span> Work Name</label>
+                                        <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                             <svg 
                                                 xmlns="http://www.w3.org/2000/svg" 
                                                 className="inputIcon" 
@@ -249,7 +275,7 @@ export default function profile({ partnerProfile }) {
                                             <input
                                                 type="text"
                                                 { ...register("partner_bus_name", { required : "This field cannot be empty" }) } 
-                                                className="inputField"
+                                                className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
                                                 defaultValue={ partnerProfile.business_name || '' }
                                             />
                                         </div>
@@ -263,8 +289,8 @@ export default function profile({ partnerProfile }) {
                                     </div>
 
                                     <div className="flex flex-col gap-y-1">
-                                    <label className="inputFieldLabel">Type of Business <span className='font-medium'>/</span> Work</label>
-                                        <div className="inputContainer">
+                                    <label className="inputFieldLabel dark:text-gray-300">Type of Business <span className='font-medium'>/</span> Work</label>
+                                        <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                             <svg 
                                                 xmlns="http://www.w3.org/2000/svg" 
                                                 className="inputIcon" 
@@ -277,7 +303,7 @@ export default function profile({ partnerProfile }) {
                                             <input
                                                 type="text"
                                                 { ...register("partner_tob", { required : "This field cannot be empty" }) } 
-                                                className="inputField"
+                                                className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
                                                 defaultValue={ partnerProfile.type_of_business || '' }
                                             />
                                         </div>
@@ -294,15 +320,15 @@ export default function profile({ partnerProfile }) {
 
                                 {/* This is for the address field */}
                                 <div className="flex flex-col gap-y-2">
-                                    <p className="inputFieldLabel">Address</p>
+                                    <p className="inputFieldLabel dark:text-gray-300">Address</p>
 
                                     <div className="flex flex-col gap-y-6">
 
-                                    <div className="flex gap-x-5">
+                                    <div className="flex flex-col md:flex-row gap-x-5 gap-y-5">
 
                                         <div className="flex flex-col gap-y-1">
                                             <p className="text-xs">Street Address</p>
-                                            <div className="inputContainer">
+                                            <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                                 <svg 
                                                     xmlns="http://www.w3.org/2000/svg" 
                                                     className="inputIcon" 
@@ -315,7 +341,7 @@ export default function profile({ partnerProfile }) {
                                                 <input
                                                     type="text"
                                                     { ...register("partner_st_add", { required : "This field cannot be empty" }) } 
-                                                    className="inputField"
+                                                    className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
                                                     defaultValue={ partnerProfile.street_address || '' }
                                                 />
                                             </div>
@@ -330,7 +356,7 @@ export default function profile({ partnerProfile }) {
 
                                         <div className="flex flex-col gap-y-1">
                                             <p className="text-xs">City</p>
-                                            <div className="inputContainer">
+                                            <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
                                                 <svg 
                                                     xmlns="http://www.w3.org/2000/svg" 
                                                     className="inputIcon" 
@@ -343,7 +369,7 @@ export default function profile({ partnerProfile }) {
                                                 <input
                                                     type="text"
                                                     { ...register("partner_city", { required : "This field cannot be empty" }) } 
-                                                    className="inputField"
+                                                    className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
                                                     defaultValue={ partnerProfile.city || '' }
                                                 />
                                             </div>
@@ -358,63 +384,63 @@ export default function profile({ partnerProfile }) {
 
                                         </div>
 
-                                        <div className="flex gap-x-5">
+                                        <div className="flex flex-col md:flex-row gap-x-5 gap-y-5">
 
-                                        <div className="flex flex-col gap-y-1">
-                                            <p className="text-xs">State / Province</p>
-                                            <div className="inputContainer">
-                                                <svg 
-                                                    xmlns="http://www.w3.org/2000/svg" 
-                                                    className="inputIcon" 
-                                                    fill="none" 
-                                                    viewBox="0 0 24 24" 
-                                                    stroke="currentColor"
-                                                    >
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                                <input
-                                                    type="text"
-                                                    { ...register("partner_province", { required : "This field cannot be empty" }) } 
-                                                    className="inputField"
-                                                    defaultValue={ partnerProfile.state_province || '' }
-                                                />
+                                            <div className="flex flex-col gap-y-1">
+                                                <p className="text-xs">State / Province</p>
+                                                <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
+                                                    <svg 
+                                                        xmlns="http://www.w3.org/2000/svg" 
+                                                        className="inputIcon" 
+                                                        fill="none" 
+                                                        viewBox="0 0 24 24" 
+                                                        stroke="currentColor"
+                                                        >
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    <input
+                                                        type="text"
+                                                        { ...register("partner_province", { required : "This field cannot be empty" }) } 
+                                                        className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
+                                                        defaultValue={ partnerProfile.state_province || '' }
+                                                    />
+                                                </div>
+                                                { 
+                                                    errors.partner_province && 
+                                                    <div className="flex items-center gap-x-1 text-red-500">
+                                                        <AuthErrorIcon />
+                                                        <p className="text-xs">{ errors.partner_province.message }</p>
+                                                    </div> 
+                                                }
                                             </div>
-                                            { 
-                                                errors.partner_province && 
-                                                <div className="flex items-center gap-x-1 text-red-500">
-                                                    <AuthErrorIcon />
-                                                    <p className="text-xs">{ errors.partner_province.message }</p>
-                                                </div> 
-                                            }
-                                        </div>
 
-                                        <div className="flex flex-col gap-y-1">
-                                            <p className="text-xs">Postal / Zip Code</p>
-                                            <div className="inputContainer">
-                                                <svg 
-                                                    xmlns="http://www.w3.org/2000/svg" 
-                                                    className="inputIcon" 
-                                                    fill="none" 
-                                                    viewBox="0 0 24 24" 
-                                                    stroke="currentColor"
-                                                    >
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                                <input
-                                                    type="text"
-                                                    { ...register("partner_zip", { required : "This field cannot be empty" }) } 
-                                                    className="inputField"
-                                                    defaultValue={ partnerProfile.postal_zip || '' }
-                                                />
+                                            <div className="flex flex-col gap-y-1">
+                                                <p className="text-xs">Postal / Zip Code</p>
+                                                <div className="px-2 py-1 flex items-center bg-transparent gap-x-1 border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 rounded-lg">
+                                                    <svg 
+                                                        xmlns="http://www.w3.org/2000/svg" 
+                                                        className="inputIcon" 
+                                                        fill="none" 
+                                                        viewBox="0 0 24 24" 
+                                                        stroke="currentColor"
+                                                        >
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    <input
+                                                        type="text"
+                                                        { ...register("partner_zip", { required : "This field cannot be empty" }) } 
+                                                        className="w-40 md:w-52 py-0 px-0 bg-transparent border-transparent border-none focus:outline-none focus:ring-transparent text-sm text-gray-800 dark:text-gray-300 appearance-none"
+                                                        defaultValue={ partnerProfile.postal_zip || '' }
+                                                    />
+                                                </div>
+                                                { 
+                                                    errors.partner_zip && 
+                                                    <div className="flex items-center gap-x-1 text-red-500">
+                                                        <AuthErrorIcon />
+                                                        <p className="text-xs">{ errors.partner_zip.message }</p>
+                                                    </div> 
+                                                }
                                             </div>
-                                            { 
-                                                errors.partner_zip && 
-                                                <div className="flex items-center gap-x-1 text-red-500">
-                                                    <AuthErrorIcon />
-                                                    <p className="text-xs">{ errors.partner_zip.message }</p>
-                                                </div> 
-                                            }
-                                        </div>
 
                                         </div>
 
@@ -423,9 +449,9 @@ export default function profile({ partnerProfile }) {
                                 </div>
 
                                 <div className="flex flex-col gap-y-1">
-                                    <label className="inputFieldLabel">Services Offered</label>
+                                    <label className="inputFieldLabel dark:text-gray-300">Services Offered</label>
                                     <textarea 
-                                        className="inputTextArea"
+                                        className="w-52 md:w-custom-textarea px-2 py-1 bg-transparent border border-gray-300 dark:border-gray-700 focus-within:border-gray-600 focus:outline-none focus:ring-transparent rounded-lg text-sm"
                                         { ...register("partner_services", { required : "This field cannot be empty" }) }
                                         // onChange={e => setAreaText(e.target.value)}
                                         defaultValue={ partnerProfile.services_offered || '' }

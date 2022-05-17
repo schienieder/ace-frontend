@@ -53,7 +53,7 @@ export default function clients({ eventTransactions }) {
             Header : 'Last Update',
             accessor : 'last_update',
             Cell : ({row}) => (
-                <p className={`${adminStyles.tableDataTextClass} text-gray-800 dark:text-gray-300`}>{ moment(row.original.updated_at).format('ll') }</p>
+                <p className={`${adminStyles.tableDataTextClass} text-gray-800 dark:text-gray-300`}>{ moment(row.original.last_update).format('ll') }</p>
             )
         },
     ], [])

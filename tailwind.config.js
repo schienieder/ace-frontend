@@ -43,6 +43,7 @@ module.exports = {
         'rating-form' : '42rem',
         'custom-textarea': '32rem',
         '49' : '11.5rem',
+        'file-mobile' : '202px',
         '50' : '205px',
         '57' : '14.5rem',
         '63': '15.625rem',

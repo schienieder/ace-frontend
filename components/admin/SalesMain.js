@@ -64,7 +64,7 @@ const SalesMain = () => {
             Header : 'Last Update',
             accessor : 'last_update',
             Cell : ({row}) => (
-                <p className="text-sm text-gray-800 dark:text-gray-300">{ moment(row.original.event_schedule).format('ll') }</p>
+                <p className="text-sm text-gray-800 dark:text-gray-300">{ moment(row.original.last_update).format('ll') }</p>
             )
         },
         {
@@ -223,6 +223,7 @@ const SalesMain = () => {
                                             axisLine={ true }
                                             tickLine={ false }
                                             tickFormatter={ number => `₱${number}` }
+                                            domain={[0, "dataMax"]}
                                             style={{
                                                 fontSize : '10px',
                                             }}
