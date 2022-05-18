@@ -138,7 +138,7 @@ export default function dashboard({ clientProfile, bookingInfo, interviewInfo, e
                                         </svg>
                                         <h4 className='font-bold'>Date & Time</h4>
                                     </div>
-                                    <p className='text-sm self-end'>{ moment(eventInfo.event_date).format('ll')+" "+eventInfo.time_schedule }</p>
+                                    <p className='text-sm self-end'>{ moment(eventInfo.date_schedule).format('ll')+" "+eventInfo.time_schedule }</p>
                                 </div>
                                 <div className='card flex flex-col gap-y-5'>
                                     <div className='flex gap-x-1 items-center'>
